@@ -127,7 +127,7 @@
 
         <!-- Sidebar Header -->
         <div class="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50">
-            <div class="text-xl font-black text-[var(--primary)] tracking-tight">Menu</div>
+            <div class="text-xl font-black text-[var(--primary)] tracking-tight" data-i18n="nav_menu">Menu</div>
             <button id="mobileBackBtn"
                 class="text-gray-400 hover:text-[var(--primary)] p-2 transition-colors focus:outline-none">
                 <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -140,7 +140,8 @@
         <!-- Sidebar Content -->
         <div class="flex flex-col p-8 space-y-6 flex-grow">
             <div class="space-y-4">
-                <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Navigation</p>
+                <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest" data-i18n="nav_navigation">
+                    Navigation</p>
                 <a href="athlete-home.html"
                     class="flex items-center gap-4 py-3 text-lg font-bold text-[var(--primary)] transition-colors">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -148,7 +149,7 @@
                             d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
                         </path>
                     </svg>
-                    Home
+                    <span data-i18n="nav_home">Home</span>
                 </a>
                 <a href="dashboard.html"
                     class="flex items-center gap-4 py-3 text-lg font-bold text-gray-800 hover:text-[var(--primary)] transition-colors">
@@ -157,7 +158,7 @@
                             d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
                         </path>
                     </svg>
-                    Dashboard
+                    <span data-i18n="nav_dashboard">Dashboard</span>
                 </a>
                 <a href="events.html"
                     class="flex items-center gap-4 py-3 text-lg font-bold text-gray-800 hover:text-[var(--primary)] transition-colors">
@@ -166,13 +167,14 @@
                             d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
                         </path>
                     </svg>
-                    Events
+                    <span data-i18n="nav_events">Events</span>
                 </a>
             </div>
 
             <div class="pt-6 border-t border-gray-100">
                 <div class="mb-6">
-                    <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Signed in as</p>
+                    <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2"
+                        data-i18n="nav_account">Signed in as</p>
                     <div class="flex items-center gap-3">
                         <div id="mobileUserPic"
                             class="w-10 h-10 rounded-full bg-white hidden overflow-hidden border border-gray-100 shrink-0">
@@ -208,16 +210,19 @@
                 class="lg:col-span-5 flex flex-col justify-center items-center text-center lg:text-left lg:items-start">
 
                 <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-[var(--primary)] leading-tight mb-8">
-                    Welcome, <span id="heroUserDisplay" class="text-white drop-shadow-sm">Athlete</span> <br>
-                    <span class="block mt-4 text-[var(--primary)]">Start Your Journey With Us Today.</span>
+                    <span data-i18n="athlete_home_welcome">Welcome,</span> <span id="heroUserDisplay"
+                        class="text-white drop-shadow-sm">Athlete</span> <br>
+                    <span class="block mt-4 text-[var(--primary)]" data-i18n="athlete_home_journey">Start Your Journey
+                        With Us Today.</span>
                 </h1>
 
-                <p class="text-lg sm:text-xl text-black/80 font-medium mb-12 leading-relaxed max-w-xl">
+                <p class="text-lg sm:text-xl text-black/80 font-medium mb-12 leading-relaxed max-w-xl"
+                    data-i18n="athlete_home_subtitle">
                     Unlock your potential by building your performance portfolio. Track your progress, showcase
                     achievements, and get noticed by experts.
                 </p>
 
-                <button id="createProfileBtn"
+                <button id="createProfileBtn" data-i18n="athlete_home_create_btn"
                     class="bg-[var(--secondary)] text-white px-12 py-5 rounded-full shadow-2xl hover:bg-[var(--primary)] transition-all duration-300 font-bold text-xl transform hover:scale-105 active:scale-95">
                     Create Profile
                 </button>
@@ -238,7 +243,7 @@
 
     <!-- SQUAD PLAN SECTION -->
     <section id="athleteSquadSection" class="max-w-7xl mx-auto px-6 pb-20 hidden">
-        <h2 class="text-3xl font-black text-[var(--primary)] mb-6">Your Squad Plan</h2>
+        <h2 class="text-3xl font-black text-[var(--primary)] mb-6" data-i18n="athlete_squad_title">Your Squad Plan</h2>
         <div
             class="bg-white p-8 rounded-[2rem] shadow-xl border border-white/40 backdrop-blur-sm relative overflow-hidden">
             <!-- Decorative background element -->
@@ -262,18 +267,20 @@
                 </div>
 
                 <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100 mb-2">
-                    <p id="squadPlanText" class="whitespace-pre-wrap text-slate-700 font-medium leading-relaxed">No plan
+                    <p id="squadPlanText" class="whitespace-pre-wrap text-slate-700 font-medium leading-relaxed"
+                        data-i18n="athlete_squad_empty">No plan
                         posted yet.</p>
                 </div>
 
-                <p class="text-xs text-slate-400 font-bold uppercase tracking-widest text-right mt-4">Visible only to
+                <p class="text-xs text-slate-400 font-bold uppercase tracking-widest text-right mt-4"
+                    data-i18n="athlete_squad_helper">Visible only to
                     squad members</p>
             </div>
         </div>
     </section>
 
     <footer class="bg-[var(--background)] text-black border-t border-gray-400 mt-12">
-        <div class="max-w-7xl mx-auto py-8 text-center text-sm font-medium">
+        <div class="max-w-7xl mx-auto py-8 text-center text-sm font-medium" data-i18n="footer_rights">
             © 2025 Talent Tracker. All Rights Reserved.
         </div>
     </footer>

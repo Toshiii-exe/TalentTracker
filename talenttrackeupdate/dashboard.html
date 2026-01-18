@@ -174,7 +174,7 @@
 
         <!-- Sidebar Header -->
         <div class="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50">
-            <div class="text-xl font-black text-[var(--primary)] tracking-tight">Menu</div>
+            <div class="text-xl font-black text-[var(--primary)] tracking-tight" data-i18n="nav_menu">Menu</div>
             <button id="mobileBackBtn"
                 class="text-gray-400 hover:text-[var(--primary)] p-2 transition-colors focus:outline-none">
                 <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -187,7 +187,8 @@
         <!-- Sidebar Content -->
         <div class="flex flex-col p-8 space-y-6 flex-grow">
             <div class="space-y-4">
-                <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Navigation</p>
+                <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest" data-i18n="nav_navigation">
+                    Navigation</p>
                 <a href="athlete-home.html"
                     class="flex items-center gap-4 py-3 text-lg font-bold text-gray-800 hover:text-[var(--primary)] transition-colors">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -219,7 +220,8 @@
 
             <div class="pt-6 border-t border-gray-100">
                 <div class="mb-6">
-                    <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Signed in as</p>
+                    <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2"
+                        data-i18n="nav_account">Signed in as</p>
                     <div class="flex items-center gap-3">
                         <div id="mobileUserPic"
                             class="w-10 h-10 rounded-full bg-white hidden overflow-hidden border border-gray-100 shrink-0">
@@ -276,9 +278,11 @@
             <div class="flex flex-col gap-5 text-center md:text-left w-full relative z-10">
                 <div>
                     <h1 class="text-4xl md:text-5xl font-extrabold text-[var(--primary)] tracking-tight mb-2">
-                        Hi, <span id="dashUserName" class="text-[var(--secondary)] font-black uppercase">Athlete</span>
+                        <span data-i18n="dash_welcome">Hi,</span> <span id="dashUserName"
+                            class="text-[var(--secondary)] font-black uppercase">Athlete</span>
                     </h1>
-                    <p class="text-gray-500 font-medium tracking-wide uppercase text-xs">Ready for today's training?</p>
+                    <p class="text-gray-500 font-medium tracking-wide uppercase text-xs" data-i18n="dash_ready">Ready
+                        for today's training?</p>
                 </div>
 
                 <div id="headerPBDisplay" class="flex flex-wrap gap-4 justify-center md:justify-start">
@@ -288,7 +292,7 @@
                 </div>
 
                 <div class="pt-2 flex flex-wrap gap-3 justify-center md:justify-start">
-                    <button id="editProfileBtn"
+                    <button id="editProfileBtn" data-i18n="dash_update_profile"
                         class="px-8 py-3 rounded-2xl bg-[var(--primary)] text-white font-bold hover:bg-[var(--secondary)] transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 text-sm flex items-center gap-2">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -297,7 +301,7 @@
                         </svg>
                         Update Profile
                     </button>
-                    <button id="contactSupportBtn"
+                    <button id="contactSupportBtn" data-i18n="dash_contact_us"
                         class="px-8 py-3 rounded-2xl bg-white text-[var(--primary)] border-2 border-[var(--primary)] font-bold hover:bg-slate-50 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 text-sm flex items-center gap-2">
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                             <path
@@ -315,7 +319,8 @@
                 <!-- OPTIMIZATION: Responsive Height - Changed h-[500px] to h-auto md:h-[500px] to prevent layout breakage on mobile -->
                 <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4 border-b pb-4">
                     <div>
-                        <h2 class="text-xl font-bold text-[var(--primary)] uppercase">Performance Trend</h2>
+                        <h2 class="text-xl font-bold text-[var(--primary)] uppercase" data-i18n="dash_perf_trend">
+                            Performance Trend</h2>
                         <p class="text-xs text-gray-500">Event: <span id="graphEventLabel"
                                 class="text-[var(--secondary)] font-bold">Select</span></p>
                     </div>
@@ -335,7 +340,8 @@
 
             <div
                 class="bg-white rounded-2xl shadow-lg border border-gray-100 p-4 md:p-6 h-auto md:h-[500px] flex flex-col">
-                <h2 class="text-xl font-bold text-[var(--primary)] uppercase mb-4 border-b pb-2">Add Result</h2>
+                <h2 class="text-xl font-bold text-[var(--primary)] uppercase mb-4 border-b pb-2"
+                    data-i18n="dash_add_result">Add Result</h2>
                 <form id="performanceForm" class="flex flex-col gap-4 flex-grow justify-center">
                     <div class="flex flex-col gap-1">
                         <label class="text-xs font-bold text-gray-500 uppercase">Event</label>
@@ -367,14 +373,16 @@
 
             <div
                 class="bg-white rounded-2xl shadow-lg border border-gray-100 p-4 md:p-5 h-auto md:h-[850px] overflow-y-auto custom-scrollbar relative">
-                <h2 class="text-xl font-bold text-gray-700 uppercase tracking-widest mb-4 border-b pb-2 bg-white">
+                <h2 class="text-xl font-bold text-gray-700 uppercase tracking-widest mb-4 border-b pb-2 bg-white"
+                    data-i18n="dash_profile_details">
                     Athlete Profile Details</h2>
                 <div id="fullProfileList" class="space-y-4 text-sm text-gray-700 pb-4"></div>
             </div>
 
             <div
                 class="bg-white rounded-2xl shadow-lg border border-gray-100 p-4 md:p-5 h-auto md:h-[850px] overflow-y-auto custom-scrollbar relative">
-                <h2 class="text-xl font-bold text-gray-700 uppercase tracking-widest mb-4 border-b pb-2 bg-white">
+                <h2 class="text-xl font-bold text-gray-700 uppercase tracking-widest mb-4 border-b pb-2 bg-white"
+                    data-i18n="dash_official_docs">
                     Official Documents</h2>
                 <div id="officialDocsGrid" class="space-y-3 pb-4"></div>
                 <p id="noOfficialDocsText" class="text-sm text-center text-gray-400 italic mt-6 hidden">No documents.
@@ -383,7 +391,8 @@
 
             <div
                 class="bg-white rounded-2xl shadow-lg border border-gray-100 p-4 md:p-5 h-auto md:h-[850px] overflow-y-auto custom-scrollbar relative">
-                <h2 class="text-xl font-bold text-gray-700 uppercase tracking-widest mb-4 border-b pb-2 bg-white">
+                <h2 class="text-xl font-bold text-gray-700 uppercase tracking-widest mb-4 border-b pb-2 bg-white"
+                    data-i18n="dash_achievements">
                     Achievements (Max 3)</h2>
                 <div id="achievementsWrapper" class="flex flex-col gap-6 pb-4"></div>
             </div>

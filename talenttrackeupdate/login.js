@@ -6,6 +6,7 @@ import {
     getUserByUsername
 } from "./register.js";
 import { showLoading, hideLoading, updateNavbar } from "./ui-utils.js";
+import { getTranslation } from "./i18n.js";
 
 // DOM Elements
 const loginModal = document.getElementById("loginModal");
@@ -21,8 +22,8 @@ let currentRole = "athlete";
 // Role Switcher
 window.switchRole = (role) => {
     currentRole = role;
-    let title = role.charAt(0).toUpperCase() + role.slice(1) + " Login";
-    if (role === 'federation') title = "Federation Admin Login";
+    let titleKey = `login_title_${role}`;
+    let title = getTranslation(titleKey);
 
     if (loginTitle) loginTitle.innerText = title;
 
@@ -117,12 +118,12 @@ if (loginBtn) {
         const password = passwordInput.value;
 
         if (!identifier || !password) {
-            showErr("Please enter your Phone, Email, or Username and password.");
+            showErr(getTranslation("login_err_missing"));
             return;
         }
 
         loginBtn.disabled = true;
-        loginBtn.textContent = "Logging in...";
+        loginBtn.textContent = getTranslation("login_status_logging_in");
         showLoading();
 
         try {
@@ -143,10 +144,16 @@ if (loginBtn) {
 
         } catch (e) {
             console.error(e);
-            showErr("Login failed: " + (e.message || "Invalid credentials"));
+            let errMsg = getTranslation("login_err_failed");
+            if (e.message && e.message.includes("Invalid credentials")) {
+                errMsg += getTranslation("login_err_invalid");
+            } else {
+                errMsg += (e.message || getTranslation("login_err_invalid"));
+            }
+            showErr(errMsg);
             hideLoading();
             loginBtn.disabled = false;
-            loginBtn.textContent = "Login";
+            loginBtn.textContent = getTranslation("login_btn");
         }
     });
 }

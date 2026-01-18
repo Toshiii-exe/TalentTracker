@@ -31,42 +31,42 @@
 <body class="min-h-screen bg-primaryBg flex items-center justify-center px-4">
   <nav class="fixed top-0 left-0 w-full bg-white/10 backdrop-blur-sm z-50 px-6 py-4">
     <div class="max-w-7xl mx-auto flex justify-between items-center text-primaryBlue">
-      <div class="text-xl font-extrabold tracking-tight">Talent Tracker</div>
+      <div class="text-xl font-extrabold tracking-tight" data-i18n="nav_title">Talent Tracker</div>
     </div>
   </nav>
 
   <div class="w-full max-w-md bg-secondaryBg rounded-2xl shadow-xl p-8">
 
-    <h1 class="text-3xl font-extrabold text-primaryBlue text-center mb-2">
+    <h1 class="text-3xl font-extrabold text-primaryBlue text-center mb-2" data-i18n="signup_athlete_title">
       Athlete Registration
     </h1>
 
-    <p class="text-center text-gray-600 mb-6">
+    <p class="text-center text-gray-600 mb-6" data-i18n="signup_subtitle_athlete">
       Start tracking your performance today
     </p>
 
     <form id="signupForm" class="space-y-4">
 
       <div>
-        <label class="text-sm font-semibold text-primaryBlue">Username</label>
+        <label class="text-sm font-semibold text-primaryBlue" data-i18n="signup_label_username">Username</label>
         <input id="username" type="text" required class="w-full mt-1 px-4 py-2 rounded-lg border border-gray-300
                  focus:outline-none focus:ring-2 focus:ring-accentBlue" placeholder="Enter your username" />
       </div>
 
       <div>
-        <label class="text-sm font-semibold text-primaryBlue">Phone Number</label>
+        <label class="text-sm font-semibold text-primaryBlue" data-i18n="signup_label_phone">Phone Number</label>
         <input id="phone" type="tel" required class="w-full mt-1 px-4 py-2 rounded-lg border border-gray-300
                  focus:outline-none focus:ring-2 focus:ring-accentBlue" placeholder="e.g. 0771234567" />
       </div>
 
       <div>
-        <label class="text-sm font-semibold text-primaryBlue">Email (Optional)</label>
+        <label class="text-sm font-semibold text-primaryBlue" data-i18n="signup_label_email">Email (Optional)</label>
         <input id="email" type="email" class="w-full mt-1 px-4 py-2 rounded-lg border border-gray-300
                  focus:outline-none focus:ring-2 focus:ring-accentBlue" placeholder="Enter your email" />
       </div>
 
       <div class="space-y-1">
-        <label class="text-sm font-semibold text-primaryBlue">Password</label>
+        <label class="text-sm font-semibold text-primaryBlue" data-i18n="signup_label_password">Password</label>
         <div class="relative">
           <input id="password" type="password" required class="w-full mt-1 px-4 py-2 rounded-lg border border-gray-300
                    focus:outline-none focus:ring-2 focus:ring-accentBlue pr-12" placeholder="Enter your password" />
@@ -84,7 +84,7 @@
           </button>
         </div>
         <!-- OPTIMIZATION: Security Requirement - Password Complexity Hint -->
-        <p class="text-[10px] text-gray-500 mt-1">
+        <p class="text-[10px] text-gray-500 mt-1" data-i18n="signup_password_hint">
           Must contain: 8+ chars, Uppercase, Lowercase, Number & Special Char (!@#$%^&*)
         </p>
       </div>
@@ -92,7 +92,7 @@
       <!-- ERROR MESSAGE -->
       <p id="signupError" class="text-sm text-red-600 hidden"></p>
 
-      <button type="submit" class="w-full bg-accentBlue text-white py-2 rounded-lg
+      <button type="submit" data-i18n="signup_btn_create" class="w-full bg-accentBlue text-white py-2 rounded-lg
                hover:bg-accentBlueHover transition font-semibold">
         Create Account
       </button>
@@ -101,8 +101,8 @@
     </form>
 
     <p class="text-sm text-center mt-6 text-gray-600">
-      Already have an account?
-      <a href="index.html" class="font-semibold text-primaryBlue underline">
+      <span data-i18n="signup_already_have">Already have an account?</span>
+      <a href="index.html" class="font-semibold text-primaryBlue underline" data-i18n="signup_link_login">
         Login
       </a>
     </p>

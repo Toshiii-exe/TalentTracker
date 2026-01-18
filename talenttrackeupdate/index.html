@@ -92,7 +92,8 @@
       <!-- Logo with Image -->
       <div class="flex items-center gap-3">
         <img src="assets/logo.jpg" alt="Talent Tracker Logo" class="h-8 w-8 md:h-10 md:w-10 object-contain">
-        <div class="text-2xl font-extrabold text-[var(--primary)] tracking-tight">Talent Tracker</div>
+        <div class="text-2xl font-extrabold text-[var(--primary)] tracking-tight" data-i18n="nav_title">Talent Tracker
+        </div>
       </div>
 
       <!-- Desktop Menu -->
@@ -142,7 +143,7 @@
 
     <!-- Sidebar Header -->
     <div class="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50">
-      <div class="text-xl font-black text-[var(--primary)] tracking-tight">Menu</div>
+      <div class="text-xl font-black text-[var(--primary)] tracking-tight" data-i18n="nav_menu">Menu</div>
       <button id="mobileBackBtn"
         class="text-gray-400 hover:text-[var(--primary)] p-2 transition-colors focus:outline-none">
         <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -154,7 +155,8 @@
     <!-- Sidebar Content -->
     <div class="flex flex-col p-8 space-y-6 flex-grow">
       <div class="space-y-4">
-        <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Navigation</p>
+        <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest" data-i18n="nav_navigation">Navigation
+        </p>
         <a href="index.html"
           class="flex items-center gap-4 py-3 text-lg font-bold text-gray-800 hover:text-[var(--primary)] transition-colors">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -176,7 +178,8 @@
       </div>
 
       <div class="pt-6 border-t border-gray-100">
-        <p id="mobileUserLabel" class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-4">Account</p>
+        <p id="mobileUserLabel" class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-4"
+          data-i18n="nav_account">Account</p>
         <button id="mobileLoginBtn"
           class="w-full py-4 rounded-xl bg-[var(--primary)] text-white hover:bg-[var(--secondary)] transition-all shadow-lg font-black uppercase tracking-wider text-sm flex items-center justify-center gap-3">
           <div id="mobileUserPic"
@@ -318,16 +321,19 @@
         <div
           class="w-full md:w-1/3 bg-gradient-to-br from-[#2E5F9E] to-[#1a3a63] text-white p-5 md:p-10 flex flex-col justify-center border-b md:border-b-0 md:border-r border-white/10 shrink-0">
           <h3
-            class="font-black text-lg md:text-2xl mb-4 md:mb-8 text-center md:text-left uppercase tracking-widest opacity-90">
+            class="font-black text-lg md:text-2xl mb-4 md:mb-8 text-center md:text-left uppercase tracking-widest opacity-90"
+            data-i18n="login_modal_as">
             Login as</h3>
           <div class="grid grid-cols-2 md:grid-cols-1 gap-2 md:gap-4 px-1 md:px-0">
             <button id="role-athlete" onclick="switchRole('athlete')"
-              class="role-btn px-2 md:px-6 py-3 rounded-xl md:rounded-2xl bg-white/10 hover:bg-white/20 text-white text-[11px] sm:text-xs md:text-base font-bold transition-all border border-white/20 active:scale-95">Athlete</button>
+              class="role-btn px-2 md:px-6 py-3 rounded-xl md:rounded-2xl bg-white/10 hover:bg-white/20 text-white text-[11px] sm:text-xs md:text-base font-bold transition-all border border-white/20 active:scale-95"
+              data-i18n="role_athlete">Athlete</button>
             <button id="role-coach" onclick="switchRole('coach')"
-              class="role-btn px-2 md:px-6 py-3 rounded-xl md:rounded-2xl bg-white/10 hover:bg-white/20 text-white text-[11px] sm:text-xs md:text-base font-bold transition-all border border-white/20 active:scale-95">Coach</button>
+              class="role-btn px-2 md:px-6 py-3 rounded-xl md:rounded-2xl bg-white/10 hover:bg-white/20 text-white text-[11px] sm:text-xs md:text-base font-bold transition-all border border-white/20 active:scale-95"
+              data-i18n="role_coach">Coach</button>
             <button id="role-federation" onclick="switchRole('federation')"
-              class="role-btn px-2 md:px-6 py-3 rounded-xl md:rounded-2xl bg-white/10 hover:bg-white/20 text-white text-[11px] sm:text-xs md:text-base font-bold transition-all border border-white/20 active:scale-95 leading-tight col-span-2 md:col-span-1">Admin
-              (Fed)</button>
+              class="role-btn px-2 md:px-6 py-3 rounded-xl md:rounded-2xl bg-white/10 hover:bg-white/20 text-white text-[11px] sm:text-xs md:text-base font-bold transition-all border border-white/20 active:scale-95 leading-tight col-span-2 md:col-span-1"
+              data-i18n="role_federation">Admin (Fed)</button>
           </div>
         </div>
 
@@ -343,21 +349,26 @@
           </button>
 
           <div class="max-w-md mx-auto w-full">
-            <h2 id="loginTitle" class="text-3xl md:text-4xl font-black text-gray-900 mb-2 tracking-tight">
+            <h2 id="loginTitle" class="text-3xl md:text-4xl font-black text-gray-900 mb-2 tracking-tight"
+              data-i18n="role_athlete">
               Athlete Login
             </h2>
-            <p class="text-gray-500 mb-10 font-medium">Please enter your details below</p>
+            <p class="text-gray-500 mb-10 font-medium" data-i18n="login_modal_subtitle">Please enter your details below
+            </p>
 
             <form class="space-y-6" onsubmit="return false;">
               <div class="space-y-2">
-                <label class="text-xs font-black text-gray-400 uppercase tracking-widest ml-1">Phone / Email /
+                <label class="text-xs font-black text-gray-400 uppercase tracking-widest ml-1"
+                  data-i18n="login_label_identifier">Phone / Email /
                   Username</label>
-                <input id="login-identifier" type="text" placeholder="Enter Phone, Email or Username" class="w-full border-2 border-gray-100 rounded-2xl px-6 py-4
+                <input id="login-identifier" type="text" data-i18n-placeholder="login_placeholder_identifier"
+                  placeholder="Enter Phone, Email or Username" class="w-full border-2 border-gray-100 rounded-2xl px-6 py-4
                      focus:outline-none focus:border-[#2E5F9E] transition-all bg-gray-50 font-semibold" />
               </div>
 
               <div class="space-y-2">
-                <label class="text-xs font-black text-gray-400 uppercase tracking-widest ml-1">Password</label>
+                <label class="text-xs font-black text-gray-400 uppercase tracking-widest ml-1"
+                  data-i18n="login_label_password">Password</label>
                 <div class="relative">
                   <input id="login-password" type="password" placeholder="••••••••" class="w-full border-2 border-gray-100 rounded-2xl px-6 py-4
                        focus:outline-none focus:border-[#2E5F9E] transition-all bg-gray-50 font-semibold pr-16" />
@@ -385,7 +396,7 @@
                 <span>Error message here</span>
               </div>
 
-              <button id="loginBtn" type="button"
+              <button id="loginBtn" type="button" data-i18n="login_btn"
                 class="w-full bg-[#2E5F9E] hover:bg-[#1a3a63]
                    text-white font-black py-5 rounded-2xl shadow-xl hover:shadow-[#2E5F9E]/30 transition-all transform active:scale-[0.97] uppercase tracking-wider">
                 Login
@@ -399,16 +410,16 @@
                 <div class="absolute inset-0 flex items-center">
                   <div class="w-full border-t border-gray-100"></div>
                 </div>
-                <div class="relative flex justify-center text-xs uppercase"><span
+                <div class="relative flex justify-center text-xs uppercase"><span data-i18n="login_new_here"
                     class="bg-white px-4 text-gray-400 font-bold tracking-widest">New Here?</span></div>
               </div>
 
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <a href="signup-athlete.html" class="px-2 py-3 rounded-xl border-2 border-gray-100
+                <a href="signup-athlete.html" data-i18n="login_athlete_signup" class="px-2 py-3 rounded-xl border-2 border-gray-100
                         text-gray-900 font-bold text-xs hover:border-[#2E5F9E] hover:text-[#2E5F9E] transition-all">
                   ATHLETE SIGNUP
                 </a>
-                <a href="signup-coach.html" class="px-2 py-3 rounded-xl border-2 border-gray-100
+                <a href="signup-coach.html" data-i18n="login_coach_signup" class="px-2 py-3 rounded-xl border-2 border-gray-100
                         text-gray-900 font-bold text-xs hover:border-[#2E5F9E] hover:text-[#2E5F9E] transition-all">
                   COACH SIGNUP
                 </a>
