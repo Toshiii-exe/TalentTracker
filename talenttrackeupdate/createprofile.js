@@ -8,6 +8,7 @@ import {
 } from "./register.js";
 import { showLoading, hideLoading, updateNavbar } from "./ui-utils.js";
 import { setupDropdownInput, syncDropdown, CITIES } from "./locations.js";
+import { getTranslation, applyLanguage } from "./i18n.js";
 
 // Global Variables
 let currentUID = null;
@@ -227,8 +228,8 @@ async function loadProfileForEdit() {
                 }
             }
 
-            if (submitBtn) submitBtn.textContent = "Update Profile";
-            displayMessage("Profile data loaded for editing.", "success");
+            if (submitBtn) submitBtn.textContent = getTranslation("profile_submit");
+            displayMessage(getTranslation("profile_loaded_msg"), "success");
 
             // Sync Dropdown
             syncDropdown("citySelect", "city", CITIES);
@@ -249,14 +250,14 @@ window.addEventRow = function (data = null) {
 
     div.innerHTML = `
         <div class="flex justify-between items-center border-b pb-2 mb-2">
-            <h4 class="font-bold text-gray-700">Event Entry</h4>
-            <button type="button" onclick="this.closest('.event-row').remove()" class="text-red-500 font-bold hover:text-red-700 text-sm">Remove</button>
+            <h4 class="font-bold text-gray-700" data-i18n="profile_event_entry">Event Entry</h4>
+            <button type="button" onclick="this.closest('.event-row').remove()" class="text-red-500 font-bold hover:text-red-700 text-sm" data-i18n="profile_remove">Remove</button>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
             <div>
-                <label class="text-xs font-semibold text-gray-500 uppercase">Event Type <span class="text-red-500">*</span></label>
+                <label class="text-xs font-semibold text-gray-500 uppercase" data-i18n="profile_event_type">Event Type <span class="text-red-500">*</span></label>
                 <select class="input event-select">
-                    <option value="">Select</option>
+                    <option value="" data-i18n="profile_select">Select</option>
                     <option value="100m">100m</option>
                     <option value="200m">200m</option>
                     <option value="400m">400m</option>
@@ -264,33 +265,41 @@ window.addEventRow = function (data = null) {
                     <option value="1200m">1200m</option>
                     <option value="1500m">1500m</option>
                     <option value="5000m">5000m</option>
-                    <option value="Long Jump">Long Jump</option>
-                    <option value="High Jump">High Jump</option>
+                    <option value="Long Jump" data-i18n="profile_event_lj">Long Jump</option>
+                    <option value="High Jump" data-i18n="profile_event_hj">High Jump</option>
                 </select>
             </div>
             <div>
-                <label class="text-xs font-semibold text-gray-500 uppercase">Personal Best <span class="text-red-500">*</span></label>
-                <input type="number" step="0.01" class="input event-time" placeholder="e.g. 10.5 or 5.2">
+                <label class="text-xs font-semibold text-gray-500 uppercase" data-i18n="profile_pb">Personal Best <span class="text-red-500">*</span></label>
+                <input type="number" step="0.01" class="input event-time" placeholder="e.g. 10.5 or 5.2" data-i18n-placeholder="profile_pb_placeholder">
             </div>
             <div>
-                <label class="text-xs font-semibold text-gray-500 uppercase">Experience</label>
+                <label class="text-xs font-semibold text-gray-500 uppercase" data-i18n="profile_experience">Experience</label>
                 <select class="input event-experience">
-                    <option value="">Select</option><option value="Regional Novice">Beginner</option>
-                    <option value="National Competitor">Intermediate</option><option value="International Elite">National level</option>
+                    <option value="" data-i18n="profile_select">Select</option>
+                    <option value="Regional Novice" data-i18n="profile_exp_beginner">Beginner</option>
+                    <option value="National Competitor" data-i18n="profile_exp_intermediate">Intermediate</option>
+                    <option value="International Elite" data-i18n="profile_exp_national">National level</option>
                 </select>
             </div>
             <div>
-                <label class="text-xs font-semibold text-gray-500 uppercase">Best Comp</label>
+                <label class="text-xs font-semibold text-gray-500 uppercase" data-i18n="profile_best_comp">Best Comp</label>
                 <select class="input event-level">
-                    <option value="">Select</option><option value="All-Island School Sports Festival">All-Island School Sports Festival</option>
-                    <option value="National Sports Festival">National Sports Festival</option><option value="Divisional">Divisional</option><option value="District">District</option><option value="Provincial">Provincial</option><option value="All-Island">All-Island</option>
+                    <option value="" data-i18n="profile_select">Select</option>
+                    <option value="All-Island School Sports Festival" data-i18n="profile_comp_school">All-Island School Sports Festival</option>
+                    <option value="National Sports Festival" data-i18n="profile_comp_national">National Sports Festival</option>
+                    <option value="Divisional" data-i18n="profile_comp_divisional">Divisional</option>
+                    <option value="District" data-i18n="profile_comp_district">District</option>
+                    <option value="Provincial" data-i18n="profile_comp_provincial">Provincial</option>
+                    <option value="All-Island" data-i18n="profile_comp_all_island">All-Island</option>
                 </select>
             </div>
         </div>
-        <p class="text-red-500 text-xs hidden event-row-error">Fill all 4 fields</p>
+        <p class="text-red-500 text-xs hidden event-row-error" data-i18n="profile_err_fill_all">Fill all 4 fields</p>
     `;
 
     container.appendChild(div);
+    applyLanguage(); // Re-apply translations to the new element
 
     if (data) {
         div.querySelector(".event-select").value = data.event || "";
@@ -320,10 +329,10 @@ if (dobInput) {
         if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) { age--; }
 
         if (age < 14) {
-            toggleError("err-dob", "You must be at least 14 years old to register.");
+            toggleError("err-dob", getTranslation("profile_err_age_min"));
             this.value = "";
         } else if (age > 100) {
-            toggleError("err-dob", "Please enter a realistic date of birth.");
+            toggleError("err-dob", getTranslation("profile_err_age_max"));
             this.value = "";
         } else {
             toggleError("err-dob", "");
@@ -360,7 +369,7 @@ window.submitProfile = async function () {
     for (let input of allInputs) {
         if (input.value && input.type !== 'submit' && input.type !== 'button') { isFormBlank = false; break; }
     }
-    if (isFormBlank) { displayMessage("Please fill the form before submitting.", 'warning'); return; }
+    if (isFormBlank) { displayMessage(getTranslation("profile_err_blank"), 'warning'); return; }
 
     const requiredIds = ["fullName", "dob", "gender", "phone", "email", "street", "city", "category", "height", "weight"];
     let hasRequiredError = false;
@@ -422,7 +431,7 @@ window.submitProfile = async function () {
     });
 
     if (hasRequiredError) {
-        displayMessage("Please complete all required fields.", 'warning');
+        displayMessage(getTranslation("profile_err_required_fields"), 'warning');
         document.querySelector('.error-text.visible')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
         return;
     }
@@ -485,7 +494,7 @@ window.submitProfile = async function () {
         return;
     }
 
-    submitBtn.textContent = "Uploading...";
+    submitBtn.textContent = getTranslation("profile_status_uploading");
     submitBtn.disabled = true;
 
     try {
@@ -547,7 +556,7 @@ window.submitProfile = async function () {
 
         await saveAthleteProfile(currentUID, profileData);
 
-        displayMessage("Profile saved successfully!", "success");
+        displayMessage(getTranslation("profile_success_msg"), "success");
         setTimeout(() => window.location.href = "dashboard.html", 2000);
 
     } catch (error) {
