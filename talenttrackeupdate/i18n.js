@@ -35,13 +35,13 @@ function injectLanguageSwitcher() {
 
     // Create Select Element
     const wrapper = document.createElement("div");
-    wrapper.className = "relative ml-4 mr-2 hidden md:block"; // Adjust margin/display as needed
+    wrapper.className = "relative hidden md:block order-last lg:order-none";
     wrapper.innerHTML = `
     <select id="languageSwitcher" 
-            class="appearance-none bg-white/10 hover:bg-white/20 border border-white/20 text-[var(--primary)] font-bold py-2 pl-3 pr-8 rounded-full cursor-pointer focus:outline-none focus:ring-2 focus:ring-[var(--highlight)] text-xs transition-all min-w-[100px]">
+            class="appearance-none bg-white/40 hover:bg-white/60 border border-[var(--primary)]/20 text-[var(--primary)] font-bold py-1.5 pl-3 pr-8 rounded-xl cursor-pointer focus:outline-none focus:ring-2 focus:ring-[var(--secondary)] text-xs transition-all min-w-[120px] shadow-sm">
         <option value="en">English</option>
-        <option value="si">Sinhala</option>
-        <option value="ta">Tamil</option>
+        <option value="si">Sinhala (සිංහල)</option>
+        <option value="ta">Tamil (தமிழ்)</option>
     </select>
     <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-[var(--primary)]">
       <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
@@ -55,14 +55,21 @@ function injectLanguageSwitcher() {
     // Try to find the Desktop Menu div
     const desktopMenu = navContainer.querySelector(".hidden.md\\:flex");
     if (desktopMenu) {
-        // Add inside desktop menu, before the login button?
-        // desktopMenu has links and a button. Let's add it at the beginning or end.
-        // Let's add it at the START of the Desktop Menu for visibility
-        desktopMenu.insertBefore(wrapper, desktopMenu.firstChild);
+        // Add at the end of the menu but BEFORE the user profile dropdown area if it exists
+        const userArea = document.getElementById("navUserArea");
+        if (userArea) {
+            desktopMenu.insertBefore(wrapper, userArea);
+        } else {
+            desktopMenu.appendChild(wrapper);
+        }
     } else {
         // Fallback: Add before mobile button
         const mobileBtn = document.getElementById("mobileMenuButton");
-        navContainer.insertBefore(wrapper, mobileBtn);
+        if (mobileBtn) {
+            navContainer.insertBefore(wrapper, mobileBtn);
+        } else {
+            navContainer.appendChild(wrapper);
+        }
     }
 
     // Mobile Switcher?

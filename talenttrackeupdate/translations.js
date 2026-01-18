@@ -26,7 +26,7 @@ export const translations = {
   },
   si: {
     nav_home: "මුල් පිටුව",
-    nav_dashboard: "Dashboard",
+    nav_dashboard: "දත්ත පුවරුව",
     nav_events: "සිදුවීම්",
     nav_login: "පිවිසෙන්න",
     nav_logout: "ඉවත් වන්න",
@@ -51,7 +51,7 @@ export const translations = {
   },
   ta: {
     nav_home: "முகப்பு",
-    nav_dashboard: "Dashboard",
+    nav_dashboard: "தகவல் பலகை",
     nav_events: "நிகழ்வுகள்",
     nav_login: "உள்நுழைய",
     nav_logout: "வெளியேறு",
