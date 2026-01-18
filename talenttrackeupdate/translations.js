@@ -86,7 +86,9 @@ export const translations = {
     signup_password_hint: "Must contain: 8+ chars, Uppercase, Lowercase, Number & Special Char (!@#$%^&*)",
     signup_btn_create: "Create Account",
     signup_already_have: "Already have an account?",
-    signup_link_login: "Login"
+    signup_link_login: "Login",
+    coach_home_welcome: "Welcome back, Coach",
+    coach_home_subtitle: "View your curated watchlist, manage your training squads, and discover new elite athletes."
   },
   si: {
     nav_home: "මුල් පිටුව",
@@ -175,7 +177,9 @@ export const translations = {
     signup_password_hint: "අන්තර්ගත විය යුතුය: අක්ෂර 8+, ලොකු අකුරු, කුඩා අකුරු, අංක සහ විශේෂ අක්ෂර (!@#$%^&*)",
     signup_btn_create: "ගිණුම සාදන්න",
     signup_already_have: "දැනටමත් ගිණුමක් තිබේද?",
-    signup_link_login: "පිවිසෙන්න"
+    signup_link_login: "පිවිසෙන්න",
+    coach_home_welcome: "නැවත සාදරයෙන් පිළිගනිමු, පුහුණුකරු",
+    coach_home_subtitle: "ඔබේ සුපරීක්ෂණ ලැයිස්තුව බලන්න, ඔබේ පුහුණු කණ්ඩායම් කළමනාකරණය කරන්න, සහ නව දක්ෂ ක්‍රීඩකයින් සොයා ගන්න."
   },
   ta: {
     nav_home: "முகப்பு",
@@ -264,6 +268,8 @@ export const translations = {
     signup_password_hint: "கண்டிப்பாக இருக்க வேண்டும்: 8+ எழுத்துக்கள், பெரிய எழுத்து, சிறிய எழுத்து, எண் மற்றும் சிறப்பு எழுத்து (!@#$%^&*)",
     signup_btn_create: "கணக்கை உருவாக்கவும்",
     signup_already_have: "ஏற்கனவே கணக்கு உள்ளதா?",
-    signup_link_login: "உள்நுழைக"
+    signup_link_login: "உள்நுழைக",
+    coach_home_welcome: "மீண்டும் வரவேற்கிறோம், பயிற்சியாளர்",
+    coach_home_subtitle: "உங்கள் கண்காணிப்புப் பட்டியலைப் பார்க்கவும், உங்கள் பயிற்சிக் குழுக்களை நிர்வகிக்கவும், புதிய சிறந்த விளையாட்டு வீரர்களைக் கண்டறியவும்."
   }
 };

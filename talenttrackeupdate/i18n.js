@@ -179,6 +179,13 @@ function applyLanguage(lang) {
 
     // 3. Update HTML Document Lang
     document.documentElement.lang = lang;
+
+    // 4. Force specific font for Sinhala/Tamil if needed
+    if (lang === 'si' || lang === 'ta') {
+        document.body.classList.add('notranslate'); // Discourage auto-translation
+    } else {
+        document.body.classList.remove('notranslate');
+    }
 }
 
 // Auto-init
