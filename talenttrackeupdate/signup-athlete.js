@@ -61,8 +61,8 @@ form.addEventListener("submit", async (e) => {
     return;
   }
   // OPTIMIZATION: Security Requirement - Strict Password Validation
-  // Must satisfy: 8+ chars, Uppercase, Lowercase, Number, Special Char
-  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+  // Updated regex to be more permissive with special characters (allowing #, &, etc.)
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/;
 
   if (!passwordRegex.test(password)) {
     showError("Password must be 8+ chars, with Uppercase, Lowercase, Number & Special Char.");
