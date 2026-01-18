@@ -213,10 +213,14 @@ form.addEventListener("submit", async (e) => {
     }
 
     const phoneInput = document.getElementById("phone");
-    if (phoneInput.value && !/^\+?[0-9\s-]{10,15}$/.test(phoneInput.value)) {
-        document.getElementById("error-phone").textContent = "Invalid phone format";
-        document.getElementById("error-phone").classList.add("visible");
-        isValid = false;
+    if (phoneInput.value) {
+        // Sri Lankan Phone Validation: Supports 07... , +947... , 947... , 7...
+        const slPhoneRegex = /^(?:0|94|\+94)?(?:7[01245678]|11|2[134567]|3[12345678]|4[157]|5[12457]|6[3567]|81|91)\d{7}$/;
+        if (!slPhoneRegex.test(phoneInput.value)) {
+            document.getElementById("error-phone").textContent = "Invalid Sri Lankan phone number";
+            document.getElementById("error-phone").classList.add("visible");
+            isValid = false;
+        }
     }
 
     const nicInput = document.getElementById("nic");

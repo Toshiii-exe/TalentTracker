@@ -412,8 +412,10 @@ window.submitProfile = async function () {
             toggleError(`err-${id}`, "Required");
             hasRequiredError = true;
         } else {
-            if (id === "phone" && !/^\+?[0-9\s-]{10,15}$/.test(el.value)) {
-                toggleError("err-phone", "Invalid phone format (+94XXXXXXXXX)");
+            // Sri Lankan Phone Validation: Supports 07... , +947... , 947... , 7...
+            const slPhoneRegex = /^(?:0|94|\+94)?(?:7[01245678]|11|2[134567]|3[12345678]|4[157]|5[12457]|6[3567]|81|91)\d{7}$/;
+            if (id === "phone" && !slPhoneRegex.test(el.value)) {
+                toggleError("err-phone", "Invalid Sri Lankan phone number.");
                 hasRequiredError = true;
             }
         }

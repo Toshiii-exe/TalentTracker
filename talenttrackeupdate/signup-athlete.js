@@ -56,6 +56,13 @@ form.addEventListener("submit", async (e) => {
     return;
   }
 
+  // Sri Lankan Phone Validation: Supports 07... , +947... , 947... , 7...
+  const slPhoneRegex = /^(?:0|94|\+94)?7[01245678]\d{7}$/;
+  if (!slPhoneRegex.test(phone)) {
+    showError("Please enter a valid Sri Lankan mobile number (e.g., 0771234567).");
+    return;
+  }
+
   if (username.length < 4) {
     showError("Username must be at least 4 characters.");
     return;
