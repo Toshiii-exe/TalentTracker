@@ -4,8 +4,8 @@
 <head>
   <meta charset="UTF-8" />
   <title>Athlete Sign Up</title>
-    <!-- Favicon -->
-    <link rel="icon" type="image/jpeg" href="assets/logo.jpg">
+  <!-- Favicon -->
+  <link rel="icon" type="image/jpeg" href="assets/logo.jpg">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <!-- Tailwind -->
@@ -29,6 +29,11 @@
 </head>
 
 <body class="min-h-screen bg-primaryBg flex items-center justify-center px-4">
+  <nav class="fixed top-0 left-0 w-full bg-white/10 backdrop-blur-sm z-50 px-6 py-4">
+    <div class="max-w-7xl mx-auto flex justify-between items-center text-primaryBlue">
+      <div class="text-xl font-extrabold tracking-tight">Talent Tracker</div>
+    </div>
+  </nav>
 
   <div class="w-full max-w-md bg-secondaryBg rounded-2xl shadow-xl p-8">
 
@@ -104,6 +109,7 @@
   </div>
 
   <script type="module" src="signup-athlete.js"></script>
+  <script type="module" src="i18n.js"></script>
 </body>
 
 </html>

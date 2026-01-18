@@ -73,6 +73,15 @@ onAuthChange(async (user) => {
             }
         }
 
+        // Prefill from user account
+        if (document.getElementById("email")) {
+            document.getElementById("email").value = user.email || "";
+            document.getElementById("email").readOnly = true;
+        }
+        if (document.getElementById("phone") && !document.getElementById("phone").value) {
+            document.getElementById("phone").value = user.phone || "";
+        }
+
         // Sync Locations
         syncDropdown("citySelect", "city", CITIES);
         syncDropdown("districtSelect", "district", DISTRICTS);

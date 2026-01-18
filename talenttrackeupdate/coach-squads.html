@@ -64,15 +64,17 @@
 
             <!-- Desktop Menu -->
             <div class="hidden md:flex space-x-8 font-semibold text-black items-center">
-                <a href="coach-home.html" class="hover:text-[var(--primary)] transition-colors duration-200">Home</a>
-                <a href="coach-dashboard.html"
+                <a href="coach-home.html" data-i18n="nav_home"
+                    class="hover:text-[var(--primary)] transition-colors duration-200">Home</a>
+                <a href="coach-dashboard.html" data-i18n="nav_dashboard"
                     class="hover:text-[var(--primary)] transition-colors duration-200">Dashboard</a>
-                <a href="coach-athletes.html"
+                <a href="coach-athletes.html" data-i18n="nav_discover"
                     class="hover:text-[var(--primary)] transition-colors duration-200">Discover Athletes</a>
-                <a href="coach-squads.html"
+                <a href="coach-squads.html" data-i18n="nav_squads"
                     class="hover:text-[var(--primary)] transition-colors duration-200 text-[var(--primary)]">Squad
                     Management</a>
-                <a href="events.html" class="hover:text-[var(--primary)] transition-colors duration-200">Events</a>
+                <a href="events.html" data-i18n="nav_events"
+                    class="hover:text-[var(--primary)] transition-colors duration-200">Events</a>
 
                 <div id="navUserArea" class="relative group">
                     <button id="navUserBtn"
@@ -290,6 +292,7 @@
         <span id="toastMsg">Squad updated successfully</span>
     </div>
 
+    <script type="module" src="i18n.js"></script>
     <script type="module" src="coach-squads.js"></script>
 </body>
 

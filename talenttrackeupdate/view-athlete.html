@@ -33,7 +33,7 @@
 
         .glass-card {
             background: rgba(255, 255, 255, 0.9);
-            backdrop-blur: 10px;
+            backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.2);
             box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
         }
@@ -73,8 +73,8 @@
     <!-- NAVIGATION -->
     <nav class="fixed top-0 left-0 w-full bg-white/80 backdrop-blur-md shadow-sm z-[100] border-b border-gray-100">
         <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-            <div class="text-xl font-black text-[var(--primary)] tracking-tighter">TALENT TRACKER <span
-                    class="text-slate-300">|</span> <span
+            <div class="text-xl font-black text-[var(--primary)] tracking-tighter" data-i18n="nav_title">TALENT TRACKER
+                <span class="text-slate-300">|</span> <span
                     class="text-xs font-bold text-slate-400 uppercase tracking-widest ml-1 text-sm">Coach Portal</span>
             </div>
             <a href="#" id="returnLink"
@@ -83,7 +83,7 @@
                     viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
                 </svg>
-                <span id="returnText">Return</span>
+                <span id="returnText" data-i18n="nav_return">Return</span>
             </a>
         </div>
     </nav>
@@ -282,6 +282,7 @@
         </div>
     </main>
 
+    <script type="module" src="i18n.js"></script>
     <script type="module" src="view-athlete.js"></script>
 </body>
 

@@ -152,20 +152,16 @@
 
     <nav class="fixed top-0 left-0 w-full bg-[var(--background)]/80 backdrop-blur-md shadow-sm z-[100]">
         <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-            <div class="text-2xl font-extrabold text-[var(--primary)] tracking-tight">Talent Tracker</div>
+            <div class="text-2xl font-extrabold text-[var(--primary)] tracking-tight" data-i18n="nav_title">Talent
+                Tracker</div>
             <div class="hidden md:flex space-x-8 font-semibold text-black items-center">
-                <a href="coach-home.html" class="hover:text-[var(--primary)] transition-all">Home</a>
-                <div id="navUserArea" class="relative group">
-                    <button id="navUserBtn"
-                        class="px-5 py-2 rounded-full bg-[var(--secondary)] text-white hover:bg-[var(--primary)] transition-all flex items-center gap-3">
-                        <div id="navUserPic" class="w-7 h-7 rounded-full bg-white hidden overflow-hidden">
-                            <img id="navUserImg" src="" alt="" class="w-full h-full object-cover hidden">
-                        </div>
-                        <span id="navBtnText">Coach Profile</span>
-                    </button>
-                </div>
+                <a href="coach-home.html" class="hover:text-[var(--primary)] transition-all"
+                    data-i18n="nav_home">Home</a>
+                <a href="coach-athletes.html" class="hover:text-[var(--primary)] transition-all"
+                    data-i18n="nav_discover">Discover Athletes</a>
+                <a href="coach-squads.html" class="hover:text-[var(--primary)] transition-all"
+                    data-i18n="nav_squads">Squad Management</a>
             </div>
-        </div>
     </nav>
 
     <main class="max-w-4xl mx-auto pt-32 pb-20 px-6">
@@ -519,6 +515,7 @@
     </footer>
 
     <script type="module" src="create-coach-profile.js"></script>
+    <script type="module" src="i18n.js"></script>
 </body>
 
 </html>

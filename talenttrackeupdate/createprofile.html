@@ -148,10 +148,15 @@
 
     <nav class="fixed top-0 left-0 w-full bg-[var(--background)]/80 backdrop-blur-md shadow-sm z-[100]">
         <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-            <div class="text-2xl font-extrabold text-[var(--primary)] tracking-tight">Talent Tracker</div>
+            <div class="text-2xl font-extrabold text-[var(--primary)] tracking-tight" data-i18n="nav_title">Talent
+                Tracker</div>
             <div class="hidden md:flex space-x-8 font-semibold text-black items-center">
-                <a href="athlete-home.html" class="hover:text-[var(--primary)] transition-colors duration-200">Home</a>
-                <a href="#" class="hover:text-[var(--primary)] transition-colors duration-200">Event</a>
+                <a href="athlete-home.html" class="hover:text-[var(--primary)] transition-colors duration-200"
+                    data-i18n="nav_home">Home</a>
+                <a href="dashboard.html" class="hover:text-[var(--primary)] transition-colors duration-200"
+                    data-i18n="nav_dashboard">Dashboard</a>
+                <a href="events.html" class="hover:text-[var(--primary)] transition-colors duration-200"
+                    data-i18n="nav_events">Events</a>
                 <div id="navUserArea" class="relative group">
                     <button id="navLoginBtn"
                         class="px-5 py-2 rounded-full bg-[var(--secondary)] text-white hover:bg-[var(--primary)] transition-all duration-300 font-semibold shadow-lg hover:shadow-xl flex items-center gap-3 transform hover:-translate-y-0.5">
@@ -172,7 +177,7 @@
                             <p id="navUserEmail" class="text-sm font-semibold text-gray-800 break-words leading-tight">
                             </p>
                         </div>
-                        <button id="logoutBtn"
+                        <button id="logoutBtn" data-i18n="nav_logout"
                             class="w-full bg-red-50 text-red-600 py-3 rounded-xl hover:bg-red-100 transition-colors duration-200 text-sm font-bold flex items-center justify-center gap-2">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -196,8 +201,8 @@
                 <button id="mobileMenuBackBtn"
                     class="absolute top-6 right-6 text-4xl text-[var(--primary)]">&times;</button>
 
-                <a href="athlete-home.html" class="hover:scale-110 transition-transform">Home</a>
-                <a href="#" class="hover:scale-110 transition-transform">Event</a>
+                <a href="athlete-home.html" data-i18n="nav_home" class="hover:scale-110 transition-transform">Home</a>
+                <a href="#" data-i18n="nav_events" class="hover:scale-110 transition-transform">Event</a>
 
                 <div class="w-full max-w-xs border-t border-[var(--primary)]/20 mt-4 pt-8 flex flex-col items-center">
                     <div class="mb-6 flex flex-col items-center">
@@ -208,7 +213,7 @@
                         <p class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Athlete</p>
                         <p id="mobileUserName" class="text-xl font-extrabold text-[var(--primary)]"></p>
                     </div>
-                    <button id="mobileLogoutBtn"
+                    <button id="mobileLogoutBtn" data-i18n="nav_logout"
                         class="w-full px-8 py-4 rounded-full bg-red-600 text-white hover:bg-red-700 transition-all shadow-xl active:scale-95 font-bold text-lg">
                         Logout
                     </button>
@@ -439,7 +444,8 @@
         </div>
     </footer>
 
-    <script type="module" src="createprofile.js" defer></script>
+    <script type="module" src="createprofile.js"></script>
+    <script type="module" src="i18n.js"></script>
 </body>
 
 </html>

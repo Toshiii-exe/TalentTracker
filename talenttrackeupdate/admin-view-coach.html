@@ -37,7 +37,8 @@
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
                     </svg>
-                    <span class="font-bold text-sm uppercase tracking-wide">Back to Directory</span>
+                    <span class="font-bold text-sm uppercase tracking-wide" data-i18n="nav_return">Back to
+                        Directory</span>
                 </a>
             </div>
             <div class="flex items-center gap-4">
@@ -64,7 +65,7 @@
                             <p id="navUserEmail" class="text-sm font-semibold text-gray-800 break-words leading-tight">
                                 Admin</p>
                         </div>
-                        <button id="logoutBtn"
+                        <button id="logoutBtn" data-i18n="nav_logout"
                             class="w-full bg-red-50 text-red-600 py-3 rounded-xl hover:bg-red-100 transition-colors duration-200 text-sm font-bold flex items-center justify-center gap-2">
                             Logout
                         </button>
@@ -188,6 +189,7 @@
 
     </main>
 
+    <script type="module" src="i18n.js"></script>
     <script type="module" src="admin-view.js"></script>
 </body>
 

@@ -20,6 +20,14 @@ export function initI18n() {
 }
 
 /**
+ * Gets a translation for a key
+ */
+export function getTranslation(key) {
+    const dict = translations[currentLang] || translations[DEFAULT_LANG];
+    return dict[key] || key;
+}
+
+/**
  * Injects the language switcher into the Navbar.
  * It tries to find the '.max-w-7xl' container inside 'nav'.
  */
@@ -27,7 +35,7 @@ function injectLanguageSwitcher() {
     // Check if already injected
     if (document.getElementById("languageSwitcher")) return;
 
-    const navContainer = document.querySelector("nav .max-w-7xl");
+    const navContainer = document.querySelector("nav .max-w-7xl, nav .container, nav > div");
     if (!navContainer) {
         console.warn("I18n: Navbar container not found. Skipping switcher injection.");
         return;
@@ -35,7 +43,9 @@ function injectLanguageSwitcher() {
 
     // Create Select Element
     const wrapper = document.createElement("div");
-    wrapper.className = "relative hidden md:block order-last lg:order-none";
+    const hasMobileMenu = !!document.getElementById("mobileMenu");
+    wrapper.className = `relative ${hasMobileMenu ? "hidden md:block" : "block"} order-last lg:order-none`;
+    wrapper.id = "navbarLanguageSwitcherWrapper";
     wrapper.innerHTML = `
     <select id="languageSwitcher" 
             class="appearance-none bg-white/40 hover:bg-white/60 border border-[var(--primary)]/20 text-[var(--primary)] font-bold py-1.5 pl-3 pr-8 rounded-xl cursor-pointer focus:outline-none focus:ring-2 focus:ring-[var(--secondary)] text-xs transition-all min-w-[120px] shadow-sm">
