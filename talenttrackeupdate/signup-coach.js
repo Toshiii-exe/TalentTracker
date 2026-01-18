@@ -58,12 +58,9 @@ form.addEventListener("submit", async (e) => {
         showError("Username must be at least 4 characters.");
         return;
     }
-    // OPTIMIZATION: Security Requirement - Strict Password Validation
-    // Updated regex to be more permissive with special characters (allowing #, &, etc.)
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/;
-
-    if (!passwordRegex.test(password)) {
-        showError("Password must be 8+ chars, with Uppercase, Lowercase, Number & Special Char.");
+    // Simplifed Password Requirement: Only 8+ characters
+    if (password.length < 8) {
+        showError("Password must be at least 8 characters long.");
         return;
     }
 
