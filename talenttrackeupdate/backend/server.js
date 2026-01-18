@@ -1,5 +1,10 @@
 const path = require('path');
-require('dotenv').config({ path: path.join(__dirname, '.env') });
+// Load .env only if it exists (local development)
+try {
+    require('dotenv').config({ path: path.join(__dirname, '.env') });
+} catch (e) {
+    console.log('No .env file found, using system environment variables.');
+}
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
