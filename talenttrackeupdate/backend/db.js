@@ -1,10 +1,10 @@
 const mysql = require('mysql2');
 
-const dbHost = process.env.DB_HOST || process.env.MYSQLHOST || 'mysql.railway.internal';
+const dbHost = process.env.DB_HOST || process.env.MYSQLHOST || 'tramway.proxy.rlwy.net';
 const dbUser = process.env.DB_USER || process.env.MYSQLUSER || 'root';
-const dbPass = process.env.DB_PASSWORD || process.env.MYSQLPASSWORD || '';
+const dbPass = process.env.DB_PASSWORD || process.env.MYSQLPASSWORD || 'KrDQmTqYlGzkeCPmmRUAgvaQhYSpIYSs';
 const dbName = process.env.DB_NAME || process.env.MYSQLDATABASE || 'railway';
-const dbPort = process.env.DB_PORT || process.env.MYSQLPORT || 3306;
+const dbPort = process.env.DB_PORT || process.env.MYSQLPORT || 47970;
 
 console.log(`Database Connection Debug:`);
 console.log(`- Host: ${dbHost}`);
