@@ -1,0 +1,12 @@
+# Nixpacks Plan for Railway
+[phases.setup]
+nixPkgs = ["nodejs-18_x"]
+
+[phases.install]
+cmds = ["cd talenttrackeupdate && npm install"]
+
+[phases.build]
+cmds = ["cd talenttrackeupdate/backend && npm install"]
+
+[start]
+cmd = "node talenttrackeupdate/backend/server.js"
