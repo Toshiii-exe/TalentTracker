@@ -3,11 +3,8 @@ const router = express.Router();
 const db = require('../db');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { OAuth2Client } = require('google-auth-library');
 
 const SECRET_KEY = process.env.JWT_SECRET || 'your_super_secret_key_change_this';
-const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
-const client = new OAuth2Client(GOOGLE_CLIENT_ID);
 
 // REGISTER
 router.post('/register', async (req, res) => {
