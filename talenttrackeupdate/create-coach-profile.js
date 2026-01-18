@@ -20,7 +20,13 @@ onAuthChange(async (user) => {
 
     const emailInput = document.getElementById("email");
     if (emailInput) {
-        emailInput.value = user.email;
+        emailInput.value = user.email || "";
+    }
+    const phoneInput = document.getElementById("phone");
+    if (phoneInput) {
+        if (!phoneInput.value && user.phone) {
+            phoneInput.value = user.phone;
+        }
     }
 
     try {

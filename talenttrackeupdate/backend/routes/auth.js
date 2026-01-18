@@ -6,9 +6,19 @@ const jwt = require('jsonwebtoken');
 
 const SECRET_KEY = process.env.JWT_SECRET || 'your_super_secret_key_change_this';
 
+// Helper to normalize phone numbers (e.g., convert 077... to 77...)
+function normalizePhone(phone) {
+    if (!phone) return phone;
+    let p = phone.trim().replace(/\s+/g, '').replace(/-/g, '');
+    if (p.startsWith('0')) p = p.substring(1);
+    if (p.startsWith('+94')) p = p.substring(3);
+    return p;
+}
+
 // REGISTER
 router.post('/register', async (req, res) => {
-    const { email, password, username, role, phone } = req.body;
+    let { email, password, username, role, phone } = req.body;
+    phone = normalizePhone(phone);
 
     if (!password || !role || !phone) {
         return res.status(400).json({ error: 'Password, role, and phone are required' });
@@ -52,7 +62,12 @@ router.post('/register', async (req, res) => {
 
 // LOGIN
 router.post('/login', async (req, res) => {
-    const { email: identifier, password, role } = req.body;
+    let { email: identifier, password, role } = req.body;
+
+    // If identifier looks like a phone, normalize it
+    if (identifier && /^\d+$/.test(normalizePhone(identifier))) {
+        identifier = normalizePhone(identifier);
+    }
 
     try {
         let query = 'SELECT * FROM users WHERE (email = ? OR phone = ? OR username = ?)';
@@ -83,7 +98,8 @@ router.post('/login', async (req, res) => {
                 uid: user.id,
                 email: user.email,
                 username: user.username,
-                role: user.role
+                role: user.role,
+                phone: user.phone
             }
         });
     } catch (error) {

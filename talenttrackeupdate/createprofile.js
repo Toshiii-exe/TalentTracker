@@ -106,8 +106,14 @@ onAuthChange(async (user) => {
     if (document.getElementById("navUserEmail")) document.getElementById("navUserEmail").textContent = user.email;
     if (document.getElementById("mobileUserEmail")) document.getElementById("mobileUserEmail").textContent = user.email;
     if (document.getElementById("email")) {
-        document.getElementById("email").value = user.email;
+        document.getElementById("email").value = user.email || "";
         document.getElementById("email").readOnly = true;
+    }
+    if (document.getElementById("phone")) {
+        // Prefill phone from user account if not already set (e.g. for new profile)
+        if (!document.getElementById("phone").value && user.phone) {
+            document.getElementById("phone").value = user.phone;
+        }
     }
 
     const urlParams = new URLSearchParams(window.location.search);
