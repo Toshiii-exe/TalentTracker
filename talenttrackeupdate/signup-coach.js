@@ -1,0 +1,87 @@
+import {
+    registerUser,
+    logoutUser
+} from "./register.js";
+import { showLoading, hideLoading, showSuccessModal } from "./ui-utils.js";
+
+const form = document.getElementById("signupForm");
+const errorText = document.getElementById("signupError");
+
+function showError(message) {
+    if (errorText) {
+        errorText.textContent = message;
+        errorText.classList.remove("hidden");
+    } else {
+        alert(message);
+    }
+}
+
+function clearError() {
+    if (errorText) {
+        errorText.textContent = "";
+        errorText.classList.add("hidden");
+    }
+}
+
+const togglePassword = document.getElementById("togglePassword");
+const passwordInput = document.getElementById("password");
+if (togglePassword && passwordInput) {
+    togglePassword.addEventListener("click", () => {
+        const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
+        passwordInput.setAttribute("type", type);
+        const openPaths = togglePassword.querySelectorAll(".eye-open");
+        const closedPath = togglePassword.querySelector(".eye-closed");
+        if (type === "text") {
+            openPaths.forEach(p => p.classList.add("hidden"));
+            closedPath.classList.remove("hidden");
+        } else {
+            openPaths.forEach(p => p.classList.remove("hidden"));
+            closedPath.classList.add("hidden");
+        }
+    });
+}
+
+form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    clearError();
+
+    const username = document.getElementById("username").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const phone = document.getElementById("phone").value.trim();
+    const password = document.getElementById("password").value;
+
+    if (!username || !password || !phone) {
+        showError("Username, Phone, and Password are required.");
+        return;
+    }
+    if (username.length < 4) {
+        showError("Username must be at least 4 characters.");
+        return;
+    }
+    // OPTIMIZATION: Security Requirement - Strict Password Validation
+    // Must satisfy: 8+ chars, Uppercase, Lowercase, Number, Special Char
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+    if (!passwordRegex.test(password)) {
+        showError("Password must be 8+ chars, with Uppercase, Lowercase, Number & Special Char.");
+        return;
+    }
+
+    try {
+        showLoading();
+        await registerUser(email, password, username, "coach", phone);
+        await logoutUser();
+
+        showSuccessModal("Coach account created successfully! Please login.", () => {
+            window.location.href = "index.html";
+        });
+
+    } catch (err) {
+        console.error(err);
+        showError(err.message || "Registration failed.");
+    } finally {
+        hideLoading();
+    }
+});
+
+
