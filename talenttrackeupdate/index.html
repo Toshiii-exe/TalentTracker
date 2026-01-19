@@ -318,44 +318,25 @@
       <div
         class="bg-white w-full max-w-4xl rounded-[2rem] md:rounded-[3rem] overflow-hidden flex flex-col md:flex-row shadow-2xl transform transition-all relative">
 
-        <!-- Sidebar Roles -->
-        <div
-          class="w-full md:w-1/3 bg-gradient-to-br from-[#2E5F9E] to-[#1a3a63] text-white p-5 md:p-10 flex flex-col justify-center border-b md:border-b-0 md:border-r border-white/10 shrink-0">
-          <h3
-            class="font-black text-lg md:text-2xl mb-4 md:mb-8 text-center md:text-left uppercase tracking-widest opacity-90"
-            data-i18n="login_modal_as">
-            Login as</h3>
-          <div class="grid grid-cols-2 md:grid-cols-1 gap-2 md:gap-4 px-1 md:px-0">
-            <button id="role-athlete" onclick="switchRole('athlete')"
-              class="role-btn px-2 md:px-6 py-3 rounded-xl md:rounded-2xl bg-white/10 hover:bg-white/20 text-white text-[11px] sm:text-xs md:text-base font-bold transition-all border border-white/20 active:scale-95"
-              data-i18n="role_athlete">Athlete</button>
-            <button id="role-coach" onclick="switchRole('coach')"
-              class="role-btn px-2 md:px-6 py-3 rounded-xl md:rounded-2xl bg-white/10 hover:bg-white/20 text-white text-[11px] sm:text-xs md:text-base font-bold transition-all border border-white/20 active:scale-95"
-              data-i18n="role_coach">Coach</button>
-            <button id="role-federation" onclick="switchRole('federation')"
-              class="role-btn px-2 md:px-6 py-3 rounded-xl md:rounded-2xl bg-white/10 hover:bg-white/20 text-white text-[11px] sm:text-xs md:text-base font-bold transition-all border border-white/20 active:scale-95 leading-tight col-span-2 md:col-span-1"
-              data-i18n="role_federation">Admin (Fed)</button>
-          </div>
-        </div>
-
-        <!-- Login Form Content -->
-        <div class="w-full md:w-2/3 p-6 sm:p-8 md:p-14 relative bg-white flex flex-col justify-center">
+        <!-- Simplified Unified Login Form -->
+        <div class="w-full p-8 md:p-14 relative bg-white flex flex-col justify-center min-h-[500px]">
           <!-- Close Button -->
           <button onclick="closeLogin()"
-            class="absolute top-4 right-4 md:top-6 md:right-6 p-2 text-gray-400 hover:text-gray-800 hover:bg-gray-100 rounded-full transition-all z-10"
+            class="absolute top-6 right-6 p-2 text-gray-400 hover:text-gray-800 hover:bg-gray-100 rounded-full transition-all z-10"
             aria-label="Close">
-            <svg class="w-6 h-6 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path>
             </svg>
           </button>
 
           <div class="max-w-md mx-auto w-full">
-            <h2 id="loginTitle" class="text-3xl md:text-4xl font-black text-gray-900 mb-2 tracking-tight"
-              data-i18n="role_athlete">
-              Athlete Login
-            </h2>
-            <p class="text-gray-500 mb-10 font-medium" data-i18n="login_modal_subtitle">Please enter your details below
-            </p>
+            <div class="text-center mb-10">
+              <img src="assets/logo.jpg" alt="Logo" class="h-16 w-16 mx-auto mb-4 object-contain">
+              <h2 id="loginTitle" class="text-4xl font-black text-gray-900 mb-2 tracking-tight" data-i18n="nav_login">
+                Login
+              </h2>
+              <p class="text-gray-500 font-medium" data-i18n="login_modal_subtitle">Please enter your details below</p>
+            </div>
 
             <form class="space-y-6" onsubmit="return false;">
               <div class="space-y-2">

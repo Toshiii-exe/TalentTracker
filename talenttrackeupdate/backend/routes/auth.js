@@ -62,7 +62,8 @@ router.post('/register', async (req, res) => {
 
 // LOGIN
 router.post('/login', async (req, res) => {
-    let { email: identifier, password, role } = req.body;
+    let { email, identifier: bodyIdentifier, password, role } = req.body;
+    let identifier = bodyIdentifier || email;
 
     // If identifier looks like a phone, normalize it
     if (identifier && /^\d+$/.test(normalizePhone(identifier))) {
@@ -70,13 +71,8 @@ router.post('/login', async (req, res) => {
     }
 
     try {
-        let query = 'SELECT * FROM users WHERE (email = ? OR phone = ? OR username = ?)';
-        let params = [identifier, identifier, identifier];
-
-        if (role) {
-            query += ' AND role = ?';
-            params.push(role);
-        }
+        const query = 'SELECT * FROM users WHERE (email = ? OR phone = ? OR username = ?)';
+        const params = [identifier, identifier, identifier];
 
         const [users] = await db.query(query, params);
         if (users.length === 0) {

@@ -68,7 +68,7 @@ export async function registerUser(email, password, username, role = 'athlete', 
   return { user: user };
 }
 
-export async function loginUser(email, password, role) {
+export async function loginUser(email, password, role = null) {
   const data = await API.login(email, password, role);
   auth.currentUser = data.user;
   localStorage.setItem('user', JSON.stringify(data.user));

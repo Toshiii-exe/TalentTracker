@@ -15,35 +15,10 @@ const loginBtn = document.getElementById("loginBtn");
 const loginErr = document.getElementById("loginError");
 const identifierInput = document.getElementById("login-identifier");
 const passwordInput = document.getElementById("login-password");
-const roleBtns = document.querySelectorAll('.role-btn');
-
-let currentRole = "athlete";
-
-// Role Switcher
-window.switchRole = (role) => {
-    currentRole = role;
-    let titleKey = `login_title_${role}`;
-    let title = getTranslation(titleKey);
-
-    if (loginTitle) loginTitle.innerText = title;
-
-    roleBtns.forEach(btn => {
-        btn.classList.remove('bg-white', 'text-[#2E5F9E]');
-        btn.classList.add('bg-white/10', 'text-white');
-    });
-    const activeBtn = document.getElementById(`role-${role}`);
-    if (activeBtn) {
-        activeBtn.classList.remove('bg-white/10', 'text-white');
-        activeBtn.classList.add('bg-white', 'text-[#2E5F9E]');
-    }
-
-    if (identifierInput) identifierInput.value = "";
-    if (passwordInput) passwordInput.value = "";
-    clearErr();
-};
+// Role Switcher logic removed - system now auto-detects role on login
 
 document.addEventListener('DOMContentLoaded', () => {
-    if (window.switchRole) window.switchRole('athlete');
+    // Basic init if needed
 });
 
 // Modal Logic
@@ -127,18 +102,19 @@ if (loginBtn) {
         showLoading();
 
         try {
-            // Direct login with backend supporting Email/Phone/Username
-            const data = await loginUser(identifier, password, currentRole);
+            // Role is now detected automatically by backend
+            const data = await loginUser(identifier, password);
+            const userRole = data.user.role;
 
             // Save user data
             localStorage.setItem("tt_username", data.user.username);
-            localStorage.setItem("tt_role", currentRole);
+            localStorage.setItem("tt_role", userRole);
 
-            if (currentRole === "athlete") {
+            if (userRole === "athlete") {
                 window.location.href = "athlete-home.html";
-            } else if (currentRole === "coach") {
+            } else if (userRole === "coach") {
                 window.location.href = "coach-home.html";
-            } else if (currentRole === "federation") {
+            } else if (userRole === "federation" || userRole === "admin") {
                 window.location.href = "federation-home.html";
             }
 
@@ -146,7 +122,7 @@ if (loginBtn) {
             console.error(e);
             let errMsg = getTranslation("login_err_failed");
             if (e.message && e.message.includes("Invalid credentials")) {
-                errMsg += getTranslation("login_err_invalid");
+                errMsg = getTranslation("login_err_invalid");
             } else {
                 errMsg += (e.message || getTranslation("login_err_invalid"));
             }

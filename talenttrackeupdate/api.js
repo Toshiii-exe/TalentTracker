@@ -2,11 +2,11 @@ const isLocal = !window.location.hostname || window.location.hostname === 'local
 export const BACKEND_URL = isLocal ? 'http://localhost:3000' : window.location.origin;
 export const API_URL = `${BACKEND_URL}/api`;
 
-export async function login(email, password, role) {
+export async function login(identifier, password, role = null) {
     const res = await fetch(`${API_URL}/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password, role })
+        body: JSON.stringify({ identifier, password, role })
     });
     if (!res.ok) {
         const err = await res.json();
