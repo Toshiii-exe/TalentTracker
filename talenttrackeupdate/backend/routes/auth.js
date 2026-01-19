@@ -53,7 +53,7 @@ router.post('/register', async (req, res) => {
         const userId = result.insertId;
         const token = jwt.sign({ id: userId, email, role }, SECRET_KEY, { expiresIn: '24h' });
 
-        res.json({ message: 'User registered successfully', token, user: { uid: userId, email, username, role, phone } });
+        res.json({ message: 'User registered successfully', token, user: { uid: userId, email, username, role, phone, preferred_language: 'en' } });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Server error during registration' });
@@ -99,7 +99,8 @@ router.post('/login', async (req, res) => {
                 email: user.email,
                 username: user.username,
                 role: user.role,
-                phone: user.phone
+                phone: user.phone,
+                preferred_language: user.preferred_language || 'en'
             }
         });
     } catch (error) {
@@ -129,5 +130,20 @@ router.get('/user/:username', async (req, res) => {
 });
 
 // Google Auth routes removed per user request
+
+
+// UPDATE PREFERRED LANGUAGE
+router.put('/language', async (req, res) => {
+    const { userId, language } = req.body;
+    if (!userId || !language) return res.status(400).json({ error: 'UserId and language required' });
+
+    try {
+        await db.query('UPDATE users SET preferred_language = ? WHERE id = ?', [language, userId]);
+        res.json({ message: 'Language updated successfully' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error updating language' });
+    }
+});
 
 module.exports = router;

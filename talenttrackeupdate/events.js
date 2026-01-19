@@ -62,6 +62,13 @@ async function init() {
     setupNavbarInteractions();
     setupNavigation();
     await loadEvents();
+
+    // Check for "view" query param to show event details immediately
+    const urlParams = new URLSearchParams(window.location.search);
+    const viewId = urlParams.get('view');
+    if (viewId) {
+        viewEventDetails(parseInt(viewId));
+    }
 }
 
 function setupNavbarInteractions() {

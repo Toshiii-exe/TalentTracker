@@ -1,4 +1,4 @@
-import { BACKEND_URL } from "./api.js";
+import { BACKEND_URL, API_URL } from "./api.js";
 
 // =======================================================
 // UI UTILITIES
@@ -344,6 +344,115 @@ export function updateNavbar(user, profileData = null) {
       emailEl.textContent = user.email || "No Email";
     }
   }
+
+  // Init Notifications if logged in
+  if (user && (user.uid || user.id)) {
+    initNotifications(user.uid || user.id);
+  }
+}
+
+/**
+ * Notifications Logic
+ */
+export function initNotifications(userId) {
+  if (document.getElementById("navNotificationArea")) return;
+
+  const navContainer = document.querySelector("nav .max-w-7xl, nav .container, nav > div");
+  const desktopMenu = navContainer?.querySelector(".hidden.md\\:flex");
+
+  if (!desktopMenu) return;
+
+  // 1. Inject Notification Bell
+  const bellWrapper = document.createElement("div");
+  bellWrapper.id = "navNotificationArea";
+  bellWrapper.className = "relative mr-4";
+  bellWrapper.innerHTML = `
+    <button id="notificationBell" class="p-2 rounded-full hover:bg-white/20 text-[var(--primary)] relative transition-all">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+      </svg>
+      <span id="notificationBadge" class="absolute top-1 right-1 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full hidden border-2 border-[var(--background)]">0</span>
+    </button>
+    <div id="notificationDropdown" class="hidden absolute right-0 mt-3 w-80 bg-white shadow-2xl rounded-2xl text-black p-4 border border-gray-100 z-[100] animate-fade">
+      <div class="flex justify-between items-center mb-4 border-b pb-2">
+        <h3 class="font-bold text-gray-800">Notifications</h3>
+        <button id="clearNotifications" class="text-xs text-blue-600 hover:underline">Clear All</button>
+      </div>
+      <div id="notificationList" class="max-h-64 overflow-y-auto space-y-3">
+        <p class="text-xs text-gray-400 text-center py-4">No new notifications</p>
+      </div>
+    </div>
+  `;
+
+  // Insert before the user dropdown area
+  const userArea = document.getElementById("navUserArea") || document.getElementById("navLoginBtn");
+  if (userArea) {
+    desktopMenu.insertBefore(bellWrapper, userArea);
+  } else {
+    desktopMenu.appendChild(bellWrapper);
+  }
+
+  // 2. Event Listeners
+  const bell = document.getElementById("notificationBell");
+  const dropdown = document.getElementById("notificationDropdown");
+  const list = document.getElementById("notificationList");
+  const badge = document.getElementById("notificationBadge");
+
+  bell?.addEventListener("click", (e) => {
+    e.stopPropagation();
+    dropdown?.classList.toggle("hidden");
+    // Mark as read when opened?
+  });
+
+  document.addEventListener("click", () => {
+    dropdown?.classList.add("hidden");
+  });
+
+  // 3. Fetching Logic
+  async function fetchNotifications() {
+    try {
+      const res = await fetch(`${API_URL}/notifications/${userId}`);
+      if (!res.ok) return;
+      const notifications = await res.json();
+
+      const unreadCount = notifications.filter(n => !n.is_read).length;
+      if (unreadCount > 0) {
+        badge.textContent = unreadCount;
+        badge.classList.remove("hidden");
+      } else {
+        badge.classList.add("hidden");
+      }
+
+      if (notifications.length === 0) {
+        list.innerHTML = '<p class="text-xs text-gray-400 text-center py-4">No new notifications</p>';
+        return;
+      }
+
+      list.innerHTML = notifications.map(n => `
+        <div class="p-3 rounded-xl ${n.is_read ? 'bg-gray-50' : 'bg-blue-50 border-l-4 border-blue-500'} cursor-pointer hover:bg-gray-100 transition-all" onclick="window.markReadAndGo(${n.id}, ${n.related_id})">
+          <p class="text-sm font-semibold text-gray-800 leading-tight">${n.message}</p>
+          <p class="text-[10px] text-gray-400 mt-1">${new Date(n.created_at).toLocaleString()}</p>
+        </div>
+      `).join("");
+    } catch (e) {
+      console.error("Fetch notifications failed", e);
+    }
+  }
+
+  window.markReadAndGo = async (id, eventId) => {
+    try {
+      await fetch(`${API_URL}/notifications/${id}/read`, { method: 'PUT' });
+      if (eventId) {
+        window.location.href = `events.html?view=${eventId}`;
+      } else {
+        fetchNotifications();
+      }
+    } catch (e) { }
+  };
+
+  fetchNotifications();
+  // Poll every 30 seconds
+  setInterval(fetchNotifications, 30000);
 }
 
 /**

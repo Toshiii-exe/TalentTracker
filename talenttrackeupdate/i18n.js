@@ -1,4 +1,5 @@
 import { translations } from "./translations.js";
+import { updateLanguage } from "./api.js";
 
 // --- CONFIG ---
 const DEFAULT_LANG = "en";
@@ -15,6 +16,18 @@ let currentLang = localStorage.getItem(STORAGE_KEY) || DEFAULT_LANG;
  * Call this on page load.
  */
 export function initI18n() {
+    // Try to get language from stored user object first
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+        try {
+            const user = JSON.parse(storedUser);
+            if (user.preferred_language) {
+                currentLang = user.preferred_language;
+                localStorage.setItem(STORAGE_KEY, currentLang);
+            }
+        } catch (e) { }
+    }
+
     injectLanguageSwitcher();
     applyLanguage(currentLang);
 }
@@ -147,6 +160,20 @@ export function setLanguage(lang) {
     currentLang = lang;
     localStorage.setItem(STORAGE_KEY, lang);
     applyLanguage(lang);
+
+    // Sync with backend if user is logged in
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+        try {
+            const user = JSON.parse(storedUser);
+            if (user.uid || user.id) {
+                updateLanguage(user.uid || user.id, lang).catch(err => console.error("Failed to sync language:", err));
+                // Update local user object too
+                user.preferred_language = lang;
+                localStorage.setItem('user', JSON.stringify(user));
+            }
+        } catch (e) { }
+    }
 
     // Update Select value if changed via other means
     const select = document.getElementById("languageSwitcher");

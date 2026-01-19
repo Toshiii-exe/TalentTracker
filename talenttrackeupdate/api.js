@@ -330,3 +330,36 @@ export async function getAdminNote(userId, role) {
     }
     return res.json();
 }
+// Language Preference
+export async function updateLanguage(userId, language) {
+    const res = await fetch(`${API_URL}/auth/language`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId, language })
+    });
+    if (!res.ok) throw new Error('Failed to update language');
+    return res.json();
+}
+
+// Notifications API
+export async function getNotifications(userId) {
+    const res = await fetch(`${API_URL}/notifications/${userId}`);
+    if (!res.ok) throw new Error('Failed to fetch notifications');
+    return res.json();
+}
+
+export async function markNotificationRead(id) {
+    const res = await fetch(`${API_URL}/notifications/${id}/read`, {
+        method: 'PUT'
+    });
+    if (!res.ok) throw new Error('Failed to mark notification as read');
+    return res.json();
+}
+
+export async function deleteNotification(id) {
+    const res = await fetch(`${API_URL}/notifications/${id}`, {
+        method: 'DELETE'
+    });
+    if (!res.ok) throw new Error('Failed to delete notification');
+    return res.json();
+}

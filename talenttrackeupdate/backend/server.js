@@ -14,6 +14,7 @@ const athleteRoutes = require('./routes/athlete');
 const coachRoutes = require('./routes/coach');
 const uploadRoutes = require('./routes/upload');
 const eventsRoutes = require('./routes/events');
+const notificationRoutes = require('./routes/notifications');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -40,6 +41,7 @@ app.use('/api/athlete', athleteRoutes);
 app.use('/api/coach', coachRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/events', eventsRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 // Fallback to index.html for SPA-like navigation (if needed)
 app.get('*', (req, res) => {
