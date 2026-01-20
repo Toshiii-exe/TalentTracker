@@ -167,7 +167,17 @@ form.addEventListener("submit", async (e) => {
     const validateField = (id) => {
         const el = document.getElementById(id);
         const err = document.getElementById(`error-${id}`);
-        if (!el.value) {
+        if (!el) return;
+
+        // Force sync for city dropdown if not 'Other'
+        if (id === "city") {
+            const select = document.getElementById("citySelect");
+            if (select && select.value && select.value !== "Other") {
+                el.value = select.value;
+            }
+        }
+
+        if (!el.value || !el.value.trim()) {
             if (err) err.classList.add("visible");
             el.classList.add("input-error");
             isValid = false;
@@ -176,7 +186,7 @@ form.addEventListener("submit", async (e) => {
 
     const requiredFields = [
         "fullName", "gender", "dob", "nationality", "nic",
-        "email", "phone", "street", "city", "district", "province",
+        "phone", "street", "city", "district", "province",
         "coachingLevel", "coachingRole", "experience", "organization",
         "highestQual", "issuingAuthority", "certId"
     ];
@@ -185,14 +195,20 @@ form.addEventListener("submit", async (e) => {
 
     // Email format validation
     const emailInput = document.getElementById("email");
-    if (emailInput.value) {
-        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailPattern.test(emailInput.value)) {
-            document.getElementById("error-email").textContent = "Please enter a valid email address";
-            document.getElementById("error-email").classList.add("visible");
-            emailInput.classList.add("input-error");
-            isValid = false;
-        }
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailInput.value || !emailInput.value.trim()) {
+        // Empty email field
+        document.getElementById("error-email").textContent = "Valid email address is required.";
+        document.getElementById("error-email").classList.add("visible");
+        emailInput.classList.add("input-error");
+        isValid = false;
+    } else if (!emailPattern.test(emailInput.value.trim())) {
+        // Invalid email format
+        document.getElementById("error-email").textContent = "Please enter a valid email address";
+        document.getElementById("error-email").classList.add("visible");
+        emailInput.classList.add("input-error");
+        isValid = false;
     }
 
     const dobInput = document.getElementById("dob");
