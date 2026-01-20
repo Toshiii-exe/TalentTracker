@@ -108,8 +108,13 @@ onAuthChange(async (user) => {
     if (document.getElementById("navUserEmail")) document.getElementById("navUserEmail").textContent = user.email;
     if (document.getElementById("mobileUserEmail")) document.getElementById("mobileUserEmail").textContent = user.email;
     if (document.getElementById("email")) {
-        document.getElementById("email").value = user.email || "";
-        document.getElementById("email").readOnly = true;
+        if (user.email) {
+            document.getElementById("email").value = user.email;
+            document.getElementById("email").readOnly = true;
+        } else {
+            document.getElementById("email").value = "";
+            document.getElementById("email").readOnly = false;
+        }
     }
     if (document.getElementById("phone")) {
         // Prefill phone from user account if not already set (e.g. for new profile)

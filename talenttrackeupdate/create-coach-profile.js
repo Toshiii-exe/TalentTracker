@@ -75,8 +75,13 @@ onAuthChange(async (user) => {
 
         // Prefill from user account
         if (document.getElementById("email")) {
-            document.getElementById("email").value = user.email || "";
-            document.getElementById("email").readOnly = true;
+            if (user.email) {
+                document.getElementById("email").value = user.email;
+                document.getElementById("email").readOnly = true;
+            } else {
+                document.getElementById("email").value = "";
+                document.getElementById("email").readOnly = false;
+            }
         }
         if (document.getElementById("phone") && !document.getElementById("phone").value) {
             document.getElementById("phone").value = user.phone || "";
