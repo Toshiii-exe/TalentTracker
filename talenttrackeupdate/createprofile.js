@@ -13,7 +13,8 @@ import { getTranslation, applyLanguage } from "./i18n.js";
 // Global Variables
 let currentUID = null;
 const form = document.getElementById("athleteForm");
-const submitBtn = form?.querySelector("button[type='button']");
+// Target specifically by ID (we will add this ID to HTML)
+let submitBtn = document.getElementById("submitBtn") || form?.querySelector("button[onclick*='submitProfile']");
 
 // Limits for Event Validation
 const eventTimeLimits = {
@@ -241,7 +242,7 @@ async function loadProfileForEdit() {
     }
 }
 
-window.addEventRow = function (data = null) {
+export async function addEventRow(data = null) {
     const container = document.getElementById("eventsContainer");
     if (!container) return;
 
@@ -299,7 +300,7 @@ window.addEventRow = function (data = null) {
     `;
 
     container.appendChild(div);
-    applyLanguage(); // Re-apply translations to the new element
+    applyLanguage(); // This will now use currentLang by default
 
     if (data) {
         div.querySelector(".event-select").value = data.event || "";
@@ -307,7 +308,8 @@ window.addEventRow = function (data = null) {
         div.querySelector(".event-experience").value = data.experience || "";
         div.querySelector(".event-level").value = data.bestCompetition || "";
     }
-};
+}
+window.addEventRow = addEventRow;
 
 if (document.getElementById("eventsContainer") && !new URLSearchParams(window.location.search).get('edit')) {
     window.addEventRow();
@@ -360,12 +362,15 @@ if (categorySelect) {
     });
 }
 
-window.submitProfile = async function () {
+export async function submitProfile() {
+    // Re-verify submitBtn if it was missed at start
+    if (!submitBtn) submitBtn = document.getElementById("submitBtn");
+
     document.querySelectorAll('.error-text').forEach(e => e.classList.remove('visible'));
     document.querySelectorAll('.event-row').forEach(e => e.classList.remove('border-red-500'));
 
     let isFormBlank = true;
-    const allInputs = document.querySelectorAll('#athleteForm input, #athleteForm select');
+    const allInputs = document.querySelectorAll('#athleteForm input, #athleteForm select, #athleteForm textarea');
     for (let input of allInputs) {
         if (input.value && input.type !== 'submit' && input.type !== 'button') { isFormBlank = false; break; }
     }
@@ -389,7 +394,6 @@ window.submitProfile = async function () {
         }
 
         if (file) {
-            // Relaxed validation: Allow checking extension if type is missing or generic
             const isImage = file.type.startsWith("image/") || /\.(jpe?g|png)$/i.test(file.name);
             const isPdf = (file.type && file.type.toLowerCase().includes("pdf")) || /\.pdf$/i.test(file.name);
 
@@ -398,7 +402,7 @@ window.submitProfile = async function () {
                 hasRequiredError = true;
             }
 
-            if (file.size > 5 * 1024 * 1024) { // Increased to 5MB
+            if (file.size > 5 * 1024 * 1024) {
                 toggleError(`err-${id}`, "File too large (Max 5MB)");
                 hasRequiredError = true;
             }
@@ -421,7 +425,6 @@ window.submitProfile = async function () {
             toggleError(`err-${id}`, "Required");
             hasRequiredError = true;
         } else {
-            // Sri Lankan Phone Validation: Supports 07... , +947... , 947... , 7...
             const slPhoneRegex = /^(?:0|94|\+94)?(?:7[01245678]|11|2[134567]|3[12345678]|4[157]|5[12457]|6[3567]|81|91)\d{7}$/;
             if (id === "phone" && !slPhoneRegex.test(el.value)) {
                 toggleError("err-phone", "Invalid Sri Lankan phone number.");
@@ -464,7 +467,6 @@ window.submitProfile = async function () {
 
             if (evt && time && exp && lvl) {
                 if (eventTimeLimits[evt]) {
-                    // Relaxed check for now or keep strict
                     if (time < eventTimeLimits[evt].min || time > eventTimeLimits[evt].max) {
                         displayMessage(`This personal best time is impossible so enter correct value`, 'error');
                         hasLogicError = true; row.classList.add('border-red-500');
@@ -494,8 +496,10 @@ window.submitProfile = async function () {
         return;
     }
 
-    submitBtn.textContent = getTranslation("profile_status_uploading");
-    submitBtn.disabled = true;
+    if (submitBtn) {
+        submitBtn.textContent = getTranslation("profile_status_uploading");
+        submitBtn.disabled = true;
+    }
 
     try {
         showLoading();
@@ -512,7 +516,7 @@ window.submitProfile = async function () {
             const input = document.getElementById(id);
             if (input && input.files.length > 0) {
                 const file = input.files[0];
-                const url = await uploadFile(file, currentUID, id); // using API
+                const url = await uploadFile(file, currentUID, id);
                 fileData[id] = url;
             }
         }
@@ -562,13 +566,22 @@ window.submitProfile = async function () {
     } catch (error) {
         console.error(error);
         displayMessage("Error uploading profile: " + error.message, 'error');
-        submitBtn.textContent = "Submit Profile";
-        submitBtn.disabled = false;
+        if (submitBtn) {
+            submitBtn.textContent = getTranslation("profile_submit");
+            submitBtn.disabled = false;
+        }
     } finally {
         hideLoading();
     }
-};
+}
+window.submitProfile = submitProfile;
 // Init Location Dropdowns
-document.addEventListener('DOMContentLoaded', () => {
+function initLocations() {
     setupDropdownInput('citySelect', 'city', CITIES);
-});
+}
+
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initLocations);
+} else {
+    initLocations();
+}

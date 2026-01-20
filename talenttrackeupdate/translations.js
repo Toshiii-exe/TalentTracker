@@ -178,7 +178,10 @@ export const translations = {
     profile_err_blank: "Please fill the form before submitting.",
     profile_err_required_fields: "Please complete all required fields.",
     profile_status_uploading: "Uploading...",
-    profile_success_msg: "Profile saved successfully!"
+    profile_success_msg: "Profile saved successfully!",
+    location_select: "Select Location",
+    location_other: "Other (Specify below)",
+    location_other_placeholder: "Please type your location..."
   },
   si: {
     nav_home: "මුල් පිටුව",
@@ -359,7 +362,10 @@ export const translations = {
     profile_err_blank: "කරුණාකර ඉදිරිපත් කිරීමට පෙර පෝරමය පුරවන්න.",
     profile_err_required_fields: "කරුණාකර සියලුම අනිවාර්ය ක්ෂේත්‍ර සම්පූර්ණ කරන්න.",
     profile_status_uploading: "උඩුගත වෙමින් පවතී...",
-    profile_success_msg: "පැතිකඩ සාර්ථකව සුරකින ලදී!"
+    profile_success_msg: "පැතිකඩ සාර්ථකව සුරකින ලදී!",
+    location_select: "ස්ථානය තෝරන්න",
+    location_other: "වෙනත් (පහත සඳහන් කරන්න)",
+    location_other_placeholder: "කරුණාකර ඔබේ ස්ථානය ඇතුළත් කරන්න..."
   },
   ta: {
     nav_home: "முகப்பு",
@@ -540,6 +546,9 @@ export const translations = {
     profile_err_blank: "சமர்ப்பிக்கும் முன் படிவத்தை நிரப்பவும்.",
     profile_err_required_fields: "தயவுசெய்து தேவையான அனைத்து புலங்களையும் பூர்த்தி செய்யவும்.",
     profile_status_uploading: "பதிவேற்றப்படுகிறது...",
-    profile_success_msg: "சுயவிவரம் வெற்றிகரமாக சேமிக்கப்பட்டது!"
+    profile_success_msg: "சுயவிவரம் வெற்றிகரமாக சேமிக்கப்பட்டது!",
+    location_select: "இடத்தைத் தேர்ந்தெடுக்கவும்",
+    location_other: "மற்றவை (கீழே குறிப்பிடவும்)",
+    location_other_placeholder: "தயவுசெய்து உங்கள் இடத்தை உள்ளிடவும்..."
   }
 };

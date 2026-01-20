@@ -295,7 +295,7 @@
                     <div>
                         <label class="label-style" for="city" data-i18n="profile_city">City </label>
                         <select id="citySelect" class="input mb-2"></select>
-                        <input class="input" placeholder="Select 'Other' to type custom city"
+                        <input class="input hidden" placeholder="Select 'Other' to type custom city"
                             data-i18n-placeholder="profile_city_placeholder" id="city" required>
                         <p class="error-text" id="err-city">City is required.</p>
                     </div>
@@ -358,7 +358,7 @@
                         participate in. <b>You must select your
                             Experience Level and Best Competition for each event.</b></small>
                     <div id="eventsContainer" class="space-y-4"></div>
-                    <button type="button" onclick="addEventRow()"
+                    <button type="button" onclick="window.addEventRow()"
                         class="mt-4 text-sm bg-gray-200 hover:bg-gray-300 text-black py-2 px-4 rounded transition w-full border border-gray-400 font-semibold"
                         data-i18n="profile_add_event">+
                         Add Another Event</button>
@@ -461,7 +461,7 @@
             </div>
         </div>
 
-        <button type="button" onclick="submitProfile()"
+        <button type="button" id="submitBtn" onclick="window.submitProfile()"
             class="w-full bg-[var(--secondary)] text-white py-4 rounded-xl hover:bg-[var(--primary)] transition font-bold shadow-xl mb-12 text-lg"
             data-i18n="profile_submit">
             Submit Profile

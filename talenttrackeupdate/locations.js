@@ -1,3 +1,5 @@
+import { getTranslation } from "./i18n.js";
+
 export const PROVINCES = [
     "Western", "Central", "Southern", "North Western", "Sabaragamuwa",
     "North Central", "Uva", "Northern", "Eastern"
@@ -49,7 +51,7 @@ export function setupDropdownInput(selectId, inputId, dataList) {
     }
 
     // Clear existing options
-    select.innerHTML = '<option value="">Select Location</option>';
+    select.innerHTML = `<option value="">${getTranslation('location_select')}</option>`;
 
     // Populate
     dataList.forEach(item => {
@@ -62,7 +64,7 @@ export function setupDropdownInput(selectId, inputId, dataList) {
     // Add Other
     const otherOpt = document.createElement("option");
     otherOpt.value = "Other";
-    otherOpt.textContent = "Other (Specify below)";
+    otherOpt.textContent = getTranslation('location_other');
     select.appendChild(otherOpt);
 
     // Initial Sync
@@ -74,7 +76,7 @@ export function setupDropdownInput(selectId, inputId, dataList) {
             input.classList.remove("hidden");
             input.value = "";
             input.focus();
-            input.placeholder = "Please type your location...";
+            input.placeholder = getTranslation('location_other_placeholder');
             if (input.dataset.required === "true") input.setAttribute("required", "true");
         } else {
             input.classList.add("hidden");

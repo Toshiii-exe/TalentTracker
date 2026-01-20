@@ -185,7 +185,7 @@ export function setLanguage(lang) {
 /**
  * Update all data-i18n elements
  */
-function applyLanguage(lang) {
+export function applyLanguage(lang = currentLang) {
     const dict = translations[lang] || translations["en"];
 
     // 1. Update textContent
