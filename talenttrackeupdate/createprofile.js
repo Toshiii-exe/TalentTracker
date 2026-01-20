@@ -342,24 +342,70 @@ if (dobInput) {
     });
 }
 
+// Shared Consent Logic
+function checkConsent() {
+    const categorySelect = document.getElementById("category");
+    const dobInput = document.getElementById("dob");
+    const consentContainer = document.getElementById("consentContainer");
+    const consentInput = document.getElementById("consentDoc");
+
+    if (!categorySelect || !dobInput || !consentContainer) return;
+
+    let isRequired = false;
+    const category = categorySelect.value;
+    const under18Categories = ["U12", "U14", "U16", "U18"];
+
+    // 1. Check Category first
+    if (under18Categories.includes(category)) {
+        isRequired = true;
+    }
+
+    // 2. Check Age (Override)
+    if (dobInput.value) {
+        const dob = new Date(dobInput.value);
+        const today = new Date();
+        let age = today.getFullYear() - dob.getFullYear();
+        const m = today.getMonth() - dob.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
+            age--;
+        }
+
+        // If user is 18 or older, they NEVER need parental consent
+        if (age >= 18) {
+            isRequired = false;
+        }
+        // If user is strictly under 18, they ALWAYS need consent (safeguard)
+        else if (age < 18) {
+            isRequired = true;
+        }
+    }
+
+    // Apply UI Changes
+    if (isRequired) {
+        consentContainer.classList.remove("hidden");
+        const preview = document.getElementById("preview_consentDoc");
+        // Only require if no file is already present
+        if (!preview || preview.classList.contains('hidden')) {
+            consentInput.setAttribute("required", "true");
+        }
+    } else {
+        consentContainer.classList.add("hidden");
+        consentInput.removeAttribute("required");
+        document.getElementById("err-consentDoc").classList.remove("visible"); // potential error clear
+    }
+}
+
 const categorySelect = document.getElementById("category");
 const consentContainer = document.getElementById("consentContainer");
 const consentInput = document.getElementById("consentDoc");
-const under18Categories = ["U12", "U14", "U16", "U18"];
 
 if (categorySelect) {
-    categorySelect.addEventListener("change", function () {
-        if (under18Categories.includes(this.value)) {
-            consentContainer.classList.remove("hidden");
-            const preview = document.getElementById("preview_consentDoc");
-            if (!preview || preview.classList.contains('hidden')) {
-                consentInput.setAttribute("required", "true");
-            }
-        } else {
-            consentContainer.classList.add("hidden");
-            consentInput.removeAttribute("required");
-        }
-    });
+    categorySelect.addEventListener("change", checkConsent);
+}
+
+// Attach to DOB as well (appending to existing listener via separate attach or ensuring main logic calls it)
+if (dobInput) {
+    dobInput.addEventListener("change", checkConsent);
 }
 
 export async function submitProfile() {
@@ -421,10 +467,29 @@ export async function submitProfile() {
     requiredIds.forEach(id => {
         const el = document.getElementById(id);
         if (!el) return;
-        if (!el.value) {
-            toggleError(`err-${id}`, "Required");
+
+        let val = el.value ? el.value.trim() : "";
+
+        // Fix: If it's the hidden 'city' input, and it's hidden, 
+        // it means the user should have selected from the dropdown.
+        // We ensure it's synced.
+        if (id === "city") {
+            const select = document.getElementById("citySelect");
+            if (select && select.value && select.value !== "Other") {
+                val = select.value;
+                el.value = val; // Force sync
+            }
+        }
+
+        if (!val) {
+            console.log(`Validation Failed: ${id} is empty`);
+            toggleError(`err-${id}`, getTranslation('profile_mandatory'));
             hasRequiredError = true;
         } else {
+            // Case-insensitive check for Gender if needed, but let's just make sure it's truthy
+            console.log(`Validation Passed: ${id} = "${val}"`);
+            toggleError(`err-${id}`, "", false); // Clear error if valid
+
             const slPhoneRegex = /^(?:0|94|\+94)?(?:7[01245678]|11|2[134567]|3[12345678]|4[157]|5[12457]|6[3567]|81|91)\d{7}$/;
             if (id === "phone" && !slPhoneRegex.test(el.value)) {
                 toggleError("err-phone", "Invalid Sri Lankan phone number.");
