@@ -53,10 +53,16 @@ router.get('/:id', async (req, res) => {
 // Create event (Admin only)
 router.post('/', async (req, res) => {
     const {
-        title, description, event_date, event_time, venue, city, category,
+        event_date, event_time, venue,
         eligibility, rules, requirements, registration_deadline, max_participants,
         contact_email, contact_phone, image_url, created_by
     } = req.body;
+
+    // Sanitize inputs to ensure better matching
+    const title = req.body.title ? req.body.title.trim() : '';
+    const description = req.body.description ? req.body.description.trim() : '';
+    const city = req.body.city ? req.body.city.trim() : '';
+    const category = req.body.category ? req.body.category.trim() : '';
 
     try {
         const [result] = await db.query(
