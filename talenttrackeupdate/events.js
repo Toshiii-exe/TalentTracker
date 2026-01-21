@@ -73,16 +73,14 @@ function setupNavbarInteractions() {
     const navUserBtn = document.getElementById("navUserBtn");
     const navUserDropdown = document.getElementById("navUserDropdown");
 
-    if (navUserBtn && navUserDropdown) {
-        navUserBtn.addEventListener("click", (e) => {
+    if (navUserBtn) {
+        navUserBtn.addEventListener("click", async (e) => {
             e.stopPropagation();
-            navUserDropdown.classList.toggle("hidden");
-        });
-
-        // Close dropdown when clicking outside
-        document.addEventListener("click", () => {
-            if (!navUserDropdown.classList.contains("hidden")) {
-                navUserDropdown.classList.add("hidden");
+            if (confirm("Are you sure you want to logout?")) {
+                await signOut();
+                localStorage.removeItem("tt_username");
+                localStorage.removeItem("tt_role");
+                window.location.href = "index.html";
             }
         });
     }

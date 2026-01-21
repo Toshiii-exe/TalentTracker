@@ -181,12 +181,15 @@ if (mobileLoginBtn) {
 
 const navLoginBtn = document.getElementById("navLoginBtn");
 if (navLoginBtn) {
-    navLoginBtn.addEventListener("click", (e) => {
+    navLoginBtn.addEventListener("click", async (e) => {
         const loggedInUser = localStorage.getItem("tt_username");
         if (loggedInUser) {
             e.preventDefault();
-            const dropdown = document.getElementById("logoutDropdown");
-            dropdown.classList.toggle("hidden");
+            // Direct Logout
+            if (confirm("Are you sure you want to logout?")) {
+                await logoutUser();
+                window.location.reload();
+            }
             return;
         }
         e.preventDefault();

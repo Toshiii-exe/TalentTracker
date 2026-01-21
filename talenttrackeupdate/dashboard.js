@@ -78,7 +78,13 @@ let currentUID = null;
 let athleteDocData = null;
 
 // Navbar Interaction
-navLoginBtn?.addEventListener("click", (e) => { e.stopPropagation(); navUserDropdown?.classList.toggle("hidden"); });
+navLoginBtn?.addEventListener("click", async (e) => {
+    e.stopPropagation();
+    // Direct Logout as requested
+    if (confirm("Are you sure you want to logout?")) {
+        await handleLogout();
+    }
+});
 
 const toggleMobileMenu = (show) => {
     if (show) {
@@ -97,13 +103,13 @@ const toggleMobileMenu = (show) => {
 if (mobileMenuButton) mobileMenuButton.addEventListener('click', () => toggleMobileMenu(true));
 if (mobileBackBtn) mobileBackBtn.addEventListener('click', () => toggleMobileMenu(false));
 if (mobileBackdrop) mobileBackdrop.addEventListener('click', () => toggleMobileMenu(false));
-window.addEventListener("click", () => { navUserDropdown?.classList.add("hidden"); mobileUserDropdown?.classList.add("hidden"); });
+// window.addEventListener("click", () => { navUserDropdown?.classList.add("hidden"); mobileUserDropdown?.classList.add("hidden"); });
 
 // Auth Logic
 // Auth Logic
 onAuthChange(async (user) => {
     if (!user) {
-        window.location.href = "index.html";
+        window.location.replace("index.html");
         return;
     }
 
@@ -209,7 +215,7 @@ const handleLogout = async () => {
         await signOut();
         localStorage.removeItem("tt_username");
         localStorage.removeItem("tt_role");
-        window.location.href = "index.html";
+        window.location.replace("index.html");
     } catch (e) {
         console.error("Logout error", e);
     }
@@ -267,28 +273,26 @@ profilePicInput?.addEventListener("change", async (e) => {
         const isPdf = (file.type && file.type.toLowerCase().includes("pdf")) || /\.pdf$/i.test(file.name);
         const downloadUrl = await uploadFile(file, currentUID, "profilePic");
 
-        // Partial update logic - we need to duplicate logic or create partial update route.
-        // My POST /athlete/:id replaces entire profile if I send partial data that overwrites?
-        // Wait, my POST /id route queries:
-        //  `ON DUPLICATE KEY UPDATE full_name=VALUES(full_name)...`
-        // If I send "documents: {profilePic: ...}", other fields will be null in `req.body`?
-        // `p.fullName` will be undefined.
-        // My backend code: `athleteParams` construction uses `p.fullName`. If undefined, it inserts NULL (or error if strict).
-        // It inserts NULL.
-        // So a partial update via POST will wipe other fields.
-        // I need to fetch current data, merge, and save.
-        // Or create a PATCH endpoint.
-        // Since I'm lazy, I'll fetch current localized data (athleteDocData), update field, and push everything back.
-        // This is safe because `athleteDocData` is fresh from `onAuthChange` load.
+        // Fetch FRESH data to prevent overwriting
+        const freshSnap = await getAthleteProfile(currentUID);
+        let dataToSave = {};
 
-        // Deep merge helper not needed if I just modify `athleteDocData`
-        if (!athleteDocData.documents) athleteDocData.documents = {};
-        athleteDocData.documents.profilePic = downloadUrl;
+        if (freshSnap && freshSnap.exists) {
+            dataToSave = freshSnap;
+        } else if (athleteDocData) {
+            // Fallback to local if fetch fails (unlikely if exists)
+            dataToSave = athleteDocData;
+        }
 
-        // Save to cache as well
+        if (!dataToSave.documents) dataToSave.documents = {};
+        dataToSave.documents.profilePic = downloadUrl;
+
+        // Save
+        await saveAthleteProfile(currentUID, dataToSave);
+
+        // Update Local
+        athleteDocData = dataToSave;
         localStorage.setItem(`tt_profile_${currentUID}`, JSON.stringify(athleteDocData));
-
-        await saveAthleteProfile(currentUID, athleteDocData);
 
         let displayUrl = downloadUrl;
         if (displayUrl.startsWith('/')) displayUrl = BACKEND_URL + displayUrl;
@@ -297,11 +301,13 @@ profilePicInput?.addEventListener("change", async (e) => {
             if (isPdf) {
                 profilePicEl.src = "https://cdn-icons-png.flaticon.com/512/337/337946.png"; // PDF Icon
             } else {
-                profilePicEl.src = displayUrl;
+                // Bust cache if it's the same URL
+                profilePicEl.src = displayUrl.startsWith('http') ? displayUrl + "?t=" + new Date().getTime() : displayUrl;
             }
         }
         showMessage("Profile photo updated!", "success");
     } catch (err) {
+        console.error("Upload error", err);
         showMessage("Failed to upload: " + err.message, "error");
     } finally {
         hideLoading();
@@ -401,7 +407,13 @@ function renderAchievements() {
     const events = athletic.events || [];
     const eventNames = events.map(e => e.event);
     const historyEvents = Object.keys(athleteDocData.performanceResults || {});
-    const allEvents = [...new Set([...eventNames, ...historyEvents, "100m", "200m", "400m", "800m", "1500m"])];
+    let allEvents = [...new Set([...eventNames, ...historyEvents])];
+
+    // Fallback events if none found
+    if (allEvents.length === 0) {
+        allEvents = ["100m", "200m", "400m", "800m", "1500m", "Long Jump", "High Jump", "Shot Put", "Javelin", "Discus"];
+    }
+
     const eventOptions = allEvents.map(e => `<option value="${e}">${e}</option>`).join("");
     const ageOptions = ["U12", "U14", "U16", "U18", "U20", "Open"].map(a => `<option value="${a}">${a}</option>`).join("");
 
@@ -474,7 +486,8 @@ window.uploadSlot = async (index, btnElement) => {
     const fileInput = document.getElementById(`slot_${index}_file`);
 
     if (!event || !age || !meet || !place || !fileInput.files[0]) {
-        return showMessage("Please fill all fields & select file", "error");
+        console.warn("Validation failed:", { event, age, meet, place, file: fileInput.files[0] });
+        return showMessage("Please fill all fields & select a file to upload.", "error");
     }
 
     const file = fileInput.files[0];
@@ -506,8 +519,8 @@ window.uploadSlot = async (index, btnElement) => {
         showMessage("Achievement Added!", "success");
 
     } catch (err) {
-        console.error(err);
-        showMessage("Upload Failed: " + err.message, "error");
+        console.error("Achievement Upload Error:", err);
+        showMessage("Upload Failed: " + (err.message || "Unknown error"), "error");
         if (btnElement) {
             btnElement.textContent = "Add";
             btnElement.disabled = false;
@@ -531,16 +544,27 @@ window.removeSlot = async (achId) => {
 };
 
 // Document Viewer
+// Document Viewer
 window.viewDocument = (url) => {
     if (!url) return;
+
+    // Fix relative URLs
+    let displayUrl = url;
+    if (displayUrl.startsWith('/') && !displayUrl.startsWith('http')) {
+        // Remove duplicate /api if present or just prepend base
+        // Actually BACKEND_URL usually lacks trailing slash, url has leading slash.
+        // But check if it starts with /api (some do)
+        displayUrl = BACKEND_URL + displayUrl;
+    }
+
     docContentArea.innerHTML = '<p class="text-gray-500">Loading...</p>';
     docViewModal.classList.remove('hidden');
 
-    const isPdf = url.includes('application/pdf') || /\.pdf$/i.test(url) || url.includes('type=pdf');
+    const isPdf = displayUrl.includes('application/pdf') || /\.pdf$/i.test(displayUrl) || displayUrl.includes('type=pdf');
     if (isPdf) {
-        docContentArea.innerHTML = `<iframe src="${url}" class="w-full h-full border-none rounded"></iframe>`;
+        docContentArea.innerHTML = `<iframe src="${displayUrl}" class="w-full h-full border-none rounded"></iframe>`;
     } else {
-        docContentArea.innerHTML = `<img src="${url}" class="max-w-full max-h-full object-contain shadow-lg" alt="Document">`;
+        docContentArea.innerHTML = `<img src="${displayUrl}" class="max-w-full max-h-full object-contain shadow-lg" alt="Document">`;
     }
 };
 

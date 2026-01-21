@@ -154,42 +154,46 @@ onAuthChange(async (user) => {
                 const file = e.target.files[0];
                 if (!file) return;
 
+                const originalText = navBtnText.textContent;
                 navBtnText.textContent = "Uploading...";
                 try {
+                    // Upload file first
                     const url = await uploadFile(file, user.uid, "profilePic");
 
-                    // Update DB with partial data
-                    // We need to fetch current and merge? 
-                    // Or just assume backend handles it?
-                    // My backend route requires full data usually, but creates if fails.
-                    // Wait, `saveCoachProfile` sends what we give it.
-                    // If I send { profilePic: url }, other fields might blank out if using my `coach.js` replacement logic line 77?
-                    // Line 77 in `coach.js` uses `d.fullName` etc.
-                    // If I only send `profilePic`, `fullName` is undefined => stored as NULL.
-                    // BAD.
-                    // I must merge.
+                    // Fetch LATEST full profile to ensure we don't overwrite other fields with stale data or nulls
+                    // We can't rely just on `coachData` from the initial load if other tab updated it, but close enough.
+                    // Better to re-fetch if possible, or just use `coachData` if we trust it.
+                    // Given `coachData` is local state, let's use it but ensure we aren't sending a partial object associated with `saveCoachProfile`.
+                    // `saveCoachProfile` expects the full object generally.
 
-                    if (coachData) {
-                        coachData.profilePic = url;
-                        // Use the data we fetched earlier
-                        // We need to map `coachData` (which is in frontend format) back to what `saveCoachProfile` expects.
-                        // `saveCoachProfile` expects keys like `fullName`, `gender`, etc.
-                        // My `getCoachProfile` returns these keys.
-                        // So passing `coachData` back is fine.
-                        await saveCoachProfile(user.uid, coachData);
-                    }
+                    // Safety check: Fetch fresh data just in case
+                    const freshData = await getCoachProfile(user.uid);
+                    const dataToSave = (freshData && freshData.exists) ? freshData : (coachData || {});
+
+                    dataToSave.profilePic = url;
+
+                    // Update backend
+                    await saveCoachProfile(user.uid, dataToSave);
+
+                    // Update Local State
+                    coachData = dataToSave;
 
                     const isPdf = file.type === "application/pdf" || /\.pdf$/i.test(file.name);
                     const displayUrl = isPdf ? "https://cdn-icons-png.flaticon.com/512/337/337946.png" : url;
 
-                    navImg.src = displayUrl;
+                    const imgEl = document.getElementById("navUserImg");
+                    if (imgEl) {
+                        imgEl.src = displayUrl;
+                        imgEl.classList.remove("hidden");
+                    }
                     if (mobileImg) mobileImg.src = displayUrl;
-                    navBtnText.textContent = name;
+
+                    navBtnText.textContent = originalText;
                     alert("Profile picture updated!");
                 } catch (err) {
                     console.error(err);
                     alert("Failed to upload image.");
-                    navBtnText.textContent = name;
+                    navBtnText.textContent = originalText;
                 }
             };
             navProfileInput.onchange = handleUpload;
@@ -205,12 +209,16 @@ onAuthChange(async (user) => {
 });
 
 if (navUserBtn) {
-    navUserBtn.addEventListener('click', (e) => {
+    navUserBtn.addEventListener('click', async (e) => {
         e.stopPropagation();
-        navUserDropdown.classList.toggle('hidden');
+        // Direct Logout as requested
+        if (confirm("Are you sure you want to logout?")) {
+            await handleLogout();
+        }
     });
 }
-window.addEventListener('click', () => { if (navUserDropdown) navUserDropdown.classList.add('hidden'); });
+// Dropdown hidden listener removed as we don't use dropdown anymore
+// window.addEventListener('click', () => { if (navUserDropdown) navUserDropdown.classList.add('hidden'); });
 
 async function fetchWatchlist(favorites) {
     const summaryList = document.getElementById("watchlistSummary");

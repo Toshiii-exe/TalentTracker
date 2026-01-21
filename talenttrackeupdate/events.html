@@ -267,11 +267,29 @@
     <!-- OPTIMIZATION: Mobile Responsiveness - Responsive padding -->
     <main class="max-w-7xl mx-auto pt-28 pb-20 px-4 md:px-6">
         <!-- Page Header -->
-        <div class="mb-12">
-            <h1 class="text-4xl font-black text-[var(--primary)] mb-2" data-i18n="events_title">Events</h1>
-            <p id="eventsSubtitle" class="text-slate-600 font-medium" data-i18n="events_subtitle">Discover and
-                participate in upcoming athletic
-                events</p>
+        <!-- Header -->
+        <div
+            class="relative bg-gradient-to-r from-[var(--primary)] to-[var(--secondary)] rounded-[2.5rem] p-8 md:p-12 mb-12 text-white shadow-2xl overflow-hidden group">
+            <div
+                class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -mr-16 -mt-16 group-hover:bg-white/20 transition-all duration-700">
+            </div>
+            <div
+                class="absolute bottom-0 left-0 w-40 h-40 bg-[var(--highlight)]/20 rounded-full blur-2xl -ml-10 -mb-10 animate-pulse">
+            </div>
+
+            <div class="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+                <div>
+                    <h1 class="text-3xl md:text-5xl font-black tracking-tight mb-3">Events & Competitions</h1>
+                    <p class="text-blue-100 font-medium text-lg max-w-xl data-i18n=" events_subtitle">Explore upcoming
+                        athletic meets, register for competitions, and track your schedule.</p>
+                </div>
+
+                <div
+                    class="bg-white/10 backdrop-blur-md px-6 py-4 rounded-2xl border border-white/20 flex flex-col items-center min-w-[140px]">
+                    <span id="totalEventsCount" class="text-4xl font-black text-[var(--highlight)]">0</span>
+                    <span class="text-xs font-bold uppercase tracking-widest text-blue-100">Upcoming</span>
+                </div>
+            </div>
         </div>
 
         <!-- Admin: Create Event Button -->
