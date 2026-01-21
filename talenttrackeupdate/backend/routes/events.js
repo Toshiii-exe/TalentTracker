@@ -73,32 +73,24 @@ router.post('/', async (req, res) => {
 
         // --- NOTIFICATION LOGIC ---
         try {
-            // 1. Find athletes in the same category
+            // 1. Find athletes in the same category (Simplified: Notify ALL athletes in the category)
             const [matchingAthletes] = await db.query(
-                `SELECT a.user_id, a.full_name, ae.event_name 
-                 FROM athletes a 
-                 JOIN athlete_events ae ON a.user_id = ae.athlete_id
-                 WHERE a.category = ?`,
+                `SELECT user_id, full_name, category 
+                 FROM athletes 
+                 WHERE category = ?`,
                 [category]
             );
 
-            // 2. Filter athletes whose event_name is mentioned in the event title or description
-            // (e.g., if event title has "100m" and athlete has "100m")
+            // 2. Create notifications for ALL matching athletes in that category
             const notifiedUserIds = new Set();
             for (const athlete of matchingAthletes) {
-                const eventLower = (title + ' ' + (description || '')).toLowerCase();
-                const athleteEventLower = athlete.event_name.toLowerCase();
-
-                if (eventLower.includes(athleteEventLower)) {
-                    notifiedUserIds.add(athlete.user_id);
-                }
+                notifiedUserIds.add(athlete.user_id);
             }
 
-            // 3. Create notifications for matching athletes
             if (notifiedUserIds.size > 0) {
                 const notificationValues = Array.from(notifiedUserIds).map(uid => [
                     uid,
-                    `Special Notification: A new ${category} event matching your distance (${title}) has been posted!`,
+                    `New Event Alert: A new ${category} event "${title}" has been posted!`,
                     'event',
                     eventId
                 ]);
