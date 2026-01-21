@@ -742,29 +742,44 @@ window.viewEventDetails = async function (eventId) {
 };
 
 // WhatsApp Event Notification Logic
+// WhatsApp Event Notification Logic
 async function sendEventWhatsAppNotification(event) {
     try {
         showLoading();
-        // 1. Fetch all athletes to get numbers
-        // Note: In a real large app, this should be paginated or handled by backend, 
-        // but for this MVP/Role, we fetch all.
-        const athletes = await API.getAllAthletes();
+
+        // 1. Fetch athletes specifically for this category
+        // In a real production app, we would have a backend endpoint like /athletes?category=U18
+        // For now, we fetch all and filter client-side to ensure accuracy with current API capabilities.
+        const allAthletes = await API.getAllAthletes();
         hideLoading();
 
-        // 2. Filter Valid Numbers
-        const phones = athletes
+        // 2. Filter athletes by Category match
+        const targetCategory = event.category ? event.category.trim() : '';
+
+        const targetedAthletes = allAthletes.filter(athlete => {
+            const athleteCat = athlete.category || athlete.personal?.category; // Handle different structure possibilities
+            return athleteCat === targetCategory;
+        });
+
+        // 3. Extract Valid Phone Numbers
+        const phones = targetedAthletes
             .map(a => a.personal?.phone || a.phone)
             .filter(p => p && p.trim().length > 0);
 
-        // 3. Construct Message
-        const msg = `*New Event Alert: ${event.title}*\n\n📅 ${new Date(event.event_date).toLocaleDateString()}\n📍 ${event.city}\n\n${event.description}\n\nRegister now on Talent Tracker!`;
+        if (phones.length === 0) {
+            await showAlert(`Event created! No athletes found in category "${targetCategory}" to notify via WhatsApp.`, "Info");
+            return;
+        }
 
-        // 4. Populate Modal
-        waEventCount.textContent = phones.length;
+        // 4. Construct Message
+        const msg = `*New Event Alert: ${event.title}*\n\n📅 ${new Date(event.event_date).toLocaleDateString()}\n📍 ${event.city}\n🏆 Category: ${targetCategory}\n\n${event.description}\n\nRegister now on Talent Tracker!`;
+
+        // 5. Populate Modal
+        waEventCount.textContent = phones.length; // Show count of TARGETED athletes
         waEventMessage.value = msg;
         waEventNumbers.value = phones.join(',');
 
-        // 5. Show Modal
+        // 6. Show Modal
         waEventModal.classList.remove("hidden");
         setTimeout(() => {
             waEventModalContent.classList.remove("scale-95", "opacity-0");
