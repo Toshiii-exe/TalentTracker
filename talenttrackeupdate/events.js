@@ -16,10 +16,7 @@ const openWaEventBtn = document.getElementById("openWaEventBtn");
 
 let currentUser = null;
 let currentRole = null;
-let allEvents = [];
-let filteredEvents = [];
-let editingEventId = null;
-let calendar = null;
+// View State
 let currentView = 'grid';
 
 // Check if user is already logged in
@@ -244,109 +241,11 @@ window.applyFilters = function () {
         emptyState.classList.add("hidden");
     }
 
-    if (currentView === 'grid') {
-        renderEvents();
-    } else {
-        updateCalendarEvents();
-    }
+    // Always render grid since calendar is removed
+    renderEvents();
 }
 
-window.switchView = function (view) {
-    currentView = view;
 
-    const gridBtn = document.getElementById('viewGridBtn');
-    const calendarBtn = document.getElementById('viewCalendarBtn');
-    const gridView = document.getElementById('eventsGrid');
-    const calendarView = document.getElementById('calendarView');
-    const emptyState = document.getElementById('emptyState');
-
-    if (view === 'grid') {
-        // Show Grid
-        gridBtn.classList.remove('text-slate-500', 'hover:text-[var(--primary)]', 'hover:bg-slate-50');
-        gridBtn.classList.add('bg-[var(--primary)]', 'text-white', 'shadow-md');
-
-        calendarBtn.classList.add('text-slate-500', 'hover:text-[var(--primary)]', 'hover:bg-slate-50');
-        calendarBtn.classList.remove('bg-[var(--primary)]', 'text-white', 'shadow-md');
-
-        gridView.classList.remove('hidden');
-        calendarView.classList.add('hidden');
-
-        // Re-check empty state for grid
-        if (filteredEvents.length === 0) emptyState.classList.remove("hidden");
-
-        renderEvents();
-    } else {
-        // Show Calendar
-        calendarBtn.classList.remove('text-slate-500', 'hover:text-[var(--primary)]', 'hover:bg-slate-50');
-        calendarBtn.classList.add('bg-[var(--primary)]', 'text-white', 'shadow-md');
-
-        gridBtn.classList.add('text-slate-500', 'hover:text-[var(--primary)]', 'hover:bg-slate-50');
-        gridBtn.classList.remove('bg-[var(--primary)]', 'text-white', 'shadow-md');
-
-        gridView.classList.add('hidden');
-        emptyState.classList.add('hidden'); // Hide empty state in calendar view (calendar handles empty itself)
-        calendarView.classList.remove('hidden');
-
-        if (!calendar) {
-            initCalendar();
-        } else {
-            calendar.render();
-            updateCalendarEvents();
-        }
-    }
-}
-
-function initCalendar() {
-    const calendarEl = document.getElementById('calendar');
-    calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: 'dayGridMonth',
-        headerToolbar: {
-            left: 'prev,next today',
-            center: 'title',
-            right: 'dayGridMonth,timeGridWeek,listMonth'
-        },
-        events: getCalendarEvents(),
-        eventClick: function (info) {
-            viewEventDetails(parseInt(info.event.id));
-        },
-        eventTimeFormat: {
-            hour: '2-digit',
-            minute: '2-digit',
-            meridiem: 'short'
-        },
-        height: 'auto',
-        aspectRatio: 1.8,
-    });
-    calendar.render();
-}
-
-function updateCalendarEvents() {
-    if (calendar) {
-        calendar.removeAllEvents();
-        calendar.addEventSource(getCalendarEvents());
-    }
-}
-
-function getCalendarEvents() {
-    return filteredEvents.map(event => {
-        let dateStr = event.event_date;
-        if (typeof dateStr === 'string' && dateStr.includes('T')) {
-            dateStr = dateStr.split('T')[0];
-        }
-
-        return {
-            id: event.id,
-            title: event.title,
-            start: dateStr + (event.event_time ? 'T' + event.event_time : ''),
-            // You can add more props like color based on status/category if needed
-            color: event.category === 'Open' ? '#012A61' : '#275A91',
-            extendedProps: {
-                venue: event.venue,
-                city: event.city
-            }
-        };
-    });
-}
 
 function renderEvents() {
     const grid = document.getElementById("eventsGrid");
@@ -396,14 +295,22 @@ function createEventCard(event) {
         </button>
     ` : '';
 
-    // Add to Calendar Button (Available for everyone)
-    const calendarButton = `
-        <button onclick="addToCalendar(${event.id})" class="w-full mt-2 py-2 bg-white border-2 border-[var(--primary)] text-[var(--primary)] rounded-xl font-semibold hover:bg-slate-50 transition-all flex items-center justify-center gap-2">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-            </svg>
-            Add to Calendar
-        </button>
+    // Add to Calendar Buttons
+    const calendarButtons = `
+        <div class="grid grid-cols-2 gap-2 mt-2">
+            <button onclick="addToGoogleCalendar(${event.id})" class="py-2 px-3 bg-white border-2 border-[var(--primary)] text-[var(--primary)] rounded-xl font-bold hover:bg-slate-50 transition-all text-xs flex items-center justify-center gap-1" title="Add to Google Calendar">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                   <path d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .533 5.333.533 12S5.867 24 12.48 24c3.44 0 6.04-1.133 8.04-3.2 2.04-2.04 2.627-5.027 2.627-7.44 0-.733-.067-1.44-.187-2.12h-10.48z"/>
+                </svg>
+                Google
+            </button>
+            <button onclick="addToICSCalendar(${event.id})" class="py-2 px-3 bg-[var(--primary)] border-2 border-[var(--primary)] text-white rounded-xl font-bold hover:bg-[var(--secondary)] transition-all text-xs flex items-center justify-center gap-1" title="Download Calendar File">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                </svg>
+                Mobile/ICS
+            </button>
+        </div>
     `;
 
     return `
@@ -444,7 +351,7 @@ function createEventCard(event) {
                 </button>
                 
                 ${athleteButton}
-                ${calendarButton}
+                ${calendarButtons}
                 ${adminButtons}
             </div>
         </div>
@@ -620,7 +527,7 @@ window.registerForEvent = async function (eventId) {
     }
 };
 
-window.addToCalendar = function (eventId) {
+window.addToICSCalendar = function (eventId) {
     const event = allEvents.find(e => e.id === eventId);
     if (!event) return;
 
@@ -665,6 +572,37 @@ window.addToCalendar = function (eventId) {
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
+};
+
+window.addToGoogleCalendar = function (eventId) {
+    const event = allEvents.find(e => e.id === eventId);
+    if (!event) return;
+
+    // Dates must be YYYYMMDDTHHmmSSZ
+    const startStr = event.event_date.split('T')[0] + 'T' + (event.event_time ? event.event_time.replace(':', '') + '00' : '090000');
+    // Calculate End Time (Default 1 hour)
+    // Note: Simple logic, assuming user is in local time or we use simple strings. 
+    // Google Calendar 'dates' parameter expects UTC usually but simple string works for local time if no Z.
+    // However, to be safe let's try to format it correctly.
+
+    // Better approach: Use the stored date/time directly
+    const startDate = new Date(event.event_date.split('T')[0] + ' ' + (event.event_time || '09:00'));
+    const endDate = new Date(startDate.getTime() + 60 * 60 * 1000);
+
+    const formatDate = (date) => {
+        return date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+    };
+
+    const start = formatDate(startDate);
+    const end = formatDate(endDate);
+
+    const details = encodeURIComponent(event.description || '');
+    const title = encodeURIComponent(event.title || 'Event');
+    const location = encodeURIComponent((event.venue || '') + ', ' + (event.city || ''));
+
+    const gUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${details}&location=${location}&dates=${start}/${end}`;
+
+    window.open(gUrl, '_blank');
 };
 
 window.viewEventDetails = async function (eventId) {
