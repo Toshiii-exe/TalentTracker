@@ -546,31 +546,36 @@ window.removeSlot = async (achId) => {
 // Document Viewer
 // Document Viewer
 window.viewDocument = (url) => {
+    console.log("Viewing document:", url);
     if (!url) return;
 
-    // Fix relative URLs
     let displayUrl = url;
-    if (displayUrl.startsWith('/') && !displayUrl.startsWith('http')) {
-        // Remove duplicate /api if present or just prepend base
-        // Actually BACKEND_URL usually lacks trailing slash, url has leading slash.
-        // But check if it starts with /api (some do)
-        displayUrl = BACKEND_URL + displayUrl;
+    // Fix relative URLs (prepend backend URL if it's not a full absolute URL)
+    if (!displayUrl.startsWith('http') && !displayUrl.startsWith('blob:') && !displayUrl.startsWith('data:')) {
+        const cleanPath = displayUrl.startsWith('/') ? displayUrl : '/' + displayUrl;
+        displayUrl = BACKEND_URL + cleanPath;
     }
 
-    docContentArea.innerHTML = '<p class="text-gray-500">Loading...</p>';
-    docViewModal.classList.remove('hidden');
+    console.log("Resolved Display URL:", displayUrl);
 
-    const isPdf = displayUrl.includes('application/pdf') || /\.pdf$/i.test(displayUrl) || displayUrl.includes('type=pdf');
+    if (docContentArea) {
+        docContentArea.innerHTML = '<p class="text-gray-500">Loading...</p>';
+    }
+    if (docViewModal) {
+        docViewModal.classList.remove('hidden');
+    }
+
+    const isPdf = displayUrl.toLowerCase().includes('.pdf') || displayUrl.includes('application/pdf');
     if (isPdf) {
-        docContentArea.innerHTML = `<iframe src="${displayUrl}" class="w-full h-full border-none rounded"></iframe>`;
+        if (docContentArea) docContentArea.innerHTML = `<iframe src="${displayUrl}" class="w-full h-full border-none rounded"></iframe>`;
     } else {
-        docContentArea.innerHTML = `<img src="${displayUrl}" class="max-w-full max-h-full object-contain shadow-lg" alt="Document">`;
+        if (docContentArea) docContentArea.innerHTML = `<img src="${displayUrl}" class="max-w-full max-h-full object-contain shadow-lg" alt="Document">`;
     }
 };
 
 window.closeDocViewer = () => {
-    docViewModal.classList.add('hidden');
-    docContentArea.innerHTML = '';
+    if (docViewModal) docViewModal.classList.add('hidden');
+    if (docContentArea) docContentArea.innerHTML = '';
 };
 
 // Verification Logic (Placeholder Functionality in Dashboard)

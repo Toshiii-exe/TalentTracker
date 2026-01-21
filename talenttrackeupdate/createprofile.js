@@ -4,7 +4,8 @@ import {
     signOut,
     getAthleteProfile,
     saveAthleteProfile,
-    uploadFile
+    uploadFile,
+    BACKEND_URL
 } from "./register.js";
 import { showLoading, hideLoading, updateNavbar } from "./ui-utils.js";
 import { setupDropdownInput, syncDropdown, CITIES } from "./locations.js";
@@ -214,7 +215,11 @@ async function loadProfileForEdit() {
                             prevDiv.innerHTML = `<img src="${src}" class="w-20 h-20 rounded border border-gray-300 object-cover"><span class="text-xs text-green-600 font-bold block mt-1">✓ Current Saved</span>`;
                         }
                     } else {
-                        prevDiv.innerHTML = `<a href="${src}" target="_blank" class="text-blue-600 underline text-sm">View Saved File</a> <span class="text-xs text-green-600 font-bold">✓ Saved</span>`;
+                        let fullSrc = src;
+                        if (!fullSrc.startsWith('http') && !fullSrc.startsWith('blob:') && !fullSrc.startsWith('data:')) {
+                            fullSrc = BACKEND_URL + (fullSrc.startsWith('/') ? fullSrc : '/' + fullSrc);
+                        }
+                        prevDiv.innerHTML = `<a href="${fullSrc}" target="_blank" class="text-blue-600 underline text-sm">View Saved File</a> <span class="text-xs text-green-600 font-bold">✓ Saved</span>`;
                     }
                     inputEl.removeAttribute("required");
                 }

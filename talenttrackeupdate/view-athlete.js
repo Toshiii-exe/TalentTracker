@@ -148,13 +148,13 @@ async function loadAthleteData() {
             }
 
             if (d.idDoc) {
-                btnIdDoc.href = d.idDoc;
+                btnIdDoc.onclick = () => window.viewDocument(d.idDoc);
                 btnIdDoc.classList.remove("hidden");
             } else {
                 btnIdDoc.classList.add("hidden");
             }
             if (d.consentDoc) {
-                btnConsentDoc.href = d.consentDoc;
+                btnConsentDoc.onclick = () => window.viewDocument(d.consentDoc);
                 btnConsentDoc.classList.remove("hidden");
             } else {
                 btnConsentDoc.classList.add("hidden");
