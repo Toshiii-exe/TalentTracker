@@ -72,38 +72,50 @@ router.post('/', async (req, res) => {
         const eventId = result.insertId;
 
         // --- NOTIFICATION LOGIC ---
-        try {
-            // 1. Find athletes in the same category (Simplified: Notify ALL athletes in the category)
-            const [matchingAthletes] = await db.query(
-                `SELECT user_id, full_name, category 
-                 FROM athletes 
-                 WHERE category = ?`,
-                [category]
-            );
+        // 1. Find athletes in the same category AND getting their specific events
+        // We join specific registered events to see if they match the new event title
+        const [athletesWithEvents] = await db.query(
+            `SELECT a.user_id, a.full_name, ae.event_name 
+                 FROM athletes a 
+                 JOIN athlete_events ae ON a.user_id = ae.athlete_id
+                 WHERE a.category = ?`,
+            [category]
+        );
 
-            // 2. Create notifications for ALL matching athletes in that category
-            const notifiedUserIds = new Set();
-            for (const athlete of matchingAthletes) {
-                notifiedUserIds.add(athlete.user_id);
+        // 2. Filter: Only notify if the athlete's registered event (e.g. "200m") 
+        // is found in the new Event's Title or Description.
+        const notifiedUserIds = new Set();
+
+        // Normalize event text for comparison (lowercase)
+        const newEventText = (title + ' ' + (description || '')).toLowerCase();
+
+        for (const record of athletesWithEvents) {
+            if (!record.event_name) continue;
+
+            // Normalize athlete's event name (e.g. "200m", "Long Jump")
+            const athleteEvent = record.event_name.toLowerCase().trim();
+
+            // Check if the specific event name exists in the posted event title/description
+            // Example: Athlete has "200m". Posted Event is "Annual 200m Sprint". -> MATCH.
+            if (athleteEvent.length > 0 && newEventText.includes(athleteEvent)) {
+                notifiedUserIds.add(record.user_id);
             }
-
-            if (notifiedUserIds.size > 0) {
-                const notificationValues = Array.from(notifiedUserIds).map(uid => [
-                    uid,
-                    `New Event Alert: A new ${category} event "${title}" has been posted!`,
-                    'event',
-                    eventId
-                ]);
-
-                await db.query(
-                    'INSERT INTO notifications (user_id, message, type, related_id) VALUES ?',
-                    [notificationValues]
-                );
-            }
-        } catch (notifErr) {
-            console.error("NOTIFICATION ERROR:", notifErr);
-            // Don't fail the whole request if notifications fail
         }
+
+        if (notifiedUserIds.size > 0) {
+            const notificationValues = Array.from(notifiedUserIds).map(uid => [
+                uid,
+                `New Event Alert: A new event matching your sport (${title}) has been posted for ${category}!`,
+                'event',
+                eventId
+            ]);
+
+            await db.query(
+                'INSERT INTO notifications (user_id, message, type, related_id) VALUES ?',
+                [notificationValues]
+            );
+        }
+
         // --- END NOTIFICATION LOGIC ---
 
         // Respond immediately so the UI doesn't hang
