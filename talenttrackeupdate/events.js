@@ -328,17 +328,24 @@ function updateCalendarEvents() {
 }
 
 function getCalendarEvents() {
-    return filteredEvents.map(event => ({
-        id: event.id,
-        title: event.title,
-        start: event.event_date + (event.event_time ? 'T' + event.event_time : ''),
-        // You can add more props like color based on status/category if needed
-        color: event.category === 'Open' ? '#012A61' : '#275A91',
-        extendedProps: {
-            venue: event.venue,
-            city: event.city
+    return filteredEvents.map(event => {
+        let dateStr = event.event_date;
+        if (typeof dateStr === 'string' && dateStr.includes('T')) {
+            dateStr = dateStr.split('T')[0];
         }
-    }));
+
+        return {
+            id: event.id,
+            title: event.title,
+            start: dateStr + (event.event_time ? 'T' + event.event_time : ''),
+            // You can add more props like color based on status/category if needed
+            color: event.category === 'Open' ? '#012A61' : '#275A91',
+            extendedProps: {
+                venue: event.venue,
+                city: event.city
+            }
+        };
+    });
 }
 
 function renderEvents() {
