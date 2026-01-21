@@ -17,9 +17,12 @@ const identifierInput = document.getElementById("login-identifier");
 const passwordInput = document.getElementById("login-password");
 // Role Switcher logic removed - system now auto-detects role on login
 
-document.addEventListener('DOMContentLoaded', () => {
-    // Basic init if needed
-});
+const getStartBtn = document.getElementById("getStartBtn");
+if (getStartBtn) {
+    getStartBtn.addEventListener("click", () => {
+        window.openLogin();
+    });
+}
 
 // Modal Logic
 window.openLogin = () => {
