@@ -81,6 +81,8 @@ export async function logoutUser() {
   auth.currentUser = null;
   localStorage.removeItem('user');
   localStorage.removeItem('token');
+  localStorage.removeItem('tt_username');
+  localStorage.removeItem('tt_role');
   notifyListeners(null);
 }
 
@@ -131,7 +133,7 @@ export async function removeFavorite(coachId, athleteId) {
 }
 
 export async function uploadFile(file, uid, category) {
-  return API.uploadFile(file);
+  return API.uploadFile(file, uid, category);
 }
 
 export async function addAchievement(uid, data) {

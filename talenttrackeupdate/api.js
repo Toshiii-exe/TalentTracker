@@ -144,9 +144,11 @@ export async function register(email, password, username, role, phone) {
     return res.json();
 }
 
-export async function uploadFile(file) {
+export async function uploadFile(file, uid, category) {
     const formData = new FormData();
     formData.append('file', file);
+    if (uid) formData.append('uid', uid);
+    if (category) formData.append('category', category);
 
     const res = await fetch(`${API_URL}/upload`, {
         method: 'POST',
