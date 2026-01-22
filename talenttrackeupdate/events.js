@@ -16,6 +16,9 @@ const openWaEventBtn = document.getElementById("openWaEventBtn");
 
 let currentUser = null;
 let currentRole = null;
+let editingEventId = null;
+let allEvents = [];
+let filteredEvents = [];
 // View State
 let currentView = 'grid';
 

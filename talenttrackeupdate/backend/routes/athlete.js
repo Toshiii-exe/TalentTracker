@@ -21,7 +21,8 @@ router.get('/', async (req, res) => {
             personal: {
                 fullName: a.full_name,
                 address: { city: a.city },
-                city: a.city
+                city: a.city,
+                phone: a.phone
             },
             email: a.email,
             athletic: {
