@@ -181,19 +181,32 @@ if (mobileLoginBtn) {
 
 const navLoginBtn = document.getElementById("navLoginBtn");
 if (navLoginBtn) {
-    navLoginBtn.addEventListener("click", async (e) => {
+    navLoginBtn.addEventListener("click", (e) => {
         const loggedInUser = localStorage.getItem("tt_username");
         if (loggedInUser) {
             e.preventDefault();
-            // Direct Logout
-            if (confirm(getTranslation("msg_confirm_logout") || "Are you sure you want to logout?")) {
-                await logoutUser();
-                window.location.reload();
+            e.stopPropagation();
+            const dropdown = document.getElementById("logoutDropdown");
+            if (dropdown) {
+                dropdown.classList.toggle("hidden");
+            } else {
+                // Fallback if dropdown missing (should not happen if HTML is correct)
+                if (confirm(getTranslation("msg_confirm_logout") || "Are you sure you want to logout?")) {
+                    logoutUser().then(() => window.location.reload());
+                }
             }
             return;
         }
         e.preventDefault();
         window.openLogin();
+    });
+
+    // Close dropdown when clicking outside
+    window.addEventListener("click", () => {
+        const dropdown = document.getElementById("logoutDropdown");
+        if (dropdown && !dropdown.classList.contains("hidden")) {
+            dropdown.classList.add("hidden");
+        }
     });
 }
 
