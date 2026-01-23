@@ -146,7 +146,7 @@ function setupNavigation() {
     const eventForm = document.getElementById("eventForm");
 
     if (createBtn) {
-        createBtn.addEventListener("click", () => openEventModal());
+        // createBtn.addEventListener("click", () => openEventModal());
     }
 
     if (cancelBtn) {
@@ -360,60 +360,74 @@ function createEventCard(event) {
 }
 
 function openEventModal(event = null) {
-    editingEventId = event ? event.id : null;
-    const modal = document.getElementById("eventModal");
-    const content = document.getElementById("eventModalContent");
-    const title = document.getElementById("modalTitle");
-    const form = document.getElementById("eventForm");
+    try {
+        editingEventId = event ? event.id : null;
+        const modal = document.getElementById("eventModal");
+        const content = document.getElementById("eventModalContent");
+        const title = document.getElementById("modalTitle");
+        const form = document.getElementById("eventForm");
 
-    title.textContent = event ? "Edit Event" : "Create New Event";
+        if (!modal || !content || !title || !form) {
+            console.error("Missing modal elements");
+            alert("Error: Modal elements not found!");
+            return;
+        }
 
-    if (event) {
-        // Normalizing date to YYYY-MM-DD for input[type="date"]
-        const formatDateForInput = (dateStr) => {
-            if (!dateStr) return '';
-            // If it's a date string from MySQL (YYYY-MM-DD), use it directly
-            if (typeof dateStr === 'string' && dateStr.includes('T')) {
-                return dateStr.split('T')[0];
-            }
-            if (typeof dateStr === 'string' && /^\d{4}-\d{2}-\d{2}/.test(dateStr)) {
-                return dateStr.substring(0, 10);
-            }
-            // Fallback for Date objects
-            const d = new Date(dateStr);
-            if (isNaN(d.getTime())) return '';
-            return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
-        };
+        title.textContent = event ? "Edit Event" : "Create New Event";
 
-        // Pre-fill form with event data
-        document.getElementById("eventTitle").value = event.title || '';
-        document.getElementById("eventDescription").value = event.description || '';
-        document.getElementById("eventDate").value = formatDateForInput(event.event_date);
-        document.getElementById("eventTime").value = event.event_time || '';
-        document.getElementById("eventVenue").value = event.venue || '';
-        document.getElementById("eventCity").value = event.city || '';
-        syncDropdown("eventCitySelect", "eventCity", CITIES);
-        document.getElementById("eventCategory").value = event.category || '';
-        document.getElementById("eventDeadline").value = formatDateForInput(event.registration_deadline);
-        document.getElementById("eventEligibility").value = event.eligibility || '';
-        document.getElementById("eventRules").value = event.rules || '';
-        document.getElementById("eventRequirements").value = event.requirements || '';
-        document.getElementById("eventMaxParticipants").value = event.max_participants || '';
-        document.getElementById("eventContactEmail").value = event.contact_email || '';
-        document.getElementById("eventContactPhone").value = event.contact_phone || '';
-        document.getElementById("eventImageUrl").value = event.image_url || '';
-        document.getElementById("eventStatus").value = event.status || 'upcoming';
-    } else {
-        form.reset();
-        document.getElementById("eventStatus").value = 'upcoming';
+        if (event) {
+            // Normalizing date to YYYY-MM-DD for input[type="date"]
+            const formatDateForInput = (dateStr) => {
+                if (!dateStr) return '';
+                // If it's a date string from MySQL (YYYY-MM-DD), use it directly
+                if (typeof dateStr === 'string' && dateStr.includes('T')) {
+                    return dateStr.split('T')[0];
+                }
+                if (typeof dateStr === 'string' && /^\d{4}-\d{2}-\d{2}/.test(dateStr)) {
+                    return dateStr.substring(0, 10);
+                }
+                // Fallback for Date objects
+                const d = new Date(dateStr);
+                if (isNaN(d.getTime())) return '';
+                return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+            };
+
+            // Pre-fill form with event data
+            document.getElementById("eventTitle").value = event.title || '';
+            document.getElementById("eventDescription").value = event.description || '';
+            document.getElementById("eventDate").value = formatDateForInput(event.event_date);
+            document.getElementById("eventTime").value = event.event_time || '';
+            document.getElementById("eventVenue").value = event.venue || '';
+            document.getElementById("eventCity").value = event.city || '';
+            syncDropdown("eventCitySelect", "eventCity", CITIES);
+            document.getElementById("eventCategory").value = event.category || '';
+            document.getElementById("eventDeadline").value = formatDateForInput(event.registration_deadline);
+            document.getElementById("eventEligibility").value = event.eligibility || '';
+            document.getElementById("eventRules").value = event.rules || '';
+            document.getElementById("eventRequirements").value = event.requirements || '';
+            document.getElementById("eventMaxParticipants").value = event.max_participants || '';
+            document.getElementById("eventContactEmail").value = event.contact_email || '';
+            document.getElementById("eventContactPhone").value = event.contact_phone || '';
+            document.getElementById("eventImageUrl").value = event.image_url || '';
+            document.getElementById("eventStatus").value = event.status || 'upcoming';
+        } else {
+            form.reset();
+            document.getElementById("eventStatus").value = 'upcoming';
+        }
+
+        modal.classList.remove("hidden");
+        requestAnimationFrame(() => {
+            content.classList.remove("scale-95", "opacity-0");
+            content.classList.add("scale-100", "opacity-100");
+        });
+    } catch (error) {
+        console.error("Error opening event modal:", error);
+        alert("Failed to open event form. See console for details.");
     }
-
-    modal.classList.remove("hidden");
-    requestAnimationFrame(() => {
-        content.classList.remove("scale-95", "opacity-0");
-        content.classList.add("scale-100", "opacity-100");
-    });
 }
+
+// Ensure function is available globally for onclick attribute
+window.openEventModal = openEventModal;
 
 window.closeEventModal = function () {
     const modal = document.getElementById("eventModal");
