@@ -69,6 +69,7 @@ const navUserDropdown = document.getElementById("navUserDropdown");
 if (mobileMenuBtn) mobileMenuBtn.addEventListener("click", () => mobileMenu?.classList.remove("translate-x-full"));
 if (mobileBackBtn) mobileBackBtn.addEventListener("click", () => mobileMenu?.classList.add("translate-x-full"));
 if (navLoginBtn) navLoginBtn.addEventListener("click", (e) => { e.stopPropagation(); navUserDropdown?.classList.toggle("hidden"); });
+window.addEventListener("click", () => { navUserDropdown?.classList.add("hidden"); });
 
 // Auth state
 onAuthChange(async (user) => {

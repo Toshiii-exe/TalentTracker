@@ -164,7 +164,40 @@
                     data-i18n="nav_discover">Discover Athletes</a>
                 <a href="coach-squads.html" class="hover:text-[var(--primary)] transition-all"
                     data-i18n="nav_squads">Squad Management</a>
+                <div id="navUserArea" class="relative group">
+                    <button id="navUserBtn"
+                        class="px-5 py-2 rounded-full bg-[var(--secondary)] text-white hover:bg-[var(--primary)] transition-all duration-300 font-semibold shadow-lg hover:shadow-xl flex items-center gap-3 transform hover:-translate-y-0.5 relative overflow-hidden">
+                        <div id="navUserPic"
+                            class="w-7 h-7 rounded-full bg-white hidden overflow-hidden border border-white/20 shrink-0">
+                            <img id="navUserImg" src="" alt="" class="w-full h-full object-cover hidden">
+                        </div>
+                        <span id="navBtnText">Loading...</span>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7">
+                            </path>
+                        </svg>
+                    </button>
+
+                    <div id="navUserDropdown"
+                        class="hidden absolute right-0 mt-3 w-56 bg-white shadow-2xl rounded-2xl text-black p-4 border border-gray-100 z-50 animate-fade overflow-hidden">
+                        <div class="mb-4 pb-4 border-b border-gray-100">
+                            <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Signed in as</p>
+                            <p id="navUserEmail" class="text-sm font-semibold text-gray-800 break-words leading-tight">
+                            </p>
+                        </div>
+                        <button id="logoutBtn" data-i18n="nav_logout"
+                            class="w-full bg-red-50 text-red-600 py-3 rounded-xl hover:bg-red-100 transition-colors duration-200 text-sm font-bold flex items-center justify-center gap-2 text-center">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1">
+                                </path>
+                            </svg>
+                            Logout
+                        </button>
+                    </div>
+                </div>
             </div>
+        </div>
     </nav>
 
     <main class="max-w-4xl mx-auto pt-32 pb-20 px-6">

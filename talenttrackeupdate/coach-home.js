@@ -229,16 +229,12 @@ function setupProfileUpload(user) {
 }
 
 if (navUserBtn) {
-    navUserBtn.addEventListener('click', async (e) => {
+    navUserBtn.addEventListener('click', (e) => {
         e.stopPropagation();
-        // Direct Logout as requested
-        if (confirm("Are you sure you want to logout?")) {
-            await handleLogout();
-        }
+        navUserDropdown.classList.toggle('hidden');
     });
 }
-// Dropdown hidden listener removed as we don't use dropdown anymore
-// window.addEventListener('click', () => { if (navUserDropdown) navUserDropdown.classList.add('hidden'); });
+window.addEventListener('click', () => { if (navUserDropdown) navUserDropdown.classList.add('hidden'); });
 
 async function fetchWatchlist(favorites) {
     const summaryList = document.getElementById("watchlistSummary");

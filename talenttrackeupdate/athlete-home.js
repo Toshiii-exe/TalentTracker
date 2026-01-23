@@ -152,12 +152,9 @@ function startPolling(uid) {
 }
 
 if (navUserBtn) {
-    navUserBtn.addEventListener('click', async (e) => {
+    navUserBtn.addEventListener('click', (e) => {
         e.stopPropagation();
-        // Direct Logout
-        if (confirm("Are you sure you want to logout?")) {
-            await handleLogout();
-        }
+        navUserDropdown.classList.toggle('hidden');
     });
 }
 window.addEventListener('click', () => { if (navUserDropdown) navUserDropdown.classList.add('hidden'); });

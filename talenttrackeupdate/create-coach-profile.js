@@ -127,6 +127,36 @@ onAuthChange(async (user) => {
         const maxDateString = maxDate.toISOString().split('T')[0];
         dobInput.setAttribute('max', maxDateString);
     }
+
+    // Navbar Dropdown Logic
+    const navUserBtn = document.getElementById("navUserBtn");
+    const navUserDropdown = document.getElementById("navUserDropdown");
+    const logoutBtn = document.getElementById("logoutBtn");
+
+    if (navUserBtn && navUserDropdown) {
+        navUserBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            navUserDropdown.classList.toggle("hidden");
+        });
+    }
+
+    if (logoutBtn) {
+        logoutBtn.addEventListener("click", async () => {
+            try {
+                const { signOut } = await import("./register.js");
+                await signOut();
+                localStorage.removeItem("tt_username");
+                localStorage.removeItem("tt_role");
+                window.location.href = "index.html";
+            } catch (err) {
+                console.error("Logout failed:", err);
+            }
+        });
+    }
+
+    window.addEventListener("click", () => {
+        if (navUserDropdown) navUserDropdown.classList.add("hidden");
+    });
 });
 
 const photoInput = document.getElementById("coachPhoto");

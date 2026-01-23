@@ -84,12 +84,9 @@ let currentUID = null;
 let athleteDocData = null;
 
 // Navbar Interaction
-navLoginBtn?.addEventListener("click", async (e) => {
+navLoginBtn?.addEventListener("click", (e) => {
     e.stopPropagation();
-    // Direct Logout as requested
-    if (confirm("Are you sure you want to logout?")) {
-        await handleLogout();
-    }
+    navUserDropdown?.classList.toggle("hidden");
 });
 
 const toggleMobileMenu = (show) => {
@@ -109,7 +106,7 @@ const toggleMobileMenu = (show) => {
 if (mobileMenuButton) mobileMenuButton.addEventListener('click', () => toggleMobileMenu(true));
 if (mobileBackBtn) mobileBackBtn.addEventListener('click', () => toggleMobileMenu(false));
 if (mobileBackdrop) mobileBackdrop.addEventListener('click', () => toggleMobileMenu(false));
-// window.addEventListener("click", () => { navUserDropdown?.classList.add("hidden"); mobileUserDropdown?.classList.add("hidden"); });
+window.addEventListener("click", () => { navUserDropdown?.classList.add("hidden"); });
 
 // Auth Logic
 // Auth Logic
