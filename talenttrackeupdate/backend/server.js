@@ -32,8 +32,14 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Serve Static Files (Frontend)
 app.use(express.static(path.join(__dirname, '../'))); // Serve root folder
 
-// Serve Uploads
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+// Serve Uploads - use /tmp in production (Railway/Heroku)
+const isProduction = process.env.NODE_ENV === 'production' || process.env.RAILWAY_ENVIRONMENT;
+const uploadsPath = isProduction
+    ? path.join('/tmp', 'uploads')
+    : path.join(__dirname, 'uploads');
+
+console.log('Serving uploads from:', uploadsPath);
+app.use('/uploads', express.static(uploadsPath));
 
 // Routes
 app.use('/api/auth', authRoutes);
