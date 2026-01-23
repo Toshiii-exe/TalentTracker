@@ -165,6 +165,12 @@ function setupNavigation() {
 async function loadEvents() {
     const grid = document.getElementById("eventsGrid");
     const emptyState = document.getElementById("emptyState");
+
+    if (!emptyState) {
+        console.warn("emptyState element missing");
+        return;
+    }
+
     const emptyTitle = emptyState.querySelector('h3');
     const emptyMsg = emptyState.querySelector('p');
 
@@ -228,18 +234,21 @@ window.applyFilters = function () {
     // Update Empty State logic
     const grid = document.getElementById("eventsGrid");
     const emptyState = document.getElementById("emptyState");
+
+    if (!emptyState) return;
+
     const emptyTitle = emptyState.querySelector('h3');
     const emptyMsg = emptyState.querySelector('p');
 
     if (filteredEvents.length === 0) {
         if (currentView === 'grid') grid.innerHTML = "";
         if (currentRole === "federation" || currentRole === "admin") {
-            emptyTitle.textContent = "No Events Found";
-            emptyMsg.classList.add("hidden");
+            if (emptyTitle) emptyTitle.textContent = "No Events Found";
+            if (emptyMsg) emptyMsg.classList.add("hidden");
         } else {
-            emptyTitle.textContent = "No Events Found";
-            emptyMsg.textContent = "Try adjusting your filters.";
-            emptyMsg.classList.remove("hidden");
+            if (emptyTitle) emptyTitle.textContent = "No Events Found";
+            if (emptyMsg) emptyMsg.textContent = "Try adjusting your filters.";
+            if (emptyMsg) emptyMsg.classList.remove("hidden");
         }
         if (currentView === 'grid') emptyState.classList.remove("hidden");
     } else {
