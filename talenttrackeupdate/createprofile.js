@@ -131,8 +131,7 @@ onAuthChange(async (user) => {
     }
 });
 
-document.getElementById("logoutBtn")?.addEventListener("click", async () => { await signOut(auth); window.location.href = "index.html"; });
-document.getElementById("mobileLogoutBtn")?.addEventListener("click", async () => { await signOut(auth); window.location.href = "index.html"; });
+// Logout handled globally by ui-utils.js updateNavbar()
 
 async function loadProfileForEdit() {
     try {

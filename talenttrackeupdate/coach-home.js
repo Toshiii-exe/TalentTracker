@@ -222,20 +222,9 @@ function setupProfileUpload(user) {
         }
     };
     navProfileInput.onchange = handleUpload;
-    navUserPic.onclick = (e) => {
-        e.stopPropagation();
-        navProfileInput.click();
-    }
 }
 
-if (navUserBtn) {
-    navUserBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        navUserDropdown.classList.toggle('hidden');
-    });
-}
-window.addEventListener('click', () => { if (navUserDropdown) navUserDropdown.classList.add('hidden'); });
-
+// Dropdown and Logout are handled globally by ui-utils.js updateNavbar()
 async function fetchWatchlist(favorites) {
     const summaryList = document.getElementById("watchlistSummary");
     const emptyState = document.getElementById("emptyWatchlist");
@@ -280,16 +269,8 @@ async function fetchWatchlist(favorites) {
     }
 }
 
-const handleLogout = async () => {
-    try {
-        await signOut(auth);
-        localStorage.removeItem("tt_username");
-        localStorage.removeItem("tt_role");
-        window.location.href = "index.html";
-    } catch (error) { console.error("Logout Error", error); }
-};
-if (logoutBtn) logoutBtn.addEventListener("click", handleLogout);
-if (mobileLogoutBtn) mobileLogoutBtn.addEventListener("click", handleLogout);
+// handleLogout handled globally
+
 
 contactSupportBtn?.addEventListener("click", () => {
     const supportNumber = "+94xxxxxxxxx";

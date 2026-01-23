@@ -66,7 +66,6 @@ onAuthChange(async (user) => {
 async function init() {
     updateNavbar(currentUser, null);
     updateHomeLinks(currentRole); // Update home links based on role
-    setupNavbarInteractions();
     setupNavigation();
     await loadEvents();
 

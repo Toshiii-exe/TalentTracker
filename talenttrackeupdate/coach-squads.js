@@ -485,24 +485,9 @@ if (exportBtn) {
     });
 }
 
-if (navUserBtn) {
-    navUserBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        navUserDropdown.classList.toggle('hidden');
-    });
-}
-window.addEventListener('click', () => { if (navUserDropdown) navUserDropdown.classList.add('hidden'); });
+// Dropdown and Logout are handled globally by ui-utils.js updateNavbar()
 
-if (logoutBtn) {
-    logoutBtn.addEventListener("click", async () => {
-        try {
-            await signOut();
-            localStorage.removeItem("tt_username");
-            localStorage.removeItem("tt_role");
-            window.location.href = "index.html";
-        } catch (error) { console.error("Logout Error", error); }
-    });
-}
+
 
 // Delete Squad Function
 window.confirmDeleteSquad = async function (squadName) {

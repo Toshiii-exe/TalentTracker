@@ -426,6 +426,44 @@ export function updateNavbar(user, profileData = null) {
     }
   }
 
+  // Centralized Dropdown & Logout Logic
+  const navUserBtn = document.getElementById("navUserBtn");
+  const navUserDropdown = document.getElementById("navUserDropdown");
+  const logoutBtn = document.getElementById("logoutBtn");
+  const mobileLogoutBtn = document.getElementById("mobileLogoutBtn");
+
+  if (navUserBtn && navUserDropdown && !navUserBtn.dataset.navBound) {
+    navUserBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      navUserDropdown.classList.toggle('hidden');
+    });
+    window.addEventListener('click', () => {
+      navUserDropdown.classList.add('hidden');
+    });
+    navUserBtn.dataset.navBound = "true";
+  }
+
+  const handleGlobalLogout = async () => {
+    try {
+      const { signOut } = await import("./register.js");
+      await signOut();
+      localStorage.removeItem("tt_username");
+      localStorage.removeItem("tt_role");
+      window.location.href = "index.html";
+    } catch (err) {
+      console.error("Logout failed:", err);
+    }
+  };
+
+  if (logoutBtn && !logoutBtn.dataset.navBound) {
+    logoutBtn.addEventListener("click", handleGlobalLogout);
+    logoutBtn.dataset.navBound = "true";
+  }
+  if (mobileLogoutBtn && !mobileLogoutBtn.dataset.navBound) {
+    mobileLogoutBtn.addEventListener("click", handleGlobalLogout);
+    mobileLogoutBtn.dataset.navBound = "true";
+  }
+
   // Init Notifications if logged in
   if (user && (user.uid || user.id)) {
     initNotifications(user.uid || user.id);

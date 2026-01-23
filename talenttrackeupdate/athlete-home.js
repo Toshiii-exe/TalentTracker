@@ -151,25 +151,9 @@ function startPolling(uid) {
     pollingInterval = setInterval(poll, 10000);
 }
 
-if (navUserBtn) {
-    navUserBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        navUserDropdown.classList.toggle('hidden');
-    });
-}
-window.addEventListener('click', () => { if (navUserDropdown) navUserDropdown.classList.add('hidden'); });
+// Dropdown and Logout are handled globally by ui-utils.js updateNavbar()
 
 createProfileBtn?.addEventListener("click", () => {
     window.location.href = "createprofile.html";
 });
 
-const handleLogout = async () => {
-    try {
-        await signOut();
-        localStorage.removeItem("tt_username");
-        localStorage.removeItem("tt_role");
-        window.location.href = "index.html";
-    } catch (error) { console.error("Logout Error", error); }
-};
-if (logoutBtn) logoutBtn.addEventListener("click", handleLogout);
-if (mobileLogoutBtn) mobileLogoutBtn.addEventListener("click", handleLogout);

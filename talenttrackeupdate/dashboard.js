@@ -213,18 +213,8 @@ function startPolling() {
     pollingInterval = setInterval(poll, 10000);
 }
 
-const handleLogout = async () => {
-    try {
-        await signOut();
-        localStorage.removeItem("tt_username");
-        localStorage.removeItem("tt_role");
-        window.location.replace("index.html");
-    } catch (e) {
-        console.error("Logout error", e);
-    }
-};
-if (logoutBtn) logoutBtn.addEventListener("click", handleLogout);
-if (mobileLogoutBtn) mobileLogoutBtn.addEventListener("click", handleLogout);
+// handleLogout handled globally
+
 
 editProfileBtn?.addEventListener("click", () => { if (currentUID) window.location.href = `createprofile.html?edit=true`; });
 

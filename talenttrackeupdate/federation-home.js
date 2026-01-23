@@ -267,13 +267,5 @@ if (mobileMenuButton) mobileMenuButton.addEventListener('click', () => toggleMob
 if (mobileBackBtn) mobileBackBtn.addEventListener('click', () => toggleMobileMenu(false));
 if (mobileBackdrop) mobileBackdrop.addEventListener('click', () => toggleMobileMenu(false));
 
-const handleLogout = async () => {
-    try {
-        await signOut();
-        localStorage.removeItem("tt_username");
-        localStorage.removeItem("tt_role");
-        window.location.href = "index.html";
-    } catch (error) { }
-};
-if (logoutBtn) logoutBtn.addEventListener("click", handleLogout);
-if (mobileLogoutBtn) mobileLogoutBtn.addEventListener("click", handleLogout);
+// handleLogout handled globally
+

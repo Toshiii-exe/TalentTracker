@@ -294,24 +294,4 @@ if (saveNoteBtn) {
     saveNoteBtn.addEventListener("click", saveAdminNoteHandler);
 }
 
-// Logout Logic
-if (logoutBtn) {
-    logoutBtn.addEventListener("click", async () => {
-        try {
-            await signOut();
-            localStorage.removeItem("tt_username");
-            localStorage.removeItem("tt_role");
-            window.location.href = "index.html";
-        } catch (error) {
-            console.error("Logout Error", error);
-        }
-    });
-}
-// Navbar Logic
-if (navUserBtn) {
-    navUserBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        navUserDropdown.classList.toggle('hidden');
-    });
-}
-window.addEventListener('click', () => { if (navUserDropdown) navUserDropdown.classList.add('hidden'); });
+// Dropdown and Logout are handled globally by ui-utils.js updateNavbar()
