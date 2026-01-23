@@ -177,15 +177,19 @@
         <div class="bg-white/40 backdrop-blur-xl rounded-[3rem] p-8 md:p-12 border border-white/20 shadow-2xl">
             <div class="flex flex-col md:flex-row justify-between items-end mb-10 gap-6">
                 <div>
-                    <h2 class="text-3xl font-black text-[var(--primary)] mb-2">User Management 🔐</h2>
-                    <p class="text-slate-600 font-semibold tracking-wide">Verify professional coaching credentials and
+                    <h2 class="text-3xl font-black text-[var(--primary)] mb-2" data-i18n="fed_h2_user_management">User
+                        Management 🔐</h2>
+                    <p class="text-slate-600 font-semibold tracking-wide" data-i18n="fed_p_subtitle">Verify professional
+                        coaching credentials and
                         oversee athlete registration.</p>
                 </div>
                 <div class="flex bg-white/50 p-1 rounded-2xl border border-white/20">
                     <button id="tabCoaches" onclick="switchManagementTab('coaches')"
-                        class="px-6 py-2 rounded-xl text-sm font-black transition-all bg-[var(--primary)] text-white shadow-lg">COACHES</button>
+                        class="px-6 py-2 rounded-xl text-sm font-black transition-all bg-[var(--primary)] text-white shadow-lg"
+                        data-i18n="fed_btn_coaches">COACHES</button>
                     <button id="tabAthletes" onclick="switchManagementTab('athletes')"
-                        class="px-6 py-2 rounded-xl text-sm font-black transition-all text-slate-500 hover:text-[var(--primary)]">ATHLETES</button>
+                        class="px-6 py-2 rounded-xl text-sm font-black transition-all text-slate-500 hover:text-[var(--primary)]"
+                        data-i18n="fed_btn_athletes">ATHLETES</button>
                 </div>
             </div>
 
@@ -193,6 +197,7 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
                 <div class="relative md:col-span-2">
                     <input type="text" id="userSearch" placeholder="Search by name or email..."
+                        data-i18n-placeholder="fed_placeholder_search"
                         class="w-full bg-white border-2 border-slate-100 rounded-2xl px-12 py-4 focus:outline-none focus:border-[var(--secondary)] font-semibold transition-all shadow-sm">
                     <svg class="w-5 h-5 absolute left-5 top-1/2 -translate-y-1/2 text-slate-400" fill="none"
                         stroke="currentColor" viewBox="0 0 24 24">
@@ -202,9 +207,9 @@
                 </div>
                 <select id="statusFilter"
                     class="bg-white border-2 border-slate-100 rounded-2xl px-6 py-4 focus:outline-none focus:border-[var(--secondary)] font-black text-xs uppercase tracking-widest shadow-sm">
-                    <option value="all">All Status</option>
-                    <option value="pending">Pending Only</option>
-                    <option value="approved">Approved Only</option>
+                    <option value="all" data-i18n="fed_filter_all">All Status</option>
+                    <option value="pending" data-i18n="fed_filter_pending">Pending Only</option>
+                    <option value="approved" data-i18n="fed_filter_approved">Approved Only</option>
                 </select>
             </div>
 
@@ -213,17 +218,18 @@
                 <table class="w-full text-left border-collapse">
                     <thead>
                         <tr class="bg-slate-50">
-                            <th
-                                class="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-100">
+                            <th class="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-100"
+                                data-i18n="fed_th_user_details">
                                 User Details</th>
                             <th id="colSpecific1"
-                                class="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-100">
+                                class="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-100"
+                                data-i18n="fed_th_specialization">
                                 Specialization</th>
-                            <th
-                                class="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-100 text-center">
+                            <th class="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-100 text-center"
+                                data-i18n="fed_th_status">
                                 Status</th>
-                            <th
-                                class="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-100 text-right">
+                            <th class="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-100 text-right"
+                                data-i18n="fed_th_actions">
                                 Actions</th>
                         </tr>
                     </thead>
@@ -234,7 +240,8 @@
                                 <div
                                     class="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--primary)] mx-auto mb-4">
                                 </div>
-                                <p class="text-sm font-bold text-slate-400">Loading directory...</p>
+                                <p class="text-sm font-bold text-slate-400" data-i18n="fed_msg_loading_directory">
+                                    Loading directory...</p>
                             </td>
                         </tr>
                     </tbody>
