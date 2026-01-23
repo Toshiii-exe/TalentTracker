@@ -444,7 +444,7 @@ export async function submitProfile() {
         const hasExisting = prev && !prev.classList.contains('hidden');
 
         if (!file && !hasExisting && !isOptional) {
-            toggleError(`err-${id}`, "Required");
+            toggleError(`err-${id}`, getTranslation("err_required"));
             hasRequiredError = true;
             return;
         }
@@ -454,12 +454,12 @@ export async function submitProfile() {
             const isPdf = (file.type && file.type.toLowerCase().includes("pdf")) || /\.pdf$/i.test(file.name);
 
             if (!isImage && !isPdf) {
-                toggleError(`err-${id}`, "Invalid format (Image or PDF only)");
+                toggleError(`err-${id}`, getTranslation("err_file_invalid_short"));
                 hasRequiredError = true;
             }
 
             if (file.size > 5 * 1024 * 1024) {
-                toggleError(`err-${id}`, "File too large (Max 5MB)");
+                toggleError(`err-${id}`, getTranslation("msg_max_5mb"));
                 hasRequiredError = true;
             }
         }
@@ -502,7 +502,7 @@ export async function submitProfile() {
 
             const slPhoneRegex = /^(?:0|94|\+94)?(?:7[01245678]|11|2[134567]|3[12345678]|4[157]|5[12457]|6[3567]|81|91)\d{7}$/;
             if (id === "phone" && !slPhoneRegex.test(el.value)) {
-                toggleError("err-phone", "Invalid Sri Lankan phone number.");
+                toggleError("err-phone", getTranslation("err_phone_invalid"));
                 hasRequiredError = true;
             }
         }
@@ -518,19 +518,19 @@ export async function submitProfile() {
     const h = parseFloat(document.getElementById("height").value);
     const w = parseFloat(document.getElementById("weight").value);
 
-    if (h < 50 || h > 280) { toggleError("err-height", "Invalid Height."); hasLogicError = true; }
-    if (w < 20 || w > 300) { toggleError("err-weight", "Invalid Weight."); hasLogicError = true; }
+    if (h < 50 || h > 280) { toggleError("err-height", getTranslation("err_height_invalid")); hasLogicError = true; }
+    if (w < 20 || w > 300) { toggleError("err-weight", getTranslation("err_weight_invalid")); hasLogicError = true; }
     const heightInMeters = h / 100;
     const bmi = w / (heightInMeters * heightInMeters);
     if (bmi < 10 || bmi > 60) {
-        toggleError("err-bmi", "Please verify your height and weight.");
+        toggleError("err-bmi", getTranslation("err_bmi_invalid"));
         hasLogicError = true;
     }
 
     const eventRows = document.querySelectorAll(".event-row");
     const eventData = [];
     if (eventRows.length === 0) {
-        toggleError("err-events", "Please add at least one event.");
+        toggleError("err-events", getTranslation("err_required_event"));
         hasLogicError = true;
     } else {
         let hasValidEvent = false;
@@ -543,7 +543,7 @@ export async function submitProfile() {
             if (evt && time && exp && lvl) {
                 if (eventTimeLimits[evt]) {
                     if (time < eventTimeLimits[evt].min || time > eventTimeLimits[evt].max) {
-                        displayMessage(`This personal best time is impossible so enter correct value`, 'error');
+                        displayMessage(getTranslation("err_time_impossible"), 'error');
                         hasLogicError = true; row.classList.add('border-red-500');
                     } else {
                         eventData.push({ event: evt, pb: time, experience: exp, bestCompetition: lvl });
@@ -561,7 +561,7 @@ export async function submitProfile() {
         });
 
         if (!hasValidEvent && !hasLogicError) {
-            toggleError("err-events", "Please add a valid event.");
+            toggleError("err-events", getTranslation("err_valid_event"));
             hasLogicError = true;
         }
     }
@@ -640,7 +640,7 @@ export async function submitProfile() {
 
     } catch (error) {
         console.error(error);
-        displayMessage("Error uploading profile: " + error.message, 'error');
+        displayMessage(getTranslation("err_upload_profile") + error.message, 'error');
         if (submitBtn) {
             submitBtn.textContent = getTranslation("profile_submit");
             submitBtn.disabled = false;

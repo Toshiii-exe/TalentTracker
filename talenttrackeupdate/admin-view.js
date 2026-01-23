@@ -26,6 +26,12 @@ const btnRevoke = document.getElementById("btnRevoke");
 const adminNotesTextarea = document.getElementById("adminNotesTextarea");
 const saveNoteBtn = document.getElementById("saveNoteBtn");
 
+// Navbar Elements
+const navUserBtn = document.getElementById("navUserBtn");
+const navUserDropdown = document.getElementById("navUserDropdown");
+const logoutBtn = document.getElementById("logoutBtn");
+
+
 let targetId = null;
 let targetRole = null; // 'athlete' or 'coach'
 let currentUserData = null;
@@ -300,3 +306,11 @@ if (logoutBtn) {
         }
     });
 }
+// Navbar Logic
+if (navUserBtn) {
+    navUserBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        navUserDropdown.classList.toggle('hidden');
+    });
+}
+window.addEventListener('click', () => { if (navUserDropdown) navUserDropdown.classList.add('hidden'); });

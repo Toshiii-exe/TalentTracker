@@ -8,6 +8,7 @@ import {
     BACKEND_URL
 } from "./register.js";
 import { updateNavbar } from "./ui-utils.js";
+import { getTranslation } from "./i18n.js";
 
 // DOM Elements
 const profilePicInput = document.getElementById("profilePicInput");
@@ -66,8 +67,8 @@ if (profilePicInput) {
         const file = e.target.files[0];
         if (!file || !currentCoachId) return;
 
-        if (!file.type.startsWith('image/') && !(file.type && file.type.toLowerCase().includes('pdf')) && !file.name.toLowerCase().endsWith('.pdf')) return alert("Select image or PDF");
-        if (file.size > 5 * 1024 * 1024) return alert("Max 5MB");
+        if (!file.type.startsWith('image/') && !(file.type && file.type.toLowerCase().includes('pdf')) && !file.name.toLowerCase().endsWith('.pdf')) return alert(getTranslation("msg_select_img_pdf"));
+        if (file.size > 5 * 1024 * 1024) return alert(getTranslation("msg_max_5mb"));
 
         try {
             if (profilePicDisplay) profilePicDisplay.classList.add("skeleton");
@@ -86,10 +87,10 @@ if (profilePicInput) {
             const navImg = document.getElementById("navUserImg");
             if (navImg) navImg.src = url;
 
-            alert("Updated!");
+            alert(getTranslation("msg_updated"));
         } catch (err) {
             console.error(err);
-            alert("Failed to upload");
+            alert(getTranslation("msg_upload_failed_short"));
             if (profilePicDisplay) profilePicDisplay.classList.remove("skeleton");
         }
     });
@@ -98,7 +99,7 @@ if (profilePicInput) {
 // Render
 function loadDashboardData(data, user) {
     // Map fields
-    const fullName = data.fullName || user.displayName || "Coach";
+    const fullName = data.fullName || user.displayName || getTranslation("lbl_role_coach");
     const username = data.username || fullName;
     let profilePic = data.profilePic || `https://ui-avatars.com/api/?name=${encodeURIComponent(fullName)}&background=012A61&color=fff`;
     if (profilePic && profilePic.startsWith('/')) {
@@ -111,9 +112,9 @@ function loadDashboardData(data, user) {
     }
 
     setText("coachName", fullName);
-    setText("coachSpecialization", data.sports || "General");
+    setText("coachSpecialization", data.sports || getTranslation("lbl_general"));
     setText("coachExperience", data.experience || "0");
-    setText("coachOrganization", data.organization || "Independent");
+    setText("coachOrganization", data.organization || getTranslation("lbl_independent"));
 
     // Verification
     const isVerified = data.status?.toLowerCase() === "approved";
@@ -122,32 +123,32 @@ function loadDashboardData(data, user) {
     if (badgeElement && badgeText) {
         if (isVerified) {
             badgeElement.classList.replace("bg-amber-500", "bg-green-500");
-            badgeText.textContent = "Verified";
+            badgeText.textContent = getTranslation("tag_verified");
         } else {
             badgeElement.classList.replace("bg-green-500", "bg-amber-500");
-            badgeText.textContent = "Pending";
+            badgeText.textContent = getTranslation("status_pending");
         }
     }
 
     // Stats
     setText("statSquads", (data.squads || []).length);
     setText("statFavorites", (data.favorites || []).length);
-    setText("certificationStatus", data.highestQual ? "Yes" : "No");
+    setText("certificationStatus", data.highestQual ? getTranslation("lbl_yes") : getTranslation("lbl_no"));
 
     // Personal Info
     const pInfoProxy = document.getElementById("personalInfoSection");
     if (pInfoProxy) {
         pInfoProxy.innerHTML = `
-            ${createInfoRow("Username", username)}
-            ${createInfoRow("Full Name", fullName)}
-            ${createInfoRow("Email", data.email || user.email)}
-            ${createInfoRow("Phone", data.phone || "Not provided")}
-            ${createInfoRow("DOB", data.dob || "Not provided")}
-            ${createInfoRow("Gender", data.gender || "Not provided")}
-            ${createInfoRow("NIC", data.nic || "Not provided")}
-            ${createInfoRow("Address", data.street || "Not provided")}
-            ${createInfoRow("City", data.city || "Not provided")}
-            ${createInfoRow("District", data.district || "Not provided")}
+            ${createInfoRow(getTranslation("signup_label_username"), username)}
+            ${createInfoRow(getTranslation("lbl_full_name"), fullName)}
+            ${createInfoRow(getTranslation("lbl_email"), data.email || user.email)}
+            ${createInfoRow(getTranslation("lbl_phone"), data.phone || getTranslation("lbl_not_provided"))}
+            ${createInfoRow(getTranslation("lbl_dob"), data.dob || getTranslation("lbl_not_provided"))}
+            ${createInfoRow(getTranslation("lbl_gender"), data.gender || getTranslation("lbl_not_provided"))}
+            ${createInfoRow(getTranslation("lbl_nic"), data.nic || getTranslation("lbl_not_provided"))}
+            ${createInfoRow(getTranslation("lbl_address"), data.street || getTranslation("lbl_not_provided"))}
+            ${createInfoRow(getTranslation("lbl_city"), data.city || getTranslation("lbl_not_provided"))}
+            ${createInfoRow(getTranslation("lbl_district"), data.district || getTranslation("lbl_not_provided"))}
         `;
     }
 
@@ -155,11 +156,11 @@ function loadDashboardData(data, user) {
     const cInfoProxy = document.getElementById("coachingInfoSection");
     if (cInfoProxy) {
         cInfoProxy.innerHTML = `
-            ${createInfoRow("Sports/Spec", data.sports || "Not specified")}
-            ${createInfoRow("Organization", data.organization || "Independent")}
-            ${createInfoRow("Experience", (data.experience || "0") + " Years")}
-            ${createInfoRow("Qualifications", data.highestQual || "None")}
-            ${createInfoRow("Role", data.coachingRole || "Head Coach")}
+            ${createInfoRow(getTranslation("lbl_sports_spec"), data.sports || getTranslation("lbl_not_specified"))}
+            ${createInfoRow(getTranslation("lbl_organization"), data.organization || getTranslation("lbl_independent"))}
+            ${createInfoRow(getTranslation("lbl_experience"), (data.experience || "0") + " " + getTranslation("lbl_years_exp"))}
+            ${createInfoRow(getTranslation("lbl_qualifications"), data.highestQual || getTranslation("lbl_none"))}
+            ${createInfoRow(getTranslation("lbl_role"), data.coachingRole || getTranslation("lbl_head_coach"))}
         `;
     }
 
@@ -167,9 +168,9 @@ function loadDashboardData(data, user) {
     const tInfoProxy = document.getElementById("trainingInfoSection");
     if (tInfoProxy) {
         tInfoProxy.innerHTML = `
-            ${createInfoRow("Availability", data.availDays || "Not specified")}
-            ${createInfoRow("Time Slots", data.timeSlots || "Not specified")}
-            ${createInfoRow("Location Pref", data.locationPref || "Not specified")}
+            ${createInfoRow(getTranslation("lbl_availability"), data.availDays || getTranslation("lbl_not_specified"))}
+            ${createInfoRow(getTranslation("lbl_time_slots"), data.timeSlots || getTranslation("lbl_not_specified"))}
+            ${createInfoRow(getTranslation("lbl_location_pref"), data.locationPref || getTranslation("lbl_not_specified"))}
         `;
     }
 
@@ -177,10 +178,10 @@ function loadDashboardData(data, user) {
     const docsSection = document.getElementById("documentsSection");
     if (docsSection) {
         let docsHTML = '';
-        if (data.profilePic) docsHTML += createDocumentCard("Profile Picture", data.profilePic, "image");
-        if (data.certDoc) docsHTML += createDocumentCard("Certificate", data.certDoc, "pdf");
+        if (data.profilePic) docsHTML += createDocumentCard(getTranslation("lbl_profile_pic"), data.profilePic, "image");
+        if (data.certDoc) docsHTML += createDocumentCard(getTranslation("lbl_certificate"), data.certDoc, "pdf");
 
-        if (docsHTML === '') docsHTML = '<p class="text-gray-500 text-sm italic">No documents uploaded</p>';
+        if (docsHTML === '') docsHTML = `<p class="text-gray-500 text-sm italic">${getTranslation("msg_no_docs")}</p>`;
         docsSection.innerHTML = docsHTML;
     }
 }
@@ -212,7 +213,7 @@ function createDocumentCard(label, url, type) {
                 <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow-sm">${icon}</div>
                 <div><p class="text-sm font-bold text-gray-800">${label}</p><p class="text-xs text-gray-500">${type.toUpperCase()}</p></div>
             </div>
-            <a href="${url}" target="_blank" class="px-4 py-2 bg-[var(--primary)] text-white rounded-lg text-xs font-bold hover:bg-[var(--secondary)] transition-all">View</a>
+            <a href="${url}" target="_blank" class="px-4 py-2 bg-[var(--primary)] text-white rounded-lg text-xs font-bold hover:bg-[var(--secondary)] transition-all">${getTranslation("btn_view")}</a>
         </div>
     `;
 }

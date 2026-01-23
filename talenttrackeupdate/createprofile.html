@@ -248,19 +248,21 @@
                         accept=".jpg, .jpeg, .png, .pdf, application/pdf, image/png, image/jpeg, image/jpg">
                     <small class="text-gray-600 text-sm" data-i18n="profile_pic_hint">Max size: 2MB | Formats: JPG,
                         JPEG, PNG, PDF (Optional)</small>
-                    <p class="error-text" id="err-profilePic">Invalid file type or size (Max 2MB).</p>
+                    <p class="error-text" id="err-profilePic" data-i18n="err_file_invalid">Invalid file type or size
+                        (Max 2MB).</p>
                 </div>
                 <div>
                     <label class="label-style" for="fullName" data-i18n="profile_fullname">Full Name </label>
                     <input class="input" id="fullName" placeholder="e.g. Yupun Abeykoon"
                         data-i18n-placeholder="profile_fullname_placeholder" required>
-                    <p class="error-text" id="err-fullname">Full Name is required.</p>
+                    <p class="error-text" id="err-fullname" data-i18n="err_required_fullname">Full Name is required.</p>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label class="label-style" for="dob" data-i18n="profile_dob">Date of Birth </label>
                         <input class="input" type="date" id="dob" required>
-                        <p class="error-text" id="err-dob">Valid Date of Birth is required (Cannot be in future).</p>
+                        <p class="error-text" id="err-dob" data-i18n="err_bg_date">Valid Date of Birth is required
+                            (Cannot be in future).</p>
                     </div>
                     <div>
                         <label class="label-style" data-i18n="profile_gender">Gender </label>
@@ -270,34 +272,35 @@
                             <option value="Female" data-i18n="profile_gender_female">Female</option>
                             <option value="Other" data-i18n="profile_gender_other">Other</option>
                         </select>
-                        <p class="error-text" id="err-gender">Please select your gender.</p>
+                        <p class="error-text" id="err-gender" data-i18n="err_select_gender">Please select your gender.
+                        </p>
                     </div>
                 </div>
                 <div>
                     <label class="label-style" for="phone" data-i18n="profile_phone">Phone Number </label>
                     <input class="input" type="tel" placeholder="+94 77 123 4567"
                         data-i18n-placeholder="profile_phone_placeholder" id="phone" required>
-                    <p class="error-text" id="err-phone">Phone Number is required.</p>
+                    <p class="error-text" id="err-phone" data-i18n="err_required_phone">Phone Number is required.</p>
                 </div>
                 <div>
                     <label class="label-style" for="email" data-i18n="profile_email">Email </label>
                     <input class="input" type="email" placeholder="user@example.com"
                         data-i18n-placeholder="profile_email_placeholder" id="email" required>
-                    <p class="error-text" id="err-email">Valid Email is required.</p>
+                    <p class="error-text" id="err-email" data-i18n="err_required_email">Valid Email is required.</p>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label class="label-style" for="street" data-i18n="profile_address">Street Address </label>
                         <input class="input" placeholder="Lane/Street"
                             data-i18n-placeholder="profile_address_placeholder" id="street" required>
-                        <p class="error-text" id="err-street">Address is required.</p>
+                        <p class="error-text" id="err-street" data-i18n="err_required_address">Address is required.</p>
                     </div>
                     <div>
                         <label class="label-style" for="city" data-i18n="profile_city">City </label>
                         <select id="citySelect" class="input mb-2"></select>
                         <input class="input hidden" placeholder="Select 'Other' to type custom city"
                             data-i18n-placeholder="profile_city_placeholder" id="city" required>
-                        <p class="error-text" id="err-city">City is required.</p>
+                        <p class="error-text" id="err-city" data-i18n="err_required_city">City is required.</p>
                     </div>
                 </div>
             </div>
@@ -315,16 +318,19 @@
                         <label class="label-style" for="height" data-i18n="profile_height">Height (cm) </label>
                         <input class="input" type="number" step="0.1" placeholder="e.g. 175.5"
                             data-i18n-placeholder="profile_height_placeholder" id="height" required>
-                        <p class="error-text" id="err-height">Height is required (cm).</p>
+                        <p class="error-text" id="err-height" data-i18n="err_required_height">Height is required (cm).
+                        </p>
                     </div>
                     <div>
                         <label class="label-style" for="weight" data-i18n="profile_weight">Weight (kg) </label>
                         <input class="input" type="number" step="0.1" placeholder="e.g. 68.5"
                             data-i18n-placeholder="profile_weight_placeholder" id="weight" required>
-                        <p class="error-text" id="err-weight">Weight is required (kg).</p>
+                        <p class="error-text" id="err-weight" data-i18n="err_required_weight">Weight is required (kg).
+                        </p>
                     </div>
                     <div class="col-span-1 sm:col-span-2">
-                        <p class="error-text" id="err-bmi">Logic Error: Please check Height (must be in cm) and Weight.
+                        <p class="error-text" id="err-bmi" data-i18n="err_bmi_invalid">Logic Error: Please check Height
+                            (must be in cm) and Weight.
                         </p>
                     </div>
                 </div>
@@ -334,7 +340,8 @@
                     <input type="file" class="input p-2" id="idDoc"
                         accept=".jpg, .jpeg, .png, .pdf, application/pdf, image/png, image/jpeg, image/jpg" required>
                     <small class="text-gray-500" data-i18n="profile_id_hint">Formats: Image or PDF. Max 5MB.</small>
-                    <p class="error-text" id="err-idDoc">Official ID is required (Valid Image or PDF).</p>
+                    <p class="error-text" id="err-idDoc" data-i18n="err_required_document">Official ID is required
+                        (Valid Image or PDF).</p>
                 </div>
 
                 <div>
@@ -348,7 +355,7 @@
                         <option value="U20">U20</option>
                         <option value="Open" data-i18n="profile_category_open">Senior/Open</option>
                     </select>
-                    <p class="error-text" id="err-category">Category is required.</p>
+                    <p class="error-text" id="err-category" data-i18n="err_required_category">Category is required.</p>
                 </div>
 
                 <div class="bg-gray-50 p-4 rounded-lg border border-gray-300">
@@ -362,7 +369,8 @@
                         class="mt-4 text-sm bg-gray-200 hover:bg-gray-300 text-black py-2 px-4 rounded transition w-full border border-gray-400 font-semibold"
                         data-i18n="profile_add_event">+
                         Add Another Event</button>
-                    <p class="error-text" id="err-events">At least one event with valid details is required.</p>
+                    <p class="error-text" id="err-events" data-i18n="err_required_event">At least one event with valid
+                        details is required.</p>
                 </div>
 
                 <div id="consentContainer" class="hidden bg-yellow-50 p-4 rounded-lg border border-yellow-300">
@@ -377,7 +385,8 @@
                         accept=".jpg, .jpeg, .png, .pdf, application/pdf, image/png, image/jpeg, image/jpg">
                     <small class="text-gray-500" data-i18n="profile_consent_format">Formats: PDF or Image. Max
                         2MB.</small>
-                    <p class="error-text" id="err-consentDoc">Mandatory for athletes under 18 (Max 2MB).</p>
+                    <p class="error-text" id="err-consentDoc" data-i18n="err_required_consent">Mandatory for athletes
+                        under 18 (Max 2MB).</p>
                 </div>
             </div>
         </div>
@@ -456,7 +465,8 @@
                     <input type="file" class="input p-2" id="clubIDDoc"
                         accept=".jpg, .jpeg, .png, .pdf, application/pdf, image/png, image/jpeg, image/jpg">
                     <small class="text-gray-500" data-i18n="profile_club_id_hint">Formats: Clear Photo or PDF.</small>
-                    <p class="error-text" id="err-clubIDDoc">Invalid file type or size.</p>
+                    <p class="error-text" id="err-clubIDDoc" data-i18n="err_file_invalid_short">Invalid file type or
+                        size.</p>
                 </div>
             </div>
         </div>

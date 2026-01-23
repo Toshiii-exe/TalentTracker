@@ -192,7 +192,7 @@ function startPolling() {
                 const newPlan = freshData.squad ? freshData.squad.workout_plan : null;
 
                 if (oldSquadId !== newSquadId || oldPlan !== newPlan) {
-                    console.log("Squad update detected via polling.");
+                    console.log(getTranslation("msg_squad_update"));
                     athleteDocData = freshData;
                     localStorage.setItem(`tt_profile_${currentUID}`, JSON.stringify(athleteDocData));
 
@@ -201,9 +201,9 @@ function startPolling() {
 
                     // Show a friendly toast notification
                     if (oldSquadId !== newSquadId) {
-                        showMessage("Your squad assignment has significantly changed!", "success");
+                        showMessage(getTranslation("msg_squad_changed"), "success");
                     } else if (oldPlan !== newPlan) {
-                        showMessage("New workout plan available!", "info");
+                        showMessage(getTranslation("msg_plan_new"), "info");
                     }
                 }
             }
@@ -311,10 +311,10 @@ profilePicInput?.addEventListener("change", async (e) => {
                 profilePicEl.src = displayUrl.startsWith('http') ? displayUrl + "?t=" + new Date().getTime() : displayUrl;
             }
         }
-        showMessage("Profile photo updated!", "success");
+        showMessage(getTranslation("lbl_profile_photo_updated"), "success");
     } catch (err) {
         console.error("Upload error", err);
-        showMessage("Failed to upload: " + err.message, "error");
+        showMessage(getTranslation("msg_failed_upload") + err.message, "error");
     } finally {
         hideLoading();
     }
@@ -334,7 +334,7 @@ function updateHeaderPBs() {
                 headerPBDisplay.appendChild(pill);
             });
         } else {
-            headerPBDisplay.innerHTML = `<p class="text-sm text-gray-400 italic">No events added.</p>`;
+            headerPBDisplay.innerHTML = `<p class="text-sm text-gray-400 italic">${getTranslation("lbl_no_data")}</p>`;
         }
     }
 }
@@ -361,7 +361,7 @@ function renderFullProfile() {
     html += createRow(getTranslation("lbl_medical"), m.medical);
 
     // Add Squad Display
-    const squadName = athleteDocData.squad ? athleteDocData.squad.name : "Unassigned";
+    const squadName = athleteDocData.squad ? athleteDocData.squad.name : getTranslation("lbl_unassigned");
     html += createRow(getTranslation("lbl_squad"), squadName);
 
     html += createRow(getTranslation("lbl_category"), a.category);
@@ -384,9 +384,9 @@ function renderDocuments() {
         }
     };
 
-    addCard(officialDocsGrid, "ID Document", docs.idDoc);
-    addCard(officialDocsGrid, "Club Letter", docs.clubIDDoc);
-    addCard(officialDocsGrid, "Consent Form", docs.consentDoc);
+    addCard(officialDocsGrid, getTranslation("lbl_id_doc"), docs.idDoc);
+    addCard(officialDocsGrid, getTranslation("lbl_club_letter"), docs.clubIDDoc);
+    addCard(officialDocsGrid, getTranslation("lbl_consent_form"), docs.consentDoc);
 
     if (noOfficialDocsText) noOfficialDocsText.classList.toggle("hidden", hasOfficial);
 }
@@ -463,17 +463,17 @@ function renderAchievements() {
             // Edit Mode
             slotDiv.innerHTML = `
                 <h4 class="text-xs font-bold text-gray-400 uppercase mb-3">${getTranslation("lbl_achievement")} ${i + 1}</h4>
-                <p class="text-[10px] text-gray-500 mb-3 italic">Upload your past 12 month achievement</p>
+                <p class="text-[10px] text-gray-500 mb-3 italic">${getTranslation("lbl_upload_achievement_hint")}</p>
                 <div class="space-y-2">
-                    <select id="slot_${i}_event" class="w-full text-xs p-2 rounded border border-gray-300 outline-none text-gray-500"><option value="" disabled selected>Select Event</option>${eventOptions}</select>
-                    <select id="slot_${i}_age" class="w-full text-xs p-2 rounded border border-gray-300 outline-none text-gray-500"><option value="" disabled selected>Select Age Category</option>${ageOptions}</select>
+                    <select id="slot_${i}_event" class="w-full text-xs p-2 rounded border border-gray-300 outline-none text-gray-500"><option value="" disabled selected>${getTranslation("lbl_select_event")}</option>${eventOptions}</select>
+                    <select id="slot_${i}_age" class="w-full text-xs p-2 rounded border border-gray-300 outline-none text-gray-500"><option value="" disabled selected>${getTranslation("lbl_select_age")}</option>${ageOptions}</select>
                     
                     <input type="text" id="slot_${i}_meet" placeholder="${getTranslation("placeholder_meet")}" class="w-full text-xs p-2 rounded border border-gray-300 outline-none">
                     <input type="text" id="slot_${i}_place" placeholder="${getTranslation("placeholder_place")}" class="w-full text-xs p-2 rounded border border-gray-300 outline-none">
                     
                     <div class="flex gap-2 items-center pt-1">
                         <input type="file" id="slot_${i}_file" accept=".jpg, .jpeg, .png, .pdf, application/pdf, image/png, image/jpeg, image/jpg" class="hidden" onchange="document.getElementById('slot_${i}_btn').textContent = this.files[0].name">
-                        <button onclick="document.getElementById('slot_${i}_file').click()" id="slot_${i}_btn" class="text-[10px] bg-white text-gray-600 border border-gray-300 px-3 py-2 rounded-lg hover:bg-gray-100 flex-1 text-left truncate">Select File</button>
+                        <button onclick="document.getElementById('slot_${i}_file').click()" id="slot_${i}_btn" class="text-[10px] bg-white text-gray-600 border border-gray-300 px-3 py-2 rounded-lg hover:bg-gray-100 flex-1 text-left truncate">${getTranslation("btn_select_file")}</button>
                         <button onclick="uploadSlot(${i}, this)" class="px-3 py-1 bg-[var(--highlight)] text-[var(--primary)] font-bold rounded-lg hover:bg-yellow-400 shadow-md transition text-xs">${getTranslation("btn_add")}</button>
                     </div>
                 </div>
@@ -493,11 +493,11 @@ window.uploadSlot = async (index, btnElement) => {
 
     if (!event || !age || !meet || !place || !fileInput.files[0]) {
         console.warn("Validation failed:", { event, age, meet, place, file: fileInput.files[0] });
-        return showMessage("Please fill all fields & select a file to upload.", "error");
+        return showMessage(getTranslation("msg_fill_all_upload"), "error");
     }
 
     const file = fileInput.files[0];
-    if (file.size > 2 * 1024 * 1024) return showMessage("File too large (Max 2MB)", "error");
+    if (file.size > 2 * 1024 * 1024) return showMessage(getTranslation("msg_file_too_large"), "error");
 
     if (btnElement) {
         btnElement.textContent = "...";
@@ -522,30 +522,30 @@ window.uploadSlot = async (index, btnElement) => {
         athleteDocData.achievementsList = athleteDocData.achievementsList.filter(n => n); // Compact
 
         renderAchievements();
-        showMessage("Achievement Added!", "success");
+        showMessage(getTranslation("msg_ach_added"), "success");
 
     } catch (err) {
         console.error("Achievement Upload Error:", err);
-        showMessage("Upload Failed: " + (err.message || "Unknown error"), "error");
+        showMessage(getTranslation("msg_upload_failed") + (err.message || "Unknown error"), "error");
         if (btnElement) {
-            btnElement.textContent = "Add";
+            btnElement.textContent = getTranslation("btn_add");
             btnElement.disabled = false;
         }
     }
 };
 
 window.removeSlot = async (achId) => {
-    if (!confirm("Remove this achievement?")) return;
+    if (!confirm(getTranslation("msg_confirm_remove_ach"))) return;
     try {
         await removeAchievement(currentUID, achId);
 
         // Local Update
         athleteDocData.achievementsList = athleteDocData.achievementsList.filter(a => a.id !== achId);
         renderAchievements();
-        showMessage("Removed", "info");
+        showMessage(getTranslation("msg_removed"), "info");
     } catch (err) {
         console.error(err);
-        showMessage("Failed to remove", "error");
+        showMessage(getTranslation("msg_remove_failed"), "error");
     }
 };
 
@@ -565,7 +565,7 @@ window.viewDocument = (url) => {
     console.log("Resolved Display URL:", displayUrl);
 
     if (docContentArea) {
-        docContentArea.innerHTML = '<p class="text-gray-500">Loading...</p>';
+        docContentArea.innerHTML = `<p class="text-gray-500">${getTranslation("txt_loading")}</p>`;
     }
     if (docViewModal) {
         docViewModal.classList.remove('hidden');
@@ -597,7 +597,7 @@ confirmVerifyBtn.addEventListener("click", async () => {
     const coachId = document.getElementById("verifierID").value.trim();
     const notes = verifierNotesInput.value.trim();
 
-    if (!name || !coachId) return alert("Name & Coach ID required");
+    if (!name || !coachId) return alert(getTranslation("msg_verify_req"));
 
     confirmVerifyBtn.disabled = true;
     try {
@@ -611,8 +611,8 @@ confirmVerifyBtn.addEventListener("click", async () => {
 
         renderAchievements();
         verifyModal.classList.add("hidden");
-        showMessage("Verified!", "success");
-    } catch (err) { console.error(err); showMessage("Failed", "error"); }
+        showMessage(getTranslation("msg_verified"), "success");
+    } catch (err) { console.error(err); showMessage(getTranslation("msg_failed"), "error"); }
     finally { confirmVerifyBtn.disabled = false; }
 });
 
@@ -641,7 +641,7 @@ function renderPerformanceGraph(eventName) {
 
     if (dataPoints.length === 0) {
         if (noPerformanceText) noPerformanceText.classList.remove("hidden");
-        Plotly.newPlot(performanceChartDiv, [], { title: `No Data`, xaxis: { showgrid: false }, yaxis: { showgrid: false } });
+        Plotly.newPlot(performanceChartDiv, [], { title: getTranslation("lbl_no_data"), xaxis: { showgrid: false }, yaxis: { showgrid: false } });
         return;
     }
     if (noPerformanceText) noPerformanceText.classList.add("hidden");
@@ -654,7 +654,7 @@ function renderPerformanceGraph(eventName) {
         marker: { color: '#FDC787', size: 10 }
     };
     const layout = {
-        title: { text: `${eventName} Progression`, font: { size: 16, color: '#012A61', family: "Montserrat" } },
+        title: { text: `${eventName} ${getTranslation("lbl_progression_suffix")}`, font: { size: 16, color: '#012A61', family: "Montserrat" } },
         xaxis: { title: "Date" }, yaxis: { title: "Time (s)" },
         margin: { t: 40, b: 40, l: 50, r: 20 }, font: { family: "Montserrat" }
     };
@@ -672,7 +672,7 @@ performanceForm?.addEventListener("submit", async (e) => {
 
     if (eventTimeLimits[evt]) {
         if (time < eventTimeLimits[evt].min || time > eventTimeLimits[evt].max) {
-            showMessage(`Time unrealistic for ${evt}. Check value.`, "error");
+            showMessage(getTranslation("msg_time_unrealistic").replace("{event}", evt), "error");
             return;
         }
     }
@@ -680,7 +680,7 @@ performanceForm?.addEventListener("submit", async (e) => {
     try {
         showLoading();
         performanceSubmitBtn.disabled = true;
-        performanceSubmitBtn.textContent = "Saving...";
+        performanceSubmitBtn.textContent = getTranslation("btn_saving");
 
         await addPerformance(currentUID, { event: evt, date, time });
 
@@ -689,15 +689,15 @@ performanceForm?.addEventListener("submit", async (e) => {
         if (!athleteDocData.performanceResults[evt]) athleteDocData.performanceResults[evt] = [];
         athleteDocData.performanceResults[evt].push(newEntry);
 
-        showMessage("Result Added!", "success");
+        showMessage(getTranslation("msg_result_added"), "success");
         if (eventSelect.value === evt) renderPerformanceGraph(evt);
         performanceForm.reset();
     } catch (err) {
         console.error(err);
-        showMessage("Error saving result", "error");
+        showMessage(getTranslation("msg_error_save_result"), "error");
     } finally {
         hideLoading();
         performanceSubmitBtn.disabled = false;
-        performanceSubmitBtn.textContent = "Save Result";
+        performanceSubmitBtn.textContent = getTranslation("btn_save_result");
     }
 });
