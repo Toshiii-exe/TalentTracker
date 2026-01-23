@@ -9,6 +9,7 @@ import {
     BACKEND_URL
 } from "./register.js";
 import { updateNavbar } from "./ui-utils.js";
+import { getTranslation } from "./i18n.js";
 
 // DOM Elements
 const navUserBtn = document.getElementById("navUserBtn");
@@ -29,6 +30,15 @@ const heroUserDisplay = document.getElementById("heroUserDisplay");
 const logoutBtn = document.getElementById("logoutBtn");
 const createProfileBtn = document.getElementById("createProfileBtn");
 const contactSupportBtn = document.getElementById("contactSupportBtn");
+
+// State
+let currentCoachData = null;
+let currentUser = null;
+
+// Listen for language changes
+window.addEventListener("languageChanged", () => {
+    if (currentUser) updateCoachUI(currentUser, currentCoachData);
+});
 
 // UI Toggle
 const toggleMobileMenu = (show) => {
@@ -52,161 +62,170 @@ if (mobileBackdrop) mobileBackdrop.addEventListener('click', () => toggleMobileM
 // Auth State
 onAuthChange(async (user) => {
     if (user) {
-        const onboarding = document.getElementById("onboardingState");
-        const dashboard = document.getElementById("dashboardState");
-
-        let name = user.displayName || localStorage.getItem("tt_username") || user.email.split("@")[0];
-        let profilePic = null;
-        let isProfileComplete = false;
-        let isVerified = false;
-        let coachData = null;
-
+        currentUser = user;
         // Update Navbar immediately
         updateNavbar(user, null);
 
         try {
             const data = await getCoachProfile(user.uid);
             if (data && data.exists) {
-                coachData = data;
-                isProfileComplete = !!data.fullName;
-                // Check if manually verified (not just "Pending")
-                // My Schema default is 'Pending'.
-                // If admin sets 'Approved', isVerified = true.
-                isVerified = data.status && data.status.toLowerCase() === "approved";
-
-                name = data.username || data.fullName?.split(" ")[0] || name;
-                profilePic = data.profilePic || null;
-
+                currentCoachData = data;
+                // Cache username
+                const name = data.username || data.fullName?.split(" ")[0];
                 if (name) localStorage.setItem("tt_username", name);
-
-                const statSquads = document.getElementById("statSquads");
-                const statAthletes = document.getElementById("statAthletes");
-                if (statSquads) statSquads.textContent = (data.squads || []).length.toString().padStart(2, '0');
-                if (statAthletes) statAthletes.textContent = (data.favorites || []).length.toString().padStart(2, '0');
             }
         } catch (err) {
             console.error("Error checking profile:", err);
         }
 
-        // State Logic
-        if (onboarding && dashboard) {
-            if (!isProfileComplete) {
-                onboarding.classList.remove("hidden");
-                dashboard.classList.add("hidden");
+        updateCoachUI(user, currentCoachData);
 
-                const heroTitle = onboarding.querySelector("h1");
-                const heroSubtitle = onboarding.querySelector("p");
-                const ctaBtn = document.getElementById("createProfileBtn");
-
-                if (heroTitle) heroTitle.textContent = "Welcome, Coach!";
-                if (heroSubtitle) heroSubtitle.textContent = "Let's set up your professional profile.";
-                if (ctaBtn) ctaBtn.classList.remove("hidden");
-
-            } else if (!isVerified) {
-                onboarding.classList.remove("hidden");
-                dashboard.classList.add("hidden");
-
-                const heroTitle = onboarding.querySelector("h1");
-                const heroSubtitle = onboarding.querySelector("p");
-                const ctaBtn = document.getElementById("createProfileBtn");
-
-                if (heroTitle) heroTitle.textContent = "Profile Under Review";
-                if (heroSubtitle) heroSubtitle.textContent = `Your profile is complete and waiting for Federation approval.\nStatus: ${coachData?.status?.toUpperCase() || "PENDING"}`;
-                if (ctaBtn) ctaBtn.classList.add("hidden");
-
-            } else {
-                onboarding.classList.add("hidden");
-                dashboard.classList.remove("hidden");
-                if (coachData && coachData.favorites) {
-                    fetchWatchlist(coachData.favorites);
-                }
-            }
-        }
-
-        // Verification Badge
-        const vBanner = document.getElementById("verificationBanner");
-        const vBadge = document.getElementById("verificationBadge");
-        const vText = document.getElementById("verificationStatusText");
-
-        if (isProfileComplete && !isVerified) {
-            if (vBanner) vBanner.classList.remove("hidden");
-        } else {
-            if (vBanner) vBanner.classList.add("hidden");
-        }
-
-        if (vBadge) {
-            if (isVerified) {
-                vBadge.classList.replace("bg-amber-500", "bg-green-500");
-                if (vText) vText.textContent = "Verified Professional";
-            } else {
-                vBadge.classList.replace("bg-green-500", "bg-amber-500");
-                if (vText) vText.textContent = "Pending Verification";
-            }
-        }
-
-        // Update Navbar
-        updateNavbar(user, coachData);
-        if (heroUserDisplay) heroUserDisplay.textContent = name;
-
-        // Profile Upload
+        // Profile Upload Setup
         if (navUserPic && navProfileInput) {
-            const handleUpload = async (e) => {
-                const file = e.target.files[0];
-                if (!file) return;
-
-                const originalText = navBtnText.textContent;
-                navBtnText.textContent = "Uploading...";
-                try {
-                    // Upload file first
-                    const url = await uploadFile(file, user.uid, "profilePic");
-
-                    // Fetch LATEST full profile to ensure we don't overwrite other fields with stale data or nulls
-                    // We can't rely just on `coachData` from the initial load if other tab updated it, but close enough.
-                    // Better to re-fetch if possible, or just use `coachData` if we trust it.
-                    // Given `coachData` is local state, let's use it but ensure we aren't sending a partial object associated with `saveCoachProfile`.
-                    // `saveCoachProfile` expects the full object generally.
-
-                    // Safety check: Fetch fresh data just in case
-                    const freshData = await getCoachProfile(user.uid);
-                    const dataToSave = (freshData && freshData.exists) ? freshData : (coachData || {});
-
-                    dataToSave.profilePic = url;
-
-                    // Update backend
-                    await saveCoachProfile(user.uid, dataToSave);
-
-                    // Update Local State
-                    coachData = dataToSave;
-
-                    const isPdf = file.type === "application/pdf" || /\.pdf$/i.test(file.name);
-                    const displayUrl = isPdf ? "https://cdn-icons-png.flaticon.com/512/337/337946.png" : url;
-
-                    const imgEl = document.getElementById("navUserImg");
-                    if (imgEl) {
-                        imgEl.src = displayUrl;
-                        imgEl.classList.remove("hidden");
-                    }
-                    if (mobileImg) mobileImg.src = displayUrl;
-
-                    navBtnText.textContent = originalText;
-                    alert("Profile picture updated!");
-                } catch (err) {
-                    console.error(err);
-                    alert("Failed to upload image.");
-                    navBtnText.textContent = originalText;
-                }
-            };
-            navProfileInput.onchange = handleUpload;
-            navUserPic.onclick = (e) => {
-                e.stopPropagation();
-                navProfileInput.click();
-            }
+            setupProfileUpload(user);
         }
 
     } else {
         window.location.href = "index.html";
     }
 });
+
+function updateCoachUI(user, coachData) {
+    const onboarding = document.getElementById("onboardingState");
+    const dashboard = document.getElementById("dashboardState");
+
+    let name = user.displayName || localStorage.getItem("tt_username") || user.email.split("@")[0];
+    let isProfileComplete = false;
+    let isVerified = false;
+
+    if (coachData) {
+        isProfileComplete = !!coachData.fullName;
+        isVerified = coachData.status && coachData.status.toLowerCase() === "approved";
+        name = coachData.username || coachData.fullName?.split(" ")[0] || name;
+
+        const statSquads = document.getElementById("statSquads");
+        const statAthletes = document.getElementById("statAthletes");
+        if (statSquads) statSquads.textContent = (coachData.squads || []).length.toString().padStart(2, '0');
+        if (statAthletes) statAthletes.textContent = (coachData.favorites || []).length.toString().padStart(2, '0');
+    }
+
+    // Update Navbar
+    updateNavbar(user, coachData);
+    if (heroUserDisplay) heroUserDisplay.textContent = name;
+
+    // State Logic
+    if (onboarding && dashboard) {
+        if (!isProfileComplete) {
+            onboarding.classList.remove("hidden");
+            dashboard.classList.add("hidden");
+
+            const heroTitle = onboarding.querySelector("h1");
+            const heroSubtitle = onboarding.querySelector("p");
+            const ctaBtn = document.getElementById("createProfileBtn");
+
+            if (heroTitle) heroTitle.textContent = getTranslation("coach_welcome_title");
+            if (heroSubtitle) heroSubtitle.textContent = getTranslation("coach_setup_profile");
+            if (ctaBtn) ctaBtn.classList.remove("hidden");
+
+        } else if (!isVerified) {
+            onboarding.classList.remove("hidden");
+            dashboard.classList.add("hidden");
+
+            const heroTitle = onboarding.querySelector("h1");
+            const heroSubtitle = onboarding.querySelector("p");
+            const ctaBtn = document.getElementById("createProfileBtn");
+
+            if (heroTitle) heroTitle.textContent = getTranslation("coach_profile_review");
+            if (heroSubtitle) heroSubtitle.textContent = `${getTranslation("coach_status_msg")} ${coachData?.status?.toUpperCase() || "PENDING"}`;
+            if (ctaBtn) ctaBtn.classList.add("hidden");
+
+        } else {
+            onboarding.classList.add("hidden");
+            dashboard.classList.remove("hidden");
+            if (coachData && coachData.favorites) {
+                fetchWatchlist(coachData.favorites);
+            }
+        }
+    }
+
+    // Verification Badge
+    const vBanner = document.getElementById("verificationBanner");
+    const vBadge = document.getElementById("verificationBadge");
+    const vText = document.getElementById("verificationStatusText");
+
+    if (isProfileComplete && !isVerified) {
+        if (vBanner) vBanner.classList.remove("hidden");
+    } else {
+        if (vBanner) vBanner.classList.add("hidden");
+    }
+
+    if (vBadge) {
+        if (isVerified) {
+            vBadge.classList.replace("bg-amber-500", "bg-green-500");
+            if (vText) vText.textContent = getTranslation("status_verified_pro");
+        } else {
+            vBadge.classList.replace("bg-green-500", "bg-amber-500");
+            if (vText) vText.textContent = getTranslation("status_pending_verify");
+        }
+    }
+}
+
+function setupProfileUpload(user) {
+    const handleUpload = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const navBtnText = document.getElementById("navBtnText"); // Ensure this is selected if needed, or was it a variable? It was DOM usually.
+        // It was selected implicitly by ID in previous code, let's select it safely.
+        const btnText = document.getElementById("navBtnText");
+
+        let originalText = "";
+        if (btnText) {
+            originalText = btnText.textContent;
+            btnText.textContent = "Uploading...";
+        }
+
+        try {
+            // Upload file first
+            // Upload file first
+            const uploadUrl = await uploadFile(file, user.uid, "profilePic");
+
+            // Safety check: Fetch fresh data just in case
+            const freshData = await getCoachProfile(user.uid);
+            const dataToSave = (freshData && freshData.exists) ? freshData : (currentCoachData || {});
+
+            dataToSave.profilePic = uploadUrl;
+
+            // Update backend
+            await saveCoachProfile(user.uid, dataToSave);
+
+            // Update Local State
+            currentCoachData = dataToSave;
+
+            const isPdf = file.type === "application/pdf" || /\.pdf$/i.test(file.name);
+            const displayUrl = isPdf ? "https://cdn-icons-png.flaticon.com/512/337/337946.png" : uploadUrl;
+
+            const imgEl = document.getElementById("navUserImg");
+            if (imgEl) {
+                imgEl.src = displayUrl;
+                imgEl.classList.remove("hidden");
+            }
+            if (mobileImg) mobileImg.src = displayUrl;
+
+            if (btnText) btnText.textContent = originalText;
+            alert(getTranslation("alert_pic_updated"));
+        } catch (err) {
+            console.error(err);
+            alert("Failed to upload image.");
+            if (btnText) btnText.textContent = originalText;
+        }
+    };
+    navProfileInput.onchange = handleUpload;
+    navUserPic.onclick = (e) => {
+        e.stopPropagation();
+        navProfileInput.click();
+    }
+}
 
 if (navUserBtn) {
     navUserBtn.addEventListener('click', async (e) => {

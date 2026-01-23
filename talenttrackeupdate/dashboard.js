@@ -12,6 +12,12 @@ import {
     BACKEND_URL
 } from "./register.js";
 import { showLoading, hideLoading, showMessage, updateNavbar } from "./ui-utils.js";
+import { getTranslation } from "./i18n.js";
+
+// Listen for language changes
+window.addEventListener("languageChanged", () => {
+    if (currentUID) loadAthleteProfileData();
+});
 
 // DOM Elements
 const navLoginBtn = document.getElementById("navLoginBtn");
@@ -343,26 +349,26 @@ function renderFullProfile() {
     const createRow = (label, val) => `<div class="flex flex-col pb-2 border-b border-gray-50 mb-2"><span class="text-xs text-gray-400 font-bold uppercase">${label}</span><span class="text-sm font-medium text-gray-800 break-words">${val || "-"}</span></div>`;
 
     let html = "";
-    html += createRow("Name", p.fullName);
-    html += createRow("DOB", p.dob ? new Date(p.dob).toLocaleDateString() : "-");
-    html += createRow("Gender", p.gender);
-    html += createRow("Phone", p.phone);
-    html += createRow("Email", p.email);
-    html += createRow("Address", p.address ? `${p.address.street}, ${p.address.city}` : "-");
-    html += createRow("Height", `${m.height || "-"} cm`);
-    html += createRow("Weight", `${m.weight || "-"} kg`);
-    html += createRow("Blood", m.blood);
-    html += createRow("Medical", m.medical);
+    html += createRow(getTranslation("lbl_name"), p.fullName);
+    html += createRow(getTranslation("lbl_dob"), p.dob ? new Date(p.dob).toLocaleDateString() : "-");
+    html += createRow(getTranslation("lbl_gender"), p.gender);
+    html += createRow(getTranslation("lbl_phone"), p.phone);
+    html += createRow(getTranslation("lbl_email"), p.email);
+    html += createRow(getTranslation("lbl_address"), p.address ? `${p.address.street}, ${p.address.city}` : "-");
+    html += createRow(getTranslation("lbl_height"), `${m.height || "-"} cm`);
+    html += createRow(getTranslation("lbl_weight"), `${m.weight || "-"} kg`);
+    html += createRow(getTranslation("lbl_blood"), m.blood);
+    html += createRow(getTranslation("lbl_medical"), m.medical);
 
     // Add Squad Display
     const squadName = athleteDocData.squad ? athleteDocData.squad.name : "Unassigned";
-    html += createRow("Current Squad", squadName);
+    html += createRow(getTranslation("lbl_squad"), squadName);
 
-    html += createRow("Category", a.category);
-    html += createRow("Coach", a.coach);
-    html += createRow("Training", a.trainingDays);
-    html += createRow("School", l.school);
-    html += createRow("Club", l.club);
+    html += createRow(getTranslation("lbl_category"), a.category);
+    html += createRow(getTranslation("lbl_coach"), a.coach);
+    html += createRow(getTranslation("lbl_training"), a.trainingDays);
+    html += createRow(getTranslation("lbl_school"), l.school);
+    html += createRow(getTranslation("lbl_club"), l.club);
     fullProfileList.innerHTML = html;
 }
 
@@ -430,23 +436,23 @@ function renderAchievements() {
 
             if (isVerified) {
                 const vData = verifications[ach.id];
-                badge = `<div class="group relative inline-block"><span class="verified-badge bg-green-100 text-green-700 border border-green-200 cursor-help">✓ Verified</span><div class="hidden group-hover:block absolute bottom-full right-0 mb-2 w-56 bg-gray-800 text-white text-xs rounded p-2 shadow-lg z-50"><p class="font-bold">Coach: ${vData.by}</p><p class="text-[10px]">ID: ${vData.coachId}</p></div></div>`;
+                badge = `<div class="group relative inline-block"><span class="verified-badge bg-green-100 text-green-700 border border-green-200 cursor-help">✓ ${getTranslation("tag_verified")}</span><div class="hidden group-hover:block absolute bottom-full right-0 mb-2 w-56 bg-gray-800 text-white text-xs rounded p-2 shadow-lg z-50"><p class="font-bold">${getTranslation("lbl_coach")}: ${vData.by}</p><p class="text-[10px]">ID: ${vData.coachId}</p></div></div>`;
             } else {
-                badge = `<button onclick="openVerifyModal('${ach.id}')" class="text-[10px] bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-1 rounded transition font-bold">Verify</button>`;
+                badge = `<button onclick="openVerifyModal('${ach.id}')" class="text-[10px] bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-1 rounded transition font-bold">${getTranslation("btn_verify")}</button>`;
             }
 
             slotDiv.classList.remove("border-dashed");
             slotDiv.classList.add("border-gray-200", "bg-white", "shadow-sm");
             slotDiv.innerHTML = `
                 <div class="flex justify-between items-start mb-2">
-                    <h4 class="text-xs font-bold text-[var(--primary)] uppercase">Achievement ${i + 1}</h4>
-                    <button onclick="removeSlot(${ach.id})" class="text-red-500 hover:text-red-700 text-xs font-bold bg-white px-2 py-1 rounded border border-red-100 shadow-sm">Remove</button>
+                    <h4 class="text-xs font-bold text-[var(--primary)] uppercase">${getTranslation("lbl_achievement")} ${i + 1}</h4>
+                    <button onclick="removeSlot(${ach.id})" class="text-red-500 hover:text-red-700 text-xs font-bold bg-white px-2 py-1 rounded border border-red-100 shadow-sm">${getTranslation("btn_remove")}</button>
                 </div>
                 <div class="mb-3 space-y-1">
-                    <p class="text-xs text-gray-700"><b>Event:</b> ${ach.event}</p>
-                    <p class="text-xs text-gray-700"><b>Meet:</b> ${ach.meet}</p>
-                    <p class="text-xs text-gray-700"><b>Place:</b> ${ach.place}</p>
-                    <p class="text-xs text-gray-700"><b>Category:</b> ${ach.age}</p>
+                    <p class="text-xs text-gray-700"><b>${getTranslation("lbl_event")}:</b> ${ach.event}</p>
+                    <p class="text-xs text-gray-700"><b>${getTranslation("lbl_meet")}:</b> ${ach.meet}</p>
+                    <p class="text-xs text-gray-700"><b>${getTranslation("lbl_place")}:</b> ${ach.place}</p>
+                    <p class="text-xs text-gray-700"><b>${getTranslation("lbl_category")}:</b> ${ach.age}</p>
                 </div>
                 <div class="flex justify-between items-center border-t border-gray-100 pt-2">
                     <button onclick="viewDocument('${ach.url}')" class="text-xs text-white bg-[var(--secondary)] px-3 py-1 rounded-full font-bold hover:bg-[var(--primary)] transition">View</button>
@@ -456,19 +462,19 @@ function renderAchievements() {
         } else {
             // Edit Mode
             slotDiv.innerHTML = `
-                <h4 class="text-xs font-bold text-gray-400 uppercase mb-3">Achievement ${i + 1}</h4>
+                <h4 class="text-xs font-bold text-gray-400 uppercase mb-3">${getTranslation("lbl_achievement")} ${i + 1}</h4>
                 <p class="text-[10px] text-gray-500 mb-3 italic">Upload your past 12 month achievement</p>
                 <div class="space-y-2">
                     <select id="slot_${i}_event" class="w-full text-xs p-2 rounded border border-gray-300 outline-none text-gray-500"><option value="" disabled selected>Select Event</option>${eventOptions}</select>
                     <select id="slot_${i}_age" class="w-full text-xs p-2 rounded border border-gray-300 outline-none text-gray-500"><option value="" disabled selected>Select Age Category</option>${ageOptions}</select>
                     
-                    <input type="text" id="slot_${i}_meet" placeholder="Meet / Competition" class="w-full text-xs p-2 rounded border border-gray-300 outline-none">
-                    <input type="text" id="slot_${i}_place" placeholder="Place (e.g. 1st)" class="w-full text-xs p-2 rounded border border-gray-300 outline-none">
+                    <input type="text" id="slot_${i}_meet" placeholder="${getTranslation("placeholder_meet")}" class="w-full text-xs p-2 rounded border border-gray-300 outline-none">
+                    <input type="text" id="slot_${i}_place" placeholder="${getTranslation("placeholder_place")}" class="w-full text-xs p-2 rounded border border-gray-300 outline-none">
                     
                     <div class="flex gap-2 items-center pt-1">
                         <input type="file" id="slot_${i}_file" accept=".jpg, .jpeg, .png, .pdf, application/pdf, image/png, image/jpeg, image/jpg" class="hidden" onchange="document.getElementById('slot_${i}_btn').textContent = this.files[0].name">
                         <button onclick="document.getElementById('slot_${i}_file').click()" id="slot_${i}_btn" class="text-[10px] bg-white text-gray-600 border border-gray-300 px-3 py-2 rounded-lg hover:bg-gray-100 flex-1 text-left truncate">Select File</button>
-                        <button onclick="uploadSlot(${i}, this)" class="px-3 py-1 bg-[var(--highlight)] text-[var(--primary)] font-bold rounded-lg hover:bg-yellow-400 shadow-md transition text-xs">Add</button>
+                        <button onclick="uploadSlot(${i}, this)" class="px-3 py-1 bg-[var(--highlight)] text-[var(--primary)] font-bold rounded-lg hover:bg-yellow-400 shadow-md transition text-xs">${getTranslation("btn_add")}</button>
                     </div>
                 </div>
             `;

@@ -10,6 +10,13 @@ import {
 } from "./register.js";
 import { updateNavbar } from "./ui-utils.js";
 
+import { getTranslation } from "./i18n.js";
+
+// Listen for language changes to re-render
+window.addEventListener("languageChanged", () => {
+    if (currentCoachId) renderAthletes();
+});
+
 // State
 let allAthletes = [];
 let filteredAthletes = [];
@@ -111,10 +118,10 @@ function renderAthletes() {
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                         </svg>
                     </div>
-                    <h3 class="text-xl font-bold text-slate-800 mb-2">Your Watchlist is Empty</h3>
-                    <p class="text-slate-600 mb-4">Click the ❤️ heart icon on athlete cards to add them to your watchlist.</p>
+                    <h3 class="text-xl font-bold text-slate-800 mb-2">${getTranslation("coach_watchlist_empty")}</h3>
+                    <p class="text-slate-600 mb-4">${getTranslation("coach_watchlist_empty_desc")}</p>
                     <button onclick="document.getElementById('filterFavorites').click()" class="px-6 py-2 bg-[var(--primary)] text-white rounded-xl font-semibold hover:bg-[var(--secondary)] transition-all">
-                        Show All Athletes
+                        ${getTranslation("coach_watchlist_explore")}
                     </button>
                 `;
             } else {
@@ -125,8 +132,8 @@ function renderAthletes() {
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 9.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                     </div>
-                    <h3 class="text-xl font-bold text-slate-800">No athletes found matching your filters</h3>
-                    <p class="text-slate-600">Try adjusting your search or filters.</p>
+                    <h3 class="text-xl font-bold text-slate-800">${getTranslation("msg_no_athletes_found")}</h3>
+                    <p class="text-slate-600">${getTranslation("events_no_events_desc")}</p>
                 `;
             }
             noResults.classList.remove("hidden");
@@ -152,12 +159,12 @@ function renderAthletes() {
         }
 
         const events = athlete.athletic?.events || [];
-        const mainSport = events.length > 0 ? events[0].event : "No Events";
+        const mainSport = events.length > 0 ? events[0].event : getTranslation("lbl_no_events");
         const isComplete = true; // Assuming SQL user is complete if listed
 
         const statusHTML = isComplete
-            ? `<div class="absolute top-4 left-4 bg-green-500/90 text-white px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-widest shadow-sm">Verified Profile</div>`
-            : `<div class="absolute top-4 left-4 bg-amber-500/90 text-white px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-widest shadow-sm">Pending</div>`;
+            ? `<div class="absolute top-4 left-4 bg-green-500/90 text-white px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-widest shadow-sm">${getTranslation("status_verified")}</div>`
+            : `<div class="absolute top-4 left-4 bg-amber-500/90 text-white px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-widest shadow-sm">${getTranslation("status_pending")}</div>`;
 
         const card = document.createElement("div");
         card.className = "athlete-card bg-white rounded-[2rem] overflow-hidden shadow-sm border border-blue-50 flex flex-col hover:border-[var(--secondary)] relative";
@@ -188,13 +195,13 @@ function renderAthletes() {
                 
                 <div class="grid grid-cols-2 gap-2 mb-6">
                     <div class="bg-blue-50 p-3 rounded-2xl">
-                        <p class="text-[9px] font-bold text-blue-400 uppercase tracking-wider mb-1">Main Event</p>
+                        <p class="text-[9px] font-bold text-blue-400 uppercase tracking-wider mb-1">${getTranslation("lbl_main_event")}</p>
                         <p class="text-sm font-bold text-blue-900">${mainSport}</p>
                     </div>
                 </div>
  
                 <a href="view-athlete.html?id=${athlete.id}" class="mt-auto w-full py-3 rounded-xl bg-slate-900 text-white text-center text-sm font-bold hover:bg-[var(--primary)] transition-all">
-                    View Dashboard
+                    ${getTranslation("btn_view_dashboard")}
                 </a>
             </div>
         `;

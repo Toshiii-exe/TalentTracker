@@ -180,6 +180,9 @@ export function setLanguage(lang) {
     if (select) select.value = lang;
 
     updateMobileButtons(lang);
+
+    // Dispatch event for dynamic re-renders
+    window.dispatchEvent(new CustomEvent('languageChanged', { detail: { lang } }));
 }
 
 /**

@@ -2,6 +2,7 @@ import { auth, onAuthChange, signOut } from "./register.js";
 import * as API from "./api.js";
 import { showAlert, showConfirm, updateNavbar, showLoading, hideLoading } from "./ui-utils.js";
 import { setupDropdownInput, syncDropdown, CITIES } from "./locations.js";
+import { getTranslation } from "./i18n.js";
 
 // WhatsApp DOM
 const waEventModal = document.getElementById("waEventModal");
@@ -21,6 +22,11 @@ let allEvents = [];
 let filteredEvents = [];
 // View State
 let currentView = 'grid';
+
+// Listen for language changes
+window.addEventListener("languageChanged", () => {
+    applyFilters();
+});
 
 // Check if user is already logged in
 const storedUser = localStorage.getItem('user');
@@ -182,7 +188,7 @@ async function loadEvents() {
         console.error("Error loading events:", error);
         // Show empty state instead of error for better UX
         grid.innerHTML = "";
-        emptyTitle.textContent = "No Events";
+        emptyTitle.textContent = getTranslation("events_no_events_title");
         emptyMsg.classList.add("hidden");
         emptyState.classList.remove("hidden");
     }
@@ -243,11 +249,11 @@ window.applyFilters = function () {
     if (filteredEvents.length === 0) {
         if (currentView === 'grid') grid.innerHTML = "";
         if (currentRole === "federation" || currentRole === "admin") {
-            if (emptyTitle) emptyTitle.textContent = "No Events Found";
+            if (emptyTitle) emptyTitle.textContent = getTranslation("events_no_events_title");
             if (emptyMsg) emptyMsg.classList.add("hidden");
         } else {
-            if (emptyTitle) emptyTitle.textContent = "No Events Found";
-            if (emptyMsg) emptyMsg.textContent = "Try adjusting your filters.";
+            if (emptyTitle) emptyTitle.textContent = getTranslation("events_no_events_title");
+            if (emptyMsg) emptyMsg.textContent = getTranslation("events_no_events_desc");
             if (emptyMsg) emptyMsg.classList.remove("hidden");
         }
         if (currentView === 'grid') emptyState.classList.remove("hidden");
@@ -274,7 +280,8 @@ function renderEvents() {
 
 function createEventCard(event) {
     const eventDate = new Date(event.event_date);
-    const formattedDate = eventDate.toLocaleDateString("en-US", {
+    const lang = localStorage.getItem("tt_app_language") || "en";
+    const formattedDate = eventDate.toLocaleDateString(lang, {
         month: "short",
         day: "numeric",
         year: "numeric"
@@ -294,10 +301,10 @@ function createEventCard(event) {
     const adminButtons = (currentRole === "federation" || currentRole === "admin") ? `
         <div class="flex gap-2 mt-4">
             <button onclick="editEvent(${event.id})" class="flex-1 py-2 px-4 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 font-semibold text-sm">
-                Edit
+                ${getTranslation("btn_edit")}
             </button>
             <button onclick="deleteEventConfirm(${event.id})" class="flex-1 py-2 px-4 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 font-semibold text-sm">
-                Delete
+                ${getTranslation("btn_delete")}
             </button>
         </div>
     ` : '';
@@ -305,7 +312,7 @@ function createEventCard(event) {
     // Athlete register button
     const athleteButton = currentRole === "athlete" && !isPast ? `
         <button onclick="registerForEvent(${event.id})" class="w-full mt-4 py-3 bg-[var(--primary)] text-white rounded-xl font-bold hover:bg-[var(--secondary)] transition-all">
-            Register Now
+            ${getTranslation("btn_register_now")}
         </button>
     ` : '';
 
@@ -316,13 +323,13 @@ function createEventCard(event) {
                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                    <path d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .533 5.333.533 12S5.867 24 12.48 24c3.44 0 6.04-1.133 8.04-3.2 2.04-2.04 2.627-5.027 2.627-7.44 0-.733-.067-1.44-.187-2.12h-10.48z"/>
                 </svg>
-                Google
+                ${getTranslation("btn_google_cal")}
             </button>
             <button onclick="addToICSCalendar(${event.id})" class="py-2 px-3 bg-[var(--primary)] border-2 border-[var(--primary)] text-white rounded-xl font-bold hover:bg-[var(--secondary)] transition-all text-xs flex items-center justify-center gap-1" title="Download Calendar File">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                 </svg>
-                Mobile/ICS
+                ${getTranslation("btn_ics_cal")}
             </button>
         </div>
     `;
@@ -361,7 +368,7 @@ function createEventCard(event) {
                 <p class="text-slate-600 text-sm mb-4 line-clamp-3">${event.description || ''}</p>
                 
                 <button onclick="viewEventDetails(${event.id})" class="w-full py-2 bg-slate-100 text-slate-700 rounded-xl font-semibold hover:bg-slate-200 transition-all">
-                    View Full Details
+                    ${getTranslation("btn_view_full_details")}
                 </button>
                 
                 ${athleteButton}
@@ -386,7 +393,7 @@ function openEventModal(event = null) {
             return;
         }
 
-        title.textContent = event ? "Edit Event" : "Create New Event";
+        title.textContent = event ? getTranslation("events_modal_edit_title") : getTranslation("events_modal_create_title");
 
         if (event) {
             // Normalizing date to YYYY-MM-DD for input[type="date"]
@@ -487,7 +494,7 @@ async function handleEventSubmit(e) {
         if (editingEventId) {
             await API.updateEvent(editingEventId, eventData);
             hideLoading();
-            await showAlert("Event updated successfully!", "Success");
+            await showAlert(getTranslation("msg_event_updated"), getTranslation("msg_success"));
         } else {
             await API.createEvent(eventData);
             hideLoading();
@@ -503,11 +510,11 @@ async function handleEventSubmit(e) {
     } catch (error) {
         hideLoading();
         console.error("Error saving event:", error);
-        let errorMsg = "Failed to save event. Please check your connection.";
+        let errorMsg = getTranslation("msg_error_save_event") || "Failed to save event.";
         if (error.message) {
             errorMsg = `Failed to save event: ${error.message}`;
         }
-        await showAlert(errorMsg, "Error");
+        await showAlert(errorMsg, getTranslation("msg_error"));
     }
 }
 
@@ -523,8 +530,8 @@ window.editEvent = async function (eventId) {
 
 window.deleteEventConfirm = async function (eventId) {
     const confirmed = await showConfirm(
-        "Are you sure you want to delete this event? This action cannot be undone.",
-        "Delete Event"
+        getTranslation("msg_confirm_delete_event") || "Are you sure you want to delete this event?",
+        getTranslation("title_delete_event") || "Delete Event"
     );
 
     if (!confirmed) return;
@@ -533,12 +540,12 @@ window.deleteEventConfirm = async function (eventId) {
         showLoading();
         await API.deleteEvent(eventId);
         hideLoading();
-        await showAlert("Event deleted successfully!", "Success");
+        await showAlert(getTranslation("msg_event_deleted"), getTranslation("msg_success"));
         await loadEvents();
     } catch (error) {
         hideLoading();
         console.error("Error deleting event:", error);
-        await showAlert("Failed to delete event. Please try again.", "Error");
+        await showAlert(getTranslation("msg_error_delete_event") || "Failed to delete event.", getTranslation("msg_error"));
     }
 };
 
@@ -547,11 +554,11 @@ window.registerForEvent = async function (eventId) {
         showLoading();
         await API.registerForEvent(eventId, currentUser.uid || currentUser.id);
         hideLoading();
-        await showAlert("Successfully registered for the event!", "Success");
+        await showAlert(getTranslation("msg_event_registered") || "Successfully registered!", getTranslation("msg_success"));
     } catch (error) {
         hideLoading();
         console.error("Error registering:", error);
-        await showAlert(error.message || "Failed to register for event.", "Error");
+        await showAlert(error.message || getTranslation("msg_error_register_event") || "Failed to register.", getTranslation("msg_error"));
     }
 };
 
@@ -637,6 +644,7 @@ window.viewEventDetails = async function (eventId) {
     try {
         const event = await API.getEvent(eventId);
 
+        const lang = localStorage.getItem("tt_app_language") || "en";
         const detailsHTML = `
             <div class="space-y-4">
                 <h2 class="text-3xl font-black text-[var(--primary)]">${event.title}</h2>
@@ -644,55 +652,55 @@ window.viewEventDetails = async function (eventId) {
                 
                 <div class="grid grid-cols-2 gap-4 py-4">
                     <div>
-                        <p class="text-sm font-bold text-slate-500">Date</p>
-                        <p class="text-lg font-semibold">${new Date(event.event_date).toLocaleDateString()}</p>
+                        <p class="text-sm font-bold text-slate-500">${getTranslation("lbl_event_date") || "Date"}</p>
+                        <p class="text-lg font-semibold">${new Date(event.event_date).toLocaleDateString(lang, { year: 'numeric', month: 'long', day: 'numeric' })}</p>
                     </div>
                     <div>
-                        <p class="text-sm font-bold text-slate-500">Time</p>
+                        <p class="text-sm font-bold text-slate-500">${getTranslation("lbl_event_time") || "Time"}</p>
                         <p class="text-lg font-semibold">${event.event_time || 'TBA'}</p>
                     </div>
                     <div>
-                        <p class="text-sm font-bold text-slate-500">Venue</p>
+                        <p class="text-sm font-bold text-slate-500">${getTranslation("lbl_venue")}</p>
                         <p class="text-lg font-semibold">${event.venue}</p>
                     </div>
                     <div>
-                        <p class="text-sm font-bold text-slate-500">City</p>
+                        <p class="text-sm font-bold text-slate-500">${getTranslation("lbl_city")}</p>
                         <p class="text-lg font-semibold">${event.city}</p>
                     </div>
                     <div>
-                        <p class="text-sm font-bold text-slate-500">Category</p>
+                        <p class="text-sm font-bold text-slate-500">${getTranslation("lbl_category")}</p>
                         <p class="text-lg font-semibold">${event.category}</p>
                     </div>
                     <div>
-                        <p class="text-sm font-bold text-slate-500">Registration Deadline</p>
-                        <p class="text-lg font-semibold">${event.registration_deadline ? new Date(event.registration_deadline).toLocaleDateString() : 'Open'}</p>
+                        <p class="text-sm font-bold text-slate-500">${getTranslation("lbl_reg_deadline")}</p>
+                        <p class="text-lg font-semibold">${event.registration_deadline ? new Date(event.registration_deadline).toLocaleDateString(lang, { year: 'numeric', month: 'long', day: 'numeric' }) : 'Open'}</p>
                     </div>
                 </div>
                 
                 ${event.eligibility ? `
                     <div>
-                        <h3 class="text-xl font-bold text-[var(--primary)] mb-2">Eligibility</h3>
+                        <h3 class="text-xl font-bold text-[var(--primary)] mb-2">${getTranslation("lbl_eligibility")}</h3>
                         <p class="text-slate-600 whitespace-pre-line">${event.eligibility}</p>
                     </div>
                 ` : ''}
                 
                 ${event.rules ? `
                     <div>
-                        <h3 class="text-xl font-bold text-[var(--primary)] mb-2">Rules & Regulations</h3>
+                        <h3 class="text-xl font-bold text-[var(--primary)] mb-2">${getTranslation("lbl_rules")}</h3>
                         <p class="text-slate-600 whitespace-pre-line">${event.rules}</p>
                     </div>
                 ` : ''}
                 
                 ${event.requirements ? `
                     <div>
-                        <h3 class="text-xl font-bold text-[var(--primary)] mb-2">Requirements</h3>
+                        <h3 class="text-xl font-bold text-[var(--primary)] mb-2">${getTranslation("lbl_requirements")}</h3>
                         <p class="text-slate-600 whitespace-pre-line">${event.requirements}</p>
                     </div>
                 ` : ''}
                 
                 ${event.contact_email || event.contact_phone ? `
                     <div>
-                        <h3 class="text-xl font-bold text-[var(--primary)] mb-2">Contact Information</h3>
+                        <h3 class="text-xl font-bold text-[var(--primary)] mb-2">${getTranslation("lbl_contact")}</h3>
                         ${event.contact_email ? `<p class="text-slate-600">Email: ${event.contact_email}</p>` : ''}
                         ${event.contact_phone ? `<p class="text-slate-600">Phone: ${event.contact_phone}</p>` : ''}
                     </div>
@@ -738,7 +746,8 @@ async function sendEventWhatsAppNotification(event) {
         }
 
         // 4. Construct Message
-        const msg = `*New Event Alert: ${event.title}*\n\n📅 ${new Date(event.event_date).toLocaleDateString()}\n📍 ${event.city}\n🏆 Category: ${targetCategory}\n\n${event.description}\n\nRegister now on Talent Tracker!`;
+        const lang = localStorage.getItem("tt_app_language") || "en";
+        const msg = `*New Event Alert: ${event.title}*\n\n📅 ${new Date(event.event_date).toLocaleDateString(lang)}\n📍 ${event.city}\n🏆 Category: ${targetCategory}\n\n${event.description}\n\nRegister now on Talent Tracker!`;
 
         // 5. Populate Modal
         waEventCount.textContent = phones.length; // Show count of TARGETED athletes
