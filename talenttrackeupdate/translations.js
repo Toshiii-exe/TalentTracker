@@ -605,7 +605,11 @@ export const translations = {
     fed_unknown_user: "Unknown User",
     fed_no_email: "No Email",
     fed_generalist: "Generalist",
-    fed_unknown: "Unknown"
+    fed_unknown: "Unknown",
+    msg_failed_load_event: "Failed to load event details.",
+    msg_no_athletes_for_wa: "Event created! No athletes found in category to notify via WhatsApp.",
+    msg_failed_load_athletes: "Event created, but failed to load athlete phone numbers.",
+    err_upload_profile: "Error uploading profile: "
   },
   si: {
     nav_home: "මුල් පිටුව",
@@ -1207,7 +1211,11 @@ export const translations = {
     fed_unknown_user: "නොදන්නා පරිශීලකයා",
     fed_no_email: "විද්‍යුත් තැපෑලක් නැත",
     fed_generalist: "සාමාන්‍ය",
-    fed_unknown: "නොදන්නා"
+    fed_unknown: "නොදන්නා",
+    msg_failed_load_event: "ඉසව් විස්තර පූරණය කිරීම අසාර්ථක විය.",
+    msg_no_athletes_for_wa: "ඉසව්ව නිර්මාණය කරන ලදී! WhatsApp හරහා දැනුම් දීමට අදාළ කාණ්ඩයේ ක්‍රීඩකයින් හමු නොවීය.",
+    msg_failed_load_athletes: "ඉසව්ව නිර්මාණය කරන ලදී, නමුත් ක්‍රීඩක දුරකථන අංක පූරණය කිරීම අසාර්ථක විය.",
+    err_upload_profile: "පැතිකඩ උඩුගත කිරීමේ දෝෂය: "
   },
   ta: {
     nav_home: "முகப்பு",
@@ -1809,6 +1817,10 @@ export const translations = {
     fed_unknown_user: "தெரியாத பயனர்",
     fed_no_email: "மின்னஞ்சல் இல்லை",
     fed_generalist: "பொதுவாளர்",
-    fed_unknown: "தெரியாத"
+    fed_unknown: "தெரியாத",
+    msg_failed_load_event: "நிகழ்வு விவரங்களை ஏற்றுவதில் தோல்வி.",
+    msg_no_athletes_for_wa: "நிகழ்வு உருவாக்கப்பட்டது! WhatsApp வழியாக தெரிவிக்க அந்த வகையில் விளையாட்டு வீரர்கள் யாரும் இல்லை.",
+    msg_failed_load_athletes: "நிகழ்வு உருவாக்கப்பட்டது, ஆனால் விளையாட்டு வீரர்களின் தொலைபேசி எண்களை ஏற்ற முடியவில்லை.",
+    err_upload_profile: "சுயவிவரம் பதிவேற்றுவதில் பிழை: "
   }
 };

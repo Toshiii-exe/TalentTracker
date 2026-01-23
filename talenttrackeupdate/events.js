@@ -85,7 +85,7 @@ function setupNavbarInteractions() {
     if (navUserBtn) {
         navUserBtn.addEventListener("click", async (e) => {
             e.stopPropagation();
-            if (confirm("Are you sure you want to logout?")) {
+            if (confirm(getTranslation("msg_confirm_logout") || "Are you sure you want to logout?")) {
                 await signOut();
                 localStorage.removeItem("tt_username");
                 localStorage.removeItem("tt_role");
@@ -526,7 +526,7 @@ window.editEvent = async function (eventId) {
         openEventModal(event);
     } catch (error) {
         console.error("Error loading event:", error);
-        await showAlert("Failed to load event details.", "Error");
+        await showAlert(getTranslation("msg_failed_load_event") || "Failed to load event details.", getTranslation("msg_error"));
     }
 };
 
@@ -713,7 +713,7 @@ window.viewEventDetails = async function (eventId) {
         await showAlert(detailsHTML, event.title);
     } catch (error) {
         console.error("Error loading event details:", error);
-        await showAlert("Failed to load event details.", "Error");
+        await showAlert(getTranslation("msg_failed_load_event") || "Failed to load event details.", getTranslation("msg_error"));
     }
 };
 
@@ -743,7 +743,7 @@ async function sendEventWhatsAppNotification(event) {
             .filter(p => p && p.trim().length > 0);
 
         if (phones.length === 0) {
-            await showAlert(`Event created! No athletes found in category "${targetCategory}" to notify via WhatsApp.`, "Info");
+            await showAlert(getTranslation("msg_no_athletes_for_wa") || `Event created! No athletes found in category "${targetCategory}" to notify via WhatsApp.`, "Info");
             return;
         }
 
@@ -766,7 +766,7 @@ async function sendEventWhatsAppNotification(event) {
     } catch (err) {
         hideLoading();
         console.error("Error preparing WA notification:", err);
-        showAlert("Event created, but failed to load athlete phone numbers.", "Warning");
+        showAlert(getTranslation("msg_failed_load_athletes") || "Event created, but failed to load athlete phone numbers.", "Warning");
     }
 }
 
