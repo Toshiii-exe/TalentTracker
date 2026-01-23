@@ -201,9 +201,7 @@ if (navLoginBtn) {
                 dropdown.classList.toggle("hidden");
             } else {
                 // Fallback if dropdown missing (should not happen if HTML is correct)
-                if (confirm(getTranslation("msg_confirm_logout") || "Are you sure you want to logout?")) {
-                    logoutUser().then(() => window.location.reload());
-                }
+                logoutUser().then(() => window.location.reload());
             }
             return;
         }
