@@ -146,7 +146,11 @@ function setupNavigation() {
     const eventForm = document.getElementById("eventForm");
 
     if (createBtn) {
-        // createBtn.addEventListener("click", () => openEventModal());
+        console.log("Create Event button found, attaching listener");
+        createBtn.addEventListener("click", () => {
+            console.log("Create Event button clicked via EventListener");
+            openEventModal();
+        });
     }
 
     if (cancelBtn) {
