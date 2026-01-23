@@ -53,6 +53,9 @@ export function getImageErrorHandler(fallbackName = "User", size = 150) {
  * @returns {string} Home page URL for the role
  */
 export function getHomePageForRole(role) {
+  if (!role) return 'index.html';
+
+  const normalizedRole = role.toLowerCase().trim();
   const roleMap = {
     'athlete': 'athlete-home.html',
     'coach': 'coach-home.html',
@@ -60,7 +63,7 @@ export function getHomePageForRole(role) {
     'federation': 'federation-home.html'
   };
 
-  return roleMap[role] || 'index.html';
+  return roleMap[normalizedRole] || 'index.html';
 }
 
 /**
@@ -69,7 +72,7 @@ export function getHomePageForRole(role) {
  */
 export function updateHomeLinks(role) {
   const homePage = getHomePageForRole(role);
-  const homeLinks = document.querySelectorAll('a[data-i18n="nav_home"]');
+  const homeLinks = document.querySelectorAll('a[data-i18n="nav_home"], a[data-role-home="true"]');
 
   homeLinks.forEach(link => {
     link.href = homePage;
