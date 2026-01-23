@@ -12,6 +12,12 @@ import {
     BACKEND_URL
 } from "./register.js";
 import { updateNavbar, showAlert, showConfirm } from "./ui-utils.js";
+import { getTranslation } from "./i18n.js";
+
+// Listen for language changes to re-render
+window.addEventListener("languageChanged", () => {
+    if (currentCoachId) renderPools();
+});
 
 // State
 let allAthletes = [];
@@ -141,7 +147,7 @@ function renderPools() {
     if (availableSquads.length === 0) {
         squadsContainer.innerHTML = `
             <div class="col-span-full flex flex-col items-center justify-center py-20 opacity-50">
-                <p class="text-slate-500 font-bold">No squads yet.</p>
+                <p class="text-slate-500 font-bold" data-i18n="squad_no_squads">${getTranslation("squad_no_squads")}</p>
             </div>`;
     }
 
@@ -309,8 +315,8 @@ if (cancelSquadBtn) cancelSquadBtn.addEventListener("click", closeModal);
 if (confirmSquadBtn) {
     confirmSquadBtn.addEventListener("click", async () => {
         const name = newSquadNameInput.value.trim();
-        if (!name) return alert("Enter Name");
-        if (availableSquads.includes(name)) return alert("Duplicate Name");
+        if (!name) return alert(getTranslation("squad_err_enter_name") || "Enter Name");
+        if (availableSquads.includes(name)) return alert(getTranslation("squad_err_duplicate") || "Duplicate Name");
 
         try {
             const res = await createSquad(currentCoachId, name);
@@ -326,9 +332,9 @@ if (confirmSquadBtn) {
         } catch (err) {
             console.error(err);
             if (err.message && err.message.includes('foreign key constraint')) {
-                await showAlert("It usually means your coach profile is not fully set up. Please go to your profile page and save your details.", "Coach Profile Missing");
+                await showAlert(getTranslation("squad_err_profile_missing") || "It usually means your coach profile is not fully set up. Please go to your profile page and save your details.", getTranslation("squad_err_profile_title") || "Coach Profile Missing");
             } else {
-                await showAlert(err.message || "Failed to create squad", "Error");
+                await showAlert(error.message || getTranslation("squad_err_create_failed") || "Failed to create squad", getTranslation("err_title") || "Error");
             }
         }
     });
@@ -359,7 +365,7 @@ if (exportBtn) {
             const { jsPDF } = window.jspdf;
 
             if (!jsPDF) {
-                alert("PDF library not loaded. Please refresh the page.");
+                alert(getTranslation("squad_err_pdf_library") || "PDF library not loaded. Please refresh the page.");
                 return;
             }
 
@@ -575,11 +581,11 @@ if (savePlanBtn) {
         const newName = editSquadName.value.trim();
         const newPlan = squadWorkoutPlan.value;
 
-        if (!newName) return alert("Squad name cannot be empty");
+        if (!newName) return alert(getTranslation("squad_err_name_empty") || "Squad name cannot be empty");
 
         // If name changed, check duplicates
         if (newName !== oldName && availableSquads.includes(newName)) {
-            return alert("Squad name already exists");
+            return alert(getTranslation("squad_err_name_exists") || "Squad name already exists");
         }
 
         try {
@@ -617,7 +623,7 @@ if (savePlanBtn) {
 window.createWhatsAppGroup = async function (squadName) {
     const athletes = allAthletes.filter(a => coachSquads[a.id] === squadName);
     if (athletes.length === 0) {
-        return showAlert("This squad has no athletes.", "Info");
+        return showAlert(getTranslation("squad_err_no_athletes") || "This squad has no athletes.", getTranslation("info_title") || "Info");
     }
 
     const phones = athletes
@@ -625,7 +631,7 @@ window.createWhatsAppGroup = async function (squadName) {
         .filter(p => p && p.trim().length > 0);
 
     if (phones.length === 0) {
-        return showAlert("None of the athletes in this squad have a phone number in their profile.", "No Numbers Found");
+        return showAlert(getTranslation("squad_err_no_numbers") || "None of the athletes in this squad have a phone number in their profile.", getTranslation("squad_err_no_numbers_title") || "No Numbers Found");
     }
 
     // Populate Modal
