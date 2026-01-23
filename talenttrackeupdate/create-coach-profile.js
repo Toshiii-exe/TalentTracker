@@ -7,6 +7,7 @@ import {
 } from "./register.js";
 import { showLoading, hideLoading, showSuccessModal } from "./ui-utils.js";
 import { setupDropdownInput, syncDropdown, CITIES, DISTRICTS, PROVINCES } from "./locations.js";
+import { getTranslation } from "./i18n.js";
 
 let currentUID = null;
 const form = document.getElementById("coachProfileForm");
@@ -204,13 +205,13 @@ form.addEventListener("submit", async (e) => {
 
     if (!emailInput.value || !emailInput.value.trim()) {
         // Empty email field
-        document.getElementById("error-email").textContent = "Valid email address is required.";
+        document.getElementById("error-email").textContent = getTranslation("err_email_req") || "Valid email address is required.";
         document.getElementById("error-email").classList.add("visible");
         emailInput.classList.add("input-error");
         isValid = false;
     } else if (!emailPattern.test(emailInput.value.trim())) {
         // Invalid email format
-        document.getElementById("error-email").textContent = "Please enter a valid email address";
+        document.getElementById("error-email").textContent = getTranslation("err_email_fmt") || "Please enter a valid email address";
         document.getElementById("error-email").classList.add("visible");
         emailInput.classList.add("input-error");
         isValid = false;
@@ -223,12 +224,12 @@ form.addEventListener("submit", async (e) => {
         let age = today.getFullYear() - dob.getFullYear();
         if (today.getMonth() < dob.getMonth() || (today.getMonth() === dob.getMonth() && today.getDate() < dob.getDate())) age--;
         if (age < 22) {
-            document.getElementById("error-dob").textContent = "You must be at least 22 years old to register as a coach";
+            document.getElementById("error-dob").textContent = getTranslation("err_dob_min_age_js") || "You must be at least 22 years old to register as a coach";
             document.getElementById("error-dob").classList.add("visible");
             dobInput.classList.add("input-error");
             isValid = false;
         } else if (age > 100) {
-            document.getElementById("error-dob").textContent = "Invalid age (Max 100)";
+            document.getElementById("error-dob").textContent = getTranslation("err_dob_max") || "Invalid age (Max 100)";
             document.getElementById("error-dob").classList.add("visible");
             dobInput.classList.add("input-error");
             isValid = false;
@@ -237,7 +238,7 @@ form.addEventListener("submit", async (e) => {
 
     const expInput = document.getElementById("experience");
     if (expInput.value && parseInt(expInput.value) < 0) {
-        document.getElementById("error-experience").textContent = "Experience cannot be negative";
+        document.getElementById("error-experience").textContent = getTranslation("err_exp_neg") || "Experience cannot be negative";
         document.getElementById("error-experience").classList.add("visible");
         isValid = false;
     }
@@ -247,7 +248,7 @@ form.addEventListener("submit", async (e) => {
         // Sri Lankan Phone Validation: Supports 07... , +947... , 947... , 7...
         const slPhoneRegex = /^(?:0|94|\+94)?(?:7[01245678]|11|2[134567]|3[12345678]|4[157]|5[12457]|6[3567]|81|91)\d{7}$/;
         if (!slPhoneRegex.test(phoneInput.value)) {
-            document.getElementById("error-phone").textContent = "Invalid Sri Lankan phone number";
+            document.getElementById("error-phone").textContent = getTranslation("err_phone_sl") || "Invalid Sri Lankan phone number";
             document.getElementById("error-phone").classList.add("visible");
             isValid = false;
         }
@@ -271,7 +272,7 @@ form.addEventListener("submit", async (e) => {
         const isValidPassport = passportPattern.test(nicValue);
 
         if (!isValidOldNic && !isValidNewNic && !isValidPassport) {
-            document.getElementById("error-nic").textContent = "Invalid format. Use: 9 digits+V/X, 12 digits, or passport (6-9 chars)";
+            document.getElementById("error-nic").textContent = getTranslation("err_nic_fmt") || "Invalid format. Use: 9 digits+V/X, 12 digits, or passport (6-9 chars)";
             document.getElementById("error-nic").classList.add("visible");
             nicInput.classList.add("input-error");
             isValid = false;
@@ -299,7 +300,7 @@ form.addEventListener("submit", async (e) => {
     } else if (certInput.files.length > 0) {
         const file = certInput.files[0];
         if (file.size > 5 * 1024 * 1024) {
-            certErr.textContent = "File too large (Max 5MB)";
+            certErr.textContent = getTranslation("msg_max_5mb") || "File too large (Max 5MB)";
             certErr.classList.add("visible");
             isValid = false;
         }
@@ -410,14 +411,14 @@ form.addEventListener("submit", async (e) => {
         await saveCoachProfile(currentUID, profileData);
 
         hideLoading();
-        showSuccessModal("Your coach profile has been submitted for verification!", () => {
+        showSuccessModal(getTranslation("msg_coach_profile_submitted") || "Your coach profile has been submitted for verification!", () => {
             window.location.href = "coach-home.html";
         });
 
     } catch (error) {
         console.error("Error saving coach profile:", error);
         hideLoading();
-        alert("An error occurred while saving your profile: " + (error.message || error));
+        alert(getTranslation("msg_error_save_profile") + ": " + (error.message || error));
     }
 });
 

@@ -42,8 +42,9 @@
                 </a>
             </div>
             <div class="flex items-center gap-4">
-                <div class="text-[var(--primary)] font-black text-lg tracking-tight hidden md:block">FEDERATION<span
-                        class="text-slate-400 font-light"> | ADMIN PANEL</span></div>
+                <div class="text-[var(--primary)] font-black text-lg tracking-tight hidden md:block"
+                    data-i18n="nav_admin_title">FEDERATION<span class="text-slate-400 font-light"
+                        data-i18n="nav_admin_subtitle"> | ADMIN PANEL</span></div>
 
                 <div id="navUserArea" class="relative group">
                     <button id="navUserBtn"
@@ -61,7 +62,8 @@
                     <div id="navUserDropdown"
                         class="hidden absolute right-0 mt-3 w-56 bg-white shadow-2xl rounded-2xl text-black p-4 border border-gray-100 z-50 animate-fade overflow-hidden">
                         <div class="mb-4 pb-4 border-b border-gray-100">
-                            <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Signed in as</p>
+                            <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1"
+                                data-i18n="nav_signed_in">Signed in as</p>
                             <p id="navUserEmail" class="text-sm font-semibold text-gray-800 break-words leading-tight">
                                 Admin</p>
                         </div>
@@ -121,9 +123,9 @@
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
                         </svg>
-                        Approve Access
+                        <span data-i18n="admin_btn_approve">Approve Access</span>
                     </button>
-                    <button id="btnRevoke" onclick="updateStatus('pending')"
+                    <button id="btnRevoke" onclick="updateStatus('pending')" data-i18n="admin_btn_revoke"
                         class="bg-white border-2 border-slate-200 text-slate-500 hover:text-red-500 hover:border-red-200 px-6 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider shadow-sm transition-all">
                         Revoke / Suspend
                     </button>
@@ -137,8 +139,8 @@
 
                 <!-- Personal Data -->
                 <div class="bg-white rounded-[2rem] p-8 shadow-lg">
-                    <h3
-                        class="text-sm font-black text-slate-400 uppercase tracking-widest mb-6 border-b border-slate-100 pb-4">
+                    <h3 class="text-sm font-black text-slate-400 uppercase tracking-widest mb-6 border-b border-slate-100 pb-4"
+                        data-i18n="admin_lbl_personal">
                         Personal Details</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-8" id="personalGrid">
                         <!-- Populated by JS -->
@@ -148,7 +150,8 @@
                 <!-- Specialized Data (Athletic or Coaching) -->
                 <div class="bg-white rounded-[2rem] p-8 shadow-lg">
                     <h3 id="specTitle"
-                        class="text-sm font-black text-slate-400 uppercase tracking-widest mb-6 border-b border-slate-100 pb-4">
+                        class="text-sm font-black text-slate-400 uppercase tracking-widest mb-6 border-b border-slate-100 pb-4"
+                        data-i18n="admin_lbl_profile_data">
                         Profile Data</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-8" id="specGrid">
                         <!-- Populated by JS -->
@@ -164,7 +167,8 @@
                     <div
                         class="absolute top-0 right-0 w-40 h-40 bg-[var(--secondary)]/30 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2">
                     </div>
-                    <h3 class="text-sm font-black text-slate-400 uppercase tracking-widest mb-6 relative z-10">
+                    <h3 class="text-sm font-black text-slate-400 uppercase tracking-widest mb-6 relative z-10"
+                        data-i18n="admin_lbl_docs">
                         Verification Documents</h3>
 
                     <div id="docsList" class="space-y-4 relative z-10">
@@ -175,14 +179,17 @@
 
                 <!-- Admin Notes (Mock) -->
                 <div class="bg-white rounded-[2rem] p-8 shadow-lg">
-                    <h3 class="text-sm font-black text-slate-400 uppercase tracking-widest mb-4">Admin Notes</h3>
+                    <h3 class="text-sm font-black text-slate-400 uppercase tracking-widest mb-4"
+                        data-i18n="admin_lbl_notes">Admin Notes</h3>
                     <textarea id="adminNotesTextarea"
                         class="w-full bg-slate-50 border-none rounded-xl p-4 text-sm font-medium text-slate-600 focus:ring-2 focus:ring-blue-100 outline-none h-32"
-                        placeholder="Internal notes about this verification..."></textarea>
-                    <button id="saveNoteBtn"
+                        placeholder="Internal notes about this verification..."
+                        data-i18n-placeholder="admin_ph_notes"></textarea>
+                    <button id="saveNoteBtn" data-i18n="admin_btn_save_note"
                         class="w-full mt-4 bg-slate-100 text-slate-500 hover:bg-[var(--primary)] hover:text-white py-3 rounded-xl text-xs font-bold uppercase transition-all">Save
                         Note</button>
-                    <p class="text-[9px] text-center text-slate-300 mt-2">Notes are strictly internal.</p>
+                    <p class="text-[9px] text-center text-slate-300 mt-2" data-i18n="admin_msg_internal_only">Notes are
+                        strictly internal.</p>
                 </div>
             </div>
         </div>

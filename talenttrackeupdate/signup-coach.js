@@ -3,6 +3,7 @@ import {
     logoutUser
 } from "./register.js";
 import { showLoading, hideLoading, showSuccessModal } from "./ui-utils.js";
+import { getTranslation } from "./i18n.js";
 
 const form = document.getElementById("signupForm");
 const errorText = document.getElementById("signupError");
@@ -51,23 +52,23 @@ form.addEventListener("submit", async (e) => {
     const password = document.getElementById("password").value;
 
     if (!username || !password || !phone) {
-        showError("Username, Phone, and Password are required.");
+        showError(getTranslation("signup_err_missing_fields") || "Username, Phone, and Password are required.");
         return;
     }
 
     // Sri Lankan Phone Validation: Supports 07... , +947... , 947... , 7...
     const slPhoneRegex = /^(?:0|94|\+94)?7[01245678]\d{7}$/;
     if (!slPhoneRegex.test(phone)) {
-        showError("Please enter a valid Sri Lankan mobile number (e.g., 0771234567).");
+        showError(getTranslation("signup_err_phone_invalid_sl") || "Please enter a valid Sri Lankan mobile number (e.g., 0771234567).");
         return;
     }
     if (username.length < 4) {
-        showError("Username must be at least 4 characters.");
+        showError(getTranslation("signup_err_username_len") || "Username must be at least 4 characters.");
         return;
     }
     // Simplifed Password Requirement: Only 8+ characters
     if (password.length < 8) {
-        showError("Password must be at least 8 characters long.");
+        showError(getTranslation("signup_err_password_len") || "Password must be at least 8 characters long.");
         return;
     }
 
@@ -76,13 +77,13 @@ form.addEventListener("submit", async (e) => {
         await registerUser(email, password, username, "coach", phone);
         await logoutUser();
 
-        showSuccessModal("Coach account created successfully! Please login.", () => {
+        showSuccessModal(getTranslation("signup_coach_msg_success") || "Coach account created successfully! Please login.", () => {
             window.location.href = "index.html";
         });
 
     } catch (err) {
         console.error(err);
-        showError(err.message || "Registration failed.");
+        showError(err.message || getTranslation("signup_err_failed") || "Registration failed.");
     } finally {
         hideLoading();
     }

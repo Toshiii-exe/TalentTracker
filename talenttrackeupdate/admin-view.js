@@ -9,6 +9,7 @@ import {
     BACKEND_URL
 } from "./register.js";
 import { updateNavbar } from "./ui-utils.js";
+import { getTranslation } from "./i18n.js";
 
 // DOM Elements
 const userPic = document.getElementById("userPic");
@@ -69,10 +70,10 @@ onAuthChange(async (user) => {
         let data = null;
         if (targetRole === 'coach') {
             data = await getCoachProfile(targetId);
-            specTitle.textContent = "Coaching Credentials";
+            specTitle.textContent = getTranslation("admin_title_coach_creds") || "Coaching Credentials";
         } else {
             data = await getAthleteProfile(targetId);
-            specTitle.textContent = "Athletic Profile";
+            specTitle.textContent = getTranslation("admin_title_athlete_profile") || "Athletic Profile";
         }
 
         if (data && data.exists) {
@@ -117,43 +118,43 @@ function renderProfile(data) {
     let gridHTML = "";
 
     // Common Fields
-    gridHTML += infoItem("Full Name", name);
-    gridHTML += infoItem("Email", email);
-    gridHTML += infoItem("Phone", phone);
-    gridHTML += infoItem("Gender", data.gender || p.gender || "-");
-    gridHTML += infoItem("DOB", data.dob || p.dob || "-");
-    gridHTML += infoItem("Address", (data.street || p.street || "") + " " + (data.city || p.city || ""));
-    gridHTML += infoItem("NIC / ID", data.nic || p.nic || "-");
+    gridHTML += infoItem(getTranslation("lbl_fullname") || "Full Name", name);
+    gridHTML += infoItem(getTranslation("lbl_email") || "Email", email);
+    gridHTML += infoItem(getTranslation("lbl_phone") || "Phone", phone);
+    gridHTML += infoItem(getTranslation("lbl_gender") || "Gender", data.gender || p.gender || "-");
+    gridHTML += infoItem(getTranslation("lbl_dob") || "DOB", data.dob || p.dob || "-");
+    gridHTML += infoItem(getTranslation("lbl_address") || "Address", (data.street || p.street || "") + " " + (data.city || p.city || ""));
+    gridHTML += infoItem(getTranslation("lbl_nic") || "NIC / ID", data.nic || p.nic || "-");
 
     personalGrid.innerHTML = gridHTML;
 
     // 3. Specialized Grid
     let specHTML = "";
     if (targetRole === 'coach') {
-        specHTML += infoItem("Sports", data.sports || "-");
-        specHTML += infoItem("Organization", data.organization || "-");
-        specHTML += infoItem("Experience", (data.experience || "0") + " Years");
-        specHTML += infoItem("Role", data.coachingRole || "-");
-        specHTML += infoItem("Qualifications", data.highestQual || "-");
-        specHTML += infoItem("Active Squads", (data.squads ? data.squads.length : 0));
+        specHTML += infoItem(getTranslation("lbl_sports_coached") || "Sports", data.sports || "-");
+        specHTML += infoItem(getTranslation("lbl_aff_org") || "Organization", data.organization || "-");
+        specHTML += infoItem(getTranslation("lbl_exp") || "Experience", (data.experience || "0") + " " + (getTranslation("lbl_years") || "Years"));
+        specHTML += infoItem(getTranslation("lbl_coaching_role") || "Role", data.coachingRole || "-");
+        specHTML += infoItem(getTranslation("lbl_highest_qual") || "Qualifications", data.highestQual || "-");
+        specHTML += infoItem(getTranslation("lbl_active_squads") || "Active Squads", (data.squads ? data.squads.length : 0));
     } else {
         // Athlete
         const a = data.athletic || {};
         const m = data.medicalPhysical || {};
         const l = data.playingLevel || {};
 
-        specHTML += infoItem("Category", a.category || "TBD");
-        specHTML += infoItem("Club/School", l.club || l.school || "-");
-        specHTML += infoItem("Height", m.height ? m.height + " cm" : "-");
-        specHTML += infoItem("Weight", m.weight ? m.weight + " kg" : "-");
-        specHTML += infoItem("Blood Group", m.bloodGroup || "-");
+        specHTML += infoItem(getTranslation("wa_msg_category") || "Category", a.category || "TBD");
+        specHTML += infoItem(getTranslation("lbl_club_school") || "Club/School", l.club || l.school || "-");
+        specHTML += infoItem(getTranslation("lbl_height") || "Height", m.height ? m.height + " cm" : "-");
+        specHTML += infoItem(getTranslation("lbl_weight") || "Weight", m.weight ? m.weight + " kg" : "-");
+        specHTML += infoItem(getTranslation("lbl_blood_group") || "Blood Group", m.bloodGroup || "-");
 
         // Performance Snapshot
         if (a.events && a.events.length > 0) {
             const eventsStr = a.events.map(e => `${e.event} (${e.pb}s)`).join(', ');
-            specHTML += infoItem("Top Events", eventsStr);
+            specHTML += infoItem(getTranslation("lbl_top_events") || "Top Events", eventsStr);
         } else {
-            specHTML += infoItem("Events", "None recorded");
+            specHTML += infoItem(getTranslation("events_title") || "Events", getTranslation("lbl_none_recorded") || "None recorded");
         }
     }
     specGrid.innerHTML = specHTML;
@@ -162,15 +163,12 @@ function renderProfile(data) {
     let docsHTML = "";
     const docs = data.documents || {};
     // Add known doc types driven by role
-    if (docs.idDoc) docsHTML += docItem("Identity Document", docs.idDoc);
-    if (docs.consentDoc) docsHTML += docItem("Parental Consent", docs.consentDoc);
-    if (data.certDoc) docsHTML += docItem("Coaching Cert", data.certDoc); // Coach specific root field sometimes
-
-    // Check for other loose docs
-    // (In your schema, docs are loosely defined, so explicit checks are safer)
+    if (docs.idDoc) docsHTML += docItem(getTranslation("doc_identity") || "Identity Document", docs.idDoc);
+    if (docs.consentDoc) docsHTML += docItem(getTranslation("doc_consent") || "Parental Consent", docs.consentDoc);
+    if (data.certDoc) docsHTML += docItem(getTranslation("doc_coaching_cert") || "Coaching Cert", data.certDoc);
 
     if (docsHTML === "") {
-        docsHTML = `<p class="text-slate-500 italic opacity-50">No documents found.</p>`;
+        docsHTML = `<p class="text-slate-500 italic opacity-50">${getTranslation("msg_no_docs") || "No documents found."}</p>`;
     }
     docsList.innerHTML = docsHTML;
 }
@@ -178,7 +176,10 @@ function renderProfile(data) {
 function updateStatusUI(status) {
     const isApproved = status === 'approved';
 
-    statusBadge.textContent = isApproved ? "Access Granted" : "Pending Approval";
+    statusBadge.textContent = isApproved
+        ? (getTranslation("status_access_granted") || "Access Granted")
+        : (getTranslation("status_pending_approval") || "Pending Approval");
+
     statusBadge.className = isApproved
         ? "absolute -bottom-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-green-500 text-white text-[10px] font-black uppercase tracking-widest shadow-lg border-2 border-white whitespace-nowrap"
         : "absolute -bottom-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-amber-400 text-white text-[10px] font-black uppercase tracking-widest shadow-lg border-2 border-white whitespace-nowrap";
@@ -186,11 +187,11 @@ function updateStatusUI(status) {
     if (isApproved) {
         btnApprove.classList.add("hidden");
         btnRevoke.classList.remove("hidden");
-        btnRevoke.textContent = "Revoke Access";
+        btnRevoke.textContent = getTranslation("btn_revoke_access") || "Revoke Access";
     } else {
         btnApprove.classList.remove("hidden");
-        btnRevoke.classList.remove("hidden"); // Keep as "Reject" or similar if we implemented reject fully
-        btnRevoke.textContent = "Suspend / Reject";
+        btnRevoke.classList.remove("hidden");
+        btnRevoke.textContent = getTranslation("btn_suspend_reject") || "Suspend / Reject";
     }
 }
 
@@ -199,7 +200,7 @@ window.updateStatus = async (newStatus) => {
     if (!targetId || !targetRole) return;
 
     // UI Loading state
-    btnApprove.textContent = "Processing...";
+    btnApprove.textContent = getTranslation("msg_processing") || "Processing...";
 
     try {
         await updateUserStatus(targetId, newStatus, targetRole);
@@ -210,16 +211,16 @@ window.updateStatus = async (newStatus) => {
         updateStatusUI(newStatus);
 
         // Reset Button Text
-        btnApprove.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg> Approve Access`;
+        btnApprove.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg> ${getTranslation("admin_btn_approve") || "Approve Access"}`;
 
         // Slight feedback
-        if (newStatus === 'approved') alert("Approved!");
-        else alert("Status Updated.");
+        if (newStatus === 'approved') alert(getTranslation("msg_approved") || "Approved!");
+        else alert(getTranslation("msg_status_updated") || "Status Updated.");
 
     } catch (err) {
         console.error("Update failed", err);
-        alert("Failed to update status.");
-        btnApprove.textContent = "Approve Access";
+        alert(getTranslation("msg_update_failed") || "Failed to update status.");
+        btnApprove.textContent = getTranslation("admin_btn_approve") || "Approve Access";
     }
 };
 
@@ -270,18 +271,18 @@ async function saveAdminNoteHandler() {
     const originalText = saveNoteBtn.textContent;
 
     try {
-        saveNoteBtn.textContent = "Saving...";
+        saveNoteBtn.textContent = getTranslation("msg_saving") || "Saving...";
         saveNoteBtn.disabled = true;
 
         await saveAdminNote(targetId, targetRole, note);
 
-        saveNoteBtn.textContent = "Saved!";
+        saveNoteBtn.textContent = getTranslation("msg_saved") || "Saved!";
         setTimeout(() => {
             saveNoteBtn.textContent = originalText;
         }, 2000);
     } catch (err) {
         console.error("Error saving admin note:", err);
-        alert("Failed to save note. Please try again.");
+        alert(getTranslation("msg_save_note_failed") || "Failed to save note. Please try again.");
         saveNoteBtn.textContent = originalText;
     } finally {
         saveNoteBtn.disabled = false;

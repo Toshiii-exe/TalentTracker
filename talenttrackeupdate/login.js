@@ -78,7 +78,7 @@ onAuthChange(async (user) => {
         const textIds = ["navLoginBtnText", "mobileLoginBtnText"];
         textIds.forEach(id => {
             const el = document.getElementById(id);
-            if (el) el.textContent = "Login";
+            if (el) el.textContent = getTranslation("nav_login") || "Login";
         });
 
         if (mobileDashLink) mobileDashLink.classList.add("hidden");
@@ -186,7 +186,7 @@ if (navLoginBtn) {
         if (loggedInUser) {
             e.preventDefault();
             // Direct Logout
-            if (confirm("Are you sure you want to logout?")) {
+            if (confirm(getTranslation("msg_confirm_logout") || "Are you sure you want to logout?")) {
                 await logoutUser();
                 window.location.reload();
             }

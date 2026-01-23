@@ -207,8 +207,8 @@ function populateFilters() {
     const currentCat = categorySelect.value;
 
     // Reset options
-    locationSelect.innerHTML = '<option value="all">All Locations</option>';
-    categorySelect.innerHTML = '<option value="all">All Categories</option>';
+    locationSelect.innerHTML = `<option value="all">${getTranslation("events_filter_all_locations")}</option>`;
+    categorySelect.innerHTML = `<option value="all">${getTranslation("events_filter_all_categories")}</option>`;
 
     locations.forEach(loc => {
         const option = document.createElement('option');
@@ -295,6 +295,8 @@ function createEventCard(event) {
         'cancelled': 'bg-red-500'
     }[event.status] || 'bg-blue-500';
 
+    const statusText = getTranslation(`status_${event.status}`) || event.status;
+
     const imageUrl = event.image_url || 'https://via.placeholder.com/400x200?text=Event';
 
     // Admin buttons
@@ -339,7 +341,7 @@ function createEventCard(event) {
             <div class="relative h-48 overflow-hidden">
                 <img src="${imageUrl}" alt="${event.title}" class="w-full h-full object-cover">
                 <div class="absolute top-4 right-4 ${statusColor} text-white px-3 py-1 rounded-full text-xs font-bold uppercase">
-                    ${event.status}
+                    ${statusText}
                 </div>
                 <div class="absolute top-4 left-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-xs font-bold text-[var(--primary)]">
                     ${event.category}
@@ -747,7 +749,7 @@ async function sendEventWhatsAppNotification(event) {
 
         // 4. Construct Message
         const lang = localStorage.getItem("tt_app_language") || "en";
-        const msg = `*New Event Alert: ${event.title}*\n\n📅 ${new Date(event.event_date).toLocaleDateString(lang)}\n📍 ${event.city}\n🏆 Category: ${targetCategory}\n\n${event.description}\n\nRegister now on Talent Tracker!`;
+        const msg = `*${getTranslation("wa_msg_alert")}: ${event.title}*\n\n📅 ${new Date(event.event_date).toLocaleDateString(lang)}\n📍 ${event.city}\n🏆 ${getTranslation("wa_msg_category")}: ${targetCategory}\n\n${event.description}\n\n${getTranslation("wa_msg_register")}`;
 
         // 5. Populate Modal
         waEventCount.textContent = phones.length; // Show count of TARGETED athletes
@@ -791,7 +793,7 @@ if (copyWaMsgBtn) {
         document.execCommand('copy'); // Fallback or use Clipboard API
         navigator.clipboard.writeText(waEventMessage.value).then(() => {
             const original = copyWaMsgBtn.textContent;
-            copyWaMsgBtn.textContent = "Copied!";
+            copyWaMsgBtn.textContent = getTranslation("btn_copied");
             setTimeout(() => copyWaMsgBtn.textContent = original, 2000);
         });
     });
