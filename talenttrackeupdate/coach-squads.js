@@ -222,8 +222,8 @@ function createAthleteCard(a) {
     const mainEvent = "TBD";
 
     card.innerHTML = `
-        <div class="w-12 h-12 rounded-xl overflow-hidden shrink-0">
-            <img src="${img}" class="w-full h-full object-cover">
+        <div class="w-12 h-12 rounded-xl overflow-hidden shrink-0 bg-slate-100">
+            <img src="${img}" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=012A61&color=fff&size=100';">
         </div>
         <div class="min-w-0">
             <h4 class="font-bold text-slate-800 text-sm truncate">${name}</h4>

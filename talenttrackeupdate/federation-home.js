@@ -7,7 +7,7 @@ import {
     updateUserStatus,
     BACKEND_URL
 } from "./register.js";
-import { updateNavbar } from "./ui-utils.js";
+import { updateNavbar, fixImageUrl, getImageErrorHandler } from "./ui-utils.js";
 import { getTranslation } from "./i18n.js";
 
 // DOM Elements
@@ -154,7 +154,7 @@ function renderTable() {
             <tr class="hover:bg-slate-50 transition-colors border-b border-slate-50 last:border-0">
                 <td class="px-8 py-4">
                     <div class="flex items-center gap-4">
-                        <img src="${pic}" class="w-10 h-10 rounded-xl object-cover shrink-0 border border-slate-100">
+                        <img src="${fixImageUrl(pic, name, 100)}" class="w-10 h-10 rounded-xl object-cover shrink-0 border border-slate-100" onerror="${getImageErrorHandler(name, 100)}">
                         <div class="min-w-0">
                             <p class="font-bold text-[var(--primary)] truncate">${name}</p>
                             <p class="text-[10px] font-medium text-slate-400 truncate">${email}</p>

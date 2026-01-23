@@ -170,8 +170,8 @@ function renderAthletes() {
         card.className = "athlete-card bg-white rounded-[2rem] overflow-hidden shadow-sm border border-blue-50 flex flex-col hover:border-[var(--secondary)] relative";
 
         card.innerHTML = `
-            <div class="relative h-48 overflow-hidden">
-                <img src="${profilePic}" class="w-full h-full object-cover" alt="${displayName}">
+            <div class="relative h-48 overflow-hidden bg-slate-100">
+                <img src="${profilePic}" class="w-full h-full object-cover" alt="${displayName}" onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=012A61&color=fff&size=300';">
                 ${statusHTML}
                 
                 <button onclick="toggleFavorite('${athleteIdStr}')" class="absolute top-4 right-4 z-20 p-2 rounded-full bg-white/80 backdrop-blur shadow-sm hover:scale-110 transition-all">

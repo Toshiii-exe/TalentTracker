@@ -11,7 +11,7 @@ import {
     verifyAchievement,
     BACKEND_URL
 } from "./register.js";
-import { showLoading, hideLoading, showMessage, updateNavbar } from "./ui-utils.js";
+import { showLoading, hideLoading, showMessage, updateNavbar, fixImageUrl, getImageErrorHandler } from "./ui-utils.js";
 import { getTranslation } from "./i18n.js";
 
 // Listen for language changes
@@ -253,9 +253,7 @@ function loadAthleteProfileData() {
 
         if (profilePicEl) {
             if (isPdf) {
-                profilePicEl.src = "https://cdn-icons-png.flaticon.com/512/337/337946.png";
-            } else {
-                profilePicEl.src = imgUrl.startsWith('http') ? imgUrl + "?t=" + new Date().getTime() : imgUrl;
+                profilePicEl.src = fixImageUrl(imgUrl, athleteDocData.personal?.fullName || "Athlete");
             }
         }
     }
@@ -575,7 +573,7 @@ window.viewDocument = (url) => {
     if (isPdf) {
         if (docContentArea) docContentArea.innerHTML = `<iframe src="${displayUrl}" class="w-full h-full border-none rounded"></iframe>`;
     } else {
-        if (docContentArea) docContentArea.innerHTML = `<img src="${displayUrl}" class="max-w-full max-h-full object-contain shadow-lg" alt="Document">`;
+        if (docContentArea) docContentArea.innerHTML = `<img src="${displayUrl}" class="max-w-full max-h-full object-contain shadow-lg" alt="Document" onerror="this.style.display='none'; this.parentElement.innerHTML='<p class=\'text-red-500\'>Failed to load image</p>';">`;
     }
 };
 

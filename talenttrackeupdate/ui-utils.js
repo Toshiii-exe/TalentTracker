@@ -1,6 +1,49 @@
 import { BACKEND_URL, API_URL } from "./api.js";
 
 // =======================================================
+// IMAGE URL UTILITY
+// =======================================================
+
+/**
+ * Fixes image URLs to ensure they work correctly
+ * - Converts relative paths to absolute URLs
+ * - Adds cache busting for updated images
+ * - Provides fallback for broken images
+ * @param {string} imageUrl - The image URL to fix
+ * @param {string} fallbackName - Name to use for avatar fallback
+ * @param {number} size - Size for avatar fallback (default: 150)
+ * @returns {string} Fixed image URL
+ */
+export function fixImageUrl(imageUrl, fallbackName = "User", size = 150) {
+  if (!imageUrl || imageUrl === "null" || imageUrl === "undefined") {
+    return `https://ui-avatars.com/api/?name=${encodeURIComponent(fallbackName)}&background=012A61&color=fff&size=${size}`;
+  }
+
+  // If it's a relative path, prepend BACKEND_URL
+  if (imageUrl.startsWith('/')) {
+    imageUrl = BACKEND_URL + imageUrl;
+  }
+
+  // Add cache busting for HTTP URLs (but not for external services)
+  if (imageUrl.startsWith('http') && !imageUrl.includes('ui-avatars.com') && !imageUrl.includes('?t=')) {
+    imageUrl += '?t=' + new Date().getTime();
+  }
+
+  return imageUrl;
+}
+
+/**
+ * Creates an onerror handler string for img tags
+ * @param {string} fallbackName - Name to use for avatar fallback
+ * @param {number} size - Size for avatar fallback
+ * @returns {string} onerror attribute value
+ */
+export function getImageErrorHandler(fallbackName = "User", size = 150) {
+  const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(fallbackName)}&background=012A61&color=fff&size=${size}`;
+  return `this.onerror=null; this.src='${avatarUrl}';`;
+}
+
+// =======================================================
 // UI UTILITIES
 // Shared helper functions for UI elements like loading screens.
 // =======================================================

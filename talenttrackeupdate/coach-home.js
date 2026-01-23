@@ -9,6 +9,7 @@ import {
     BACKEND_URL
 } from "./register.js";
 import { updateNavbar } from "./ui-utils.js";
+import { fixImageUrl, getImageErrorHandler } from "./ui-utils.js";
 import { getTranslation } from "./i18n.js";
 
 // DOM Elements
@@ -207,10 +208,10 @@ function setupProfileUpload(user) {
 
             const imgEl = document.getElementById("navUserImg");
             if (imgEl) {
-                imgEl.src = displayUrl;
+                imgEl.src = fixImageUrl(displayUrl, name);
                 imgEl.classList.remove("hidden");
             }
-            if (mobileImg) mobileImg.src = displayUrl;
+            if (mobileImg) mobileImg.src = fixImageUrl(displayUrl, name);
 
             if (btnText) btnText.textContent = originalText;
             alert(getTranslation("alert_pic_updated"));
@@ -273,7 +274,7 @@ async function fetchWatchlist(favorites) {
                 card.href = `view-athlete.html?id=${athleteId}`; // Needs `view-athlete.html` to be updated too?
                 card.className = "bg-white p-6 rounded-[2rem] border border-slate-100 hover:shadow-xl transition-all flex flex-col items-center text-center group";
                 card.innerHTML = `
-                    <img src="${aPic}" class="w-16 h-16 rounded-2xl object-cover mb-4 border-2 border-slate-50 group-hover:scale-110 transition-transform">
+                    <img src="${fixImageUrl(aPic, aName, 100)}" class="w-16 h-16 rounded-2xl object-cover mb-4 border-2 border-slate-50 group-hover:scale-110 transition-transform" onerror="${getImageErrorHandler(aName, 100)}">
                     <p class="font-black text-[var(--primary)] text-sm mb-1">${aName}</p>
                     <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">${aCat} Category</span>
                 `;
