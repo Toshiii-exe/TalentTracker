@@ -5,8 +5,18 @@ import {
     onAuthChange,
     getUserByUsername
 } from "./register.js";
-import { showLoading, hideLoading, updateNavbar } from "./ui-utils.js";
+import { showLoading, hideLoading, updateNavbar, getHomePageForRole } from "./ui-utils.js";
 import { getTranslation } from "./i18n.js";
+
+// Redirect logged-in users to their appropriate home page
+const storedUser = localStorage.getItem('user');
+const storedRole = localStorage.getItem('tt_role');
+
+if (storedUser && storedRole) {
+    console.log('User already logged in, redirecting to:', storedRole, 'home page');
+    const homePage = getHomePageForRole(storedRole);
+    window.location.href = homePage;
+}
 
 // DOM Elements
 const loginModal = document.getElementById("loginModal");

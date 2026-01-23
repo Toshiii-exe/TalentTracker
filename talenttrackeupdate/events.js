@@ -1,6 +1,6 @@
 import { auth, onAuthChange, signOut } from "./register.js";
 import * as API from "./api.js";
-import { showAlert, showConfirm, updateNavbar, showLoading, hideLoading } from "./ui-utils.js";
+import { showAlert, showConfirm, updateNavbar, showLoading, hideLoading, updateHomeLinks } from "./ui-utils.js";
 import { setupDropdownInput, syncDropdown, CITIES } from "./locations.js";
 import { getTranslation } from "./i18n.js";
 
@@ -65,6 +65,7 @@ onAuthChange(async (user) => {
 
 async function init() {
     updateNavbar(currentUser, null);
+    updateHomeLinks(currentRole); // Update home links based on role
     setupNavbarInteractions();
     setupNavigation();
     await loadEvents();

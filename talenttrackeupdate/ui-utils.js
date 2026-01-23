@@ -44,6 +44,41 @@ export function getImageErrorHandler(fallbackName = "User", size = 150) {
 }
 
 // =======================================================
+// ROLE-BASED NAVIGATION
+// =======================================================
+
+/**
+ * Gets the appropriate home page URL based on user role
+ * @param {string} role - User role ('athlete', 'coach', 'admin')
+ * @returns {string} Home page URL for the role
+ */
+export function getHomePageForRole(role) {
+  const roleMap = {
+    'athlete': 'athlete-home.html',
+    'coach': 'coach-home.html',
+    'admin': 'federation-home.html',
+    'federation': 'federation-home.html'
+  };
+
+  return roleMap[role] || 'index.html';
+}
+
+/**
+ * Updates all home links on the page to point to the correct home based on user role
+ * @param {string} role - User role
+ */
+export function updateHomeLinks(role) {
+  const homePage = getHomePageForRole(role);
+  const homeLinks = document.querySelectorAll('a[data-i18n="nav_home"]');
+
+  homeLinks.forEach(link => {
+    link.href = homePage;
+  });
+
+  console.log(`Updated ${homeLinks.length} home links to: ${homePage}`);
+}
+
+// =======================================================
 // UI UTILITIES
 // Shared helper functions for UI elements like loading screens.
 // =======================================================
