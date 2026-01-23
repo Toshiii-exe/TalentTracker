@@ -68,7 +68,8 @@
     <nav
         class="fixed top-0 left-0 w-full bg-[var(--background)]/80 backdrop-blur-md shadow-sm z-[100] border-b border-white/10">
         <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-            <div class="text-2xl font-extrabold text-[var(--primary)] tracking-tight">Talent Tracker</div>
+            <div class="text-2xl font-extrabold text-[var(--primary)] tracking-tight" data-i18n="nav_title">Talent
+                Tracker</div>
 
             <!-- Desktop Menu -->
             <div class="hidden md:flex space-x-8 font-semibold text-black items-center">
@@ -102,7 +103,8 @@
                     <div id="navUserDropdown"
                         class="hidden absolute right-0 mt-3 w-56 bg-white shadow-2xl rounded-2xl text-black p-4 border border-gray-100 z-50 animate-fade overflow-hidden">
                         <div class="mb-4 pb-4 border-b border-gray-100">
-                            <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Signed in as</p>
+                            <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1"
+                                data-i18n="nav_signed_in">Signed in as</p>
                             <p id="navUserEmail" class="text-sm font-semibold text-gray-800 break-words leading-tight">
                             </p>
                         </div>
@@ -113,7 +115,7 @@
                                     d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1">
                                 </path>
                             </svg>
-                            Logout
+                            <span data-i18n="nav_logout">Logout</span>
                         </button>
                     </div>
                 </div>
@@ -123,8 +125,10 @@
 
     <main class="max-w-7xl mx-auto pt-32 pb-20 px-6">
         <header class="mb-12">
-            <h1 class="text-4xl font-extrabold text-[var(--primary)] mb-4">Discover Rising Talent</h1>
-            <p class="text-slate-700 font-medium">Browse and filter athletes to build your champions.</p>
+            <h1 class="text-4xl font-extrabold text-[var(--primary)] mb-4" data-i18n="discover_title">Discover Rising
+                Talent</h1>
+            <p class="text-slate-700 font-medium" data-i18n="discover_subtitle">Browse and filter athletes to build your
+                champions.</p>
         </header>
 
         <!-- FILTERS SECTION -->
@@ -132,10 +136,12 @@
             <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
                 <!-- Search -->
                 <div class="md:col-span-2">
-                    <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Search
+                    <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2"
+                        data-i18n="discover_search_label">Search
                         Name</label>
                     <div class="relative">
                         <input type="text" id="athleteSearch" placeholder="Search by name..."
+                            data-i18n-placeholder="discover_search_placeholder"
                             class="w-full px-5 py-3 rounded-xl bg-slate-50 border-2 border-slate-100 focus:border-[var(--primary)] focus:outline-none transition-all pl-12">
                         <svg class="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" fill="none"
                             stroke="currentColor" viewBox="0 0 24 24">
@@ -147,11 +153,12 @@
 
                 <!-- Filter Race Event -->
                 <div>
-                    <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Race
+                    <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2"
+                        data-i18n="discover_event_label">Race
                         Event</label>
                     <select id="filterSport"
                         class="w-full px-5 py-3 rounded-xl bg-slate-50 border-2 border-slate-100 focus:border-[var(--primary)] focus:outline-none transition-all">
-                        <option value="all">All Events</option>
+                        <option value="all" data-i18n="discover_all_events">All Events</option>
                         <option value="100m">100m</option>
                         <option value="200m">200m</option>
                         <option value="400m">400m</option>
@@ -162,16 +169,17 @@
 
                 <!-- Filter Category -->
                 <div>
-                    <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Category</label>
+                    <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2"
+                        data-i18n="discover_category_label">Category</label>
                     <select id="filterCategory"
                         class="w-full px-5 py-3 rounded-xl bg-slate-50 border-2 border-slate-100 focus:border-[var(--primary)] focus:outline-none transition-all">
-                        <option value="all">All Categories</option>
+                        <option value="all" data-i18n="discover_all_categories">All Categories</option>
                         <option value="U12">U12</option>
                         <option value="U14">U14</option>
                         <option value="U16">U16</option>
                         <option value="U18">U18</option>
                         <option value="U20">U20</option>
-                        <option value="Open">Open</option>
+                        <option value="Open" data-i18n="profile_category_open">Open</option>
                     </select>
                 </div>
 
@@ -179,7 +187,7 @@
                 <div class="md:col-span-4 flex items-center justify-end gap-4">
                     <div id="favoritesCount"
                         class="hidden px-4 py-2 bg-red-50 text-red-600 rounded-full text-sm font-bold">
-                        <span id="favCountNumber">0</span> Favorites
+                        <span id="favCountNumber">0</span> <span data-i18n="discover_favorites">Favorites</span>
                     </div>
                     <label class="relative inline-flex items-center cursor-pointer group">
                         <input type="checkbox" id="filterFavorites" class="sr-only peer">
@@ -187,7 +195,8 @@
                             class="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-100 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-red-500 group-hover:bg-slate-300">
                         </div>
                         <span
-                            class="ml-3 text-sm font-bold text-slate-600 group-hover:text-[var(--primary)] transition-colors">Show
+                            class="ml-3 text-sm font-bold text-slate-600 group-hover:text-[var(--primary)] transition-colors"
+                            data-i18n="discover_watchlist_only">Show
                             Watchlist Only ❤️</span>
                     </label>
                 </div>
@@ -210,8 +219,9 @@
                         d="M9.172 9.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
             </div>
-            <h3 class="text-xl font-bold text-slate-800">No athletes found matching your filters</h3>
-            <p class="text-slate-600">Try adjusting your search or filters.</p>
+            <h3 class="text-xl font-bold text-slate-800" data-i18n="discover_no_results">No athletes found matching your
+                filters</h3>
+            <p class="text-slate-600" data-i18n="discover_no_results_hint">Try adjusting your search or filters.</p>
         </div>
     </main>
 
