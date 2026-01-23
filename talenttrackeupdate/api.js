@@ -145,18 +145,32 @@ export async function register(email, password, username, role, phone) {
 }
 
 export async function uploadFile(file, uid, category) {
-    const formData = new FormData();
-    formData.append('file', file);
-    if (uid) formData.append('uid', uid);
-    if (category) formData.append('category', category);
+    try {
+        const formData = new FormData();
+        formData.append('file', file);
+        if (uid) formData.append('uid', uid);
+        if (category) formData.append('category', category);
 
-    const res = await fetch(`${API_URL}/upload`, {
-        method: 'POST',
-        body: formData
-    });
-    if (!res.ok) throw new Error('Upload failed');
-    const data = await res.json();
-    return data.url;
+        console.log('Uploading file:', file.name, 'Size:', file.size, 'Type:', file.type);
+
+        const res = await fetch(`${API_URL}/upload`, {
+            method: 'POST',
+            body: formData
+        });
+
+        if (!res.ok) {
+            const errorData = await res.json().catch(() => ({ error: 'Upload failed' }));
+            console.error('Upload error:', errorData);
+            throw new Error(errorData.error || `Upload failed with status ${res.status}`);
+        }
+
+        const data = await res.json();
+        console.log('Upload successful:', data.url);
+        return data.url;
+    } catch (error) {
+        console.error('Upload exception:', error);
+        throw error;
+    }
 }
 
 export async function saveAthleteProfile(id, data) {
