@@ -295,3 +295,22 @@ if (saveNoteBtn) {
 }
 
 // Dropdown and Logout are handled globally by ui-utils.js updateNavbar()
+
+// Listen for dynamic language changes
+window.addEventListener('languageChanged', () => {
+    if (currentUserData) {
+        // 1. Re-render profile grids (Personal & Specialized)
+        renderProfile(currentUserData);
+
+        // 2. Update Status Badge text & Buttons
+        const status = currentUserData.status || (currentUserData.federationApproval ? currentUserData.federationApproval.status : 'pending');
+        updateStatusUI(status);
+
+        // 3. Update Section Titles
+        if (targetRole === 'coach') {
+            specTitle.textContent = getTranslation("admin_title_coach_creds") || "Coaching Credentials";
+        } else {
+            specTitle.textContent = getTranslation("admin_title_athlete_profile") || "Athletic Profile";
+        }
+    }
+});

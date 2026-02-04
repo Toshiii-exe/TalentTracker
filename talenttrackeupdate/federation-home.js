@@ -269,3 +269,19 @@ if (mobileBackdrop) mobileBackdrop.addEventListener('click', () => toggleMobileM
 
 // handleLogout handled globally
 
+// Listen for dynamic language changes
+window.addEventListener('languageChanged', () => {
+    // 1. Update text for tabs column header
+    const colSpecific1 = document.getElementById("colSpecific1");
+    if (colSpecific1) {
+        if (currentTab === 'coaches') {
+            colSpecific1.textContent = getTranslation("fed_th_specialization");
+        } else {
+            colSpecific1.textContent = getTranslation("fed_th_location");
+        }
+    }
+
+    // 2. Re-render table rows to apply new translations
+    renderTable();
+});
+
