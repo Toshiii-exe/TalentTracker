@@ -189,47 +189,14 @@ if (mobileLoginBtn) {
     });
 }
 
+// Redundant dropdown and logout logic removed. Handled by ui-utils.js delegation.
 const navLoginBtn = document.getElementById("navLoginBtn");
 if (navLoginBtn) {
     navLoginBtn.addEventListener("click", (e) => {
-        const loggedInUser = localStorage.getItem("tt_username");
-        if (loggedInUser) {
+        if (!localStorage.getItem("tt_username")) {
             e.preventDefault();
-            e.stopPropagation();
-            const dropdown = document.getElementById("logoutDropdown");
-            if (dropdown) {
-                dropdown.classList.toggle("hidden");
-            } else {
-                // Fallback if dropdown missing (should not happen if HTML is correct)
-                logoutUser().then(() => window.location.reload());
-            }
-            return;
+            window.openLogin();
         }
-        e.preventDefault();
-        window.openLogin();
-    });
-
-    // Close dropdown when clicking outside
-    window.addEventListener("click", () => {
-        const dropdown = document.getElementById("logoutDropdown");
-        if (dropdown && !dropdown.classList.contains("hidden")) {
-            dropdown.classList.add("hidden");
-        }
-    });
-}
-
-const logoutBtn = document.getElementById("logoutBtn");
-if (logoutBtn) {
-    logoutBtn.addEventListener("click", async () => {
-        await logoutUser();
-        window.location.reload();
-    });
-}
-const mobileLogoutBtn = document.getElementById("mobileLogoutBtn");
-if (mobileLogoutBtn) {
-    mobileLogoutBtn.addEventListener("click", async () => {
-        await logoutUser();
-        window.location.reload();
     });
 }
 

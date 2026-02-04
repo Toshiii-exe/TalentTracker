@@ -426,49 +426,66 @@ export function updateNavbar(user, profileData = null) {
     }
   }
 
-  // Centralized Dropdown & Logout Logic
-  const navUserBtn = document.getElementById("navUserBtn");
-  const navUserDropdown = document.getElementById("navUserDropdown");
-  const logoutBtn = document.getElementById("logoutBtn");
-  const mobileLogoutBtn = document.getElementById("mobileLogoutBtn");
-
-  if (navUserBtn && navUserDropdown && !navUserBtn.dataset.navBound) {
-    navUserBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      navUserDropdown.classList.toggle('hidden');
-    });
-    window.addEventListener('click', () => {
-      navUserDropdown.classList.add('hidden');
-    });
-    navUserBtn.dataset.navBound = "true";
-  }
-
-  const handleGlobalLogout = async () => {
-    try {
-      const { signOut } = await import("./register.js");
-      await signOut();
-      localStorage.removeItem("tt_username");
-      localStorage.removeItem("tt_role");
-      window.location.href = "index.html";
-    } catch (err) {
-      console.error("Logout failed:", err);
-    }
-  };
-
-  if (logoutBtn && !logoutBtn.dataset.navBound) {
-    logoutBtn.addEventListener("click", handleGlobalLogout);
-    logoutBtn.dataset.navBound = "true";
-  }
-  if (mobileLogoutBtn && !mobileLogoutBtn.dataset.navBound) {
-    mobileLogoutBtn.addEventListener("click", handleGlobalLogout);
-    mobileLogoutBtn.dataset.navBound = "true";
-  }
-
   // Init Notifications if logged in
   if (user && (user.uid || user.id)) {
     initNotifications(user.uid || user.id);
   }
 }
+
+// =======================================================
+// DELEGATED NAVBAR LOGIC
+// Handles all dropdowns and logouts globally
+// =======================================================
+
+const handleGlobalLogout = async () => {
+  try {
+    const { signOut } = await import("./register.js");
+    await signOut();
+    localStorage.removeItem("tt_username");
+    localStorage.removeItem("tt_role");
+    window.location.href = "index.html";
+  } catch (err) {
+    console.error("Logout failed:", err);
+  }
+};
+
+document.addEventListener('click', (e) => {
+  // 1. Dropdown Toggles (Desktop & Login)
+  const toggleBtn = e.target.closest('#navUserBtn, #navLoginBtn, #navUserPic, #navBtnText');
+  if (toggleBtn) {
+    // Special case: if it's navLoginBtn on index.html and user NOT logged in, don't toggle
+    if (toggleBtn.id === 'navLoginBtn' && !localStorage.getItem("tt_username")) {
+      return; // login.js handles the login modal
+    }
+
+    e.preventDefault();
+    e.stopPropagation();
+
+    // Find the correct dropdown sibling/relative
+    const dropdown = document.getElementById('navUserDropdown') || document.getElementById('logoutDropdown');
+    if (dropdown) {
+      dropdown.classList.toggle('hidden');
+    }
+    return;
+  }
+
+  // 2. Logout Actions
+  const logoutBtn = e.target.closest('#logoutBtn, #mobileLogoutBtn');
+  if (logoutBtn) {
+    e.preventDefault();
+    handleGlobalLogout();
+    return;
+  }
+
+  // 3. Close all dropdowns when clicking elsewhere
+  const menus = ['navUserDropdown', 'logoutDropdown', 'notificationDropdown'];
+  menus.forEach(id => {
+    const el = document.getElementById(id);
+    if (el && !e.target.closest(`#${id}`)) {
+      el.classList.add('hidden');
+    }
+  });
+});
 
 /**
  * Notifications Logic
