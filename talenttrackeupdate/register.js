@@ -63,10 +63,6 @@ export async function registerUser(email, password, username, role = 'athlete', 
   auth.currentUser = user;
   localStorage.setItem('user', JSON.stringify(user));
   localStorage.setItem('token', token);
-  // Ensure consistency with login flow
-  localStorage.setItem('tt_role', role);
-  if (user.username) localStorage.setItem('tt_username', user.username);
-
   notifyListeners(auth.currentUser);
 
   return { user: user };

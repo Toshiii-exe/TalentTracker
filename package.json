@@ -5,10 +5,11 @@
     "main": "talenttrackeupdate/backend/server.js",
     "scripts": {
         "start": "node talenttrackeupdate/backend/server.js",
-        "dev": "nodemon talenttrackeupdate/backend/server.js"
+        "dev": "nodemon talenttrackeupdate/backend/server.js",
+        "postinstall": "cd talenttrackeupdate/backend && npm install"
     },
     "dependencies": {
-        "bcryptjs": "^2.4.3",
+        "bcrypt": "^5.1.1",
         "body-parser": "^1.20.2",
         "cors": "^2.8.5",
         "dotenv": "^17.2.3",
@@ -17,9 +18,6 @@
         "multer": "^1.4.5-lts.1",
         "mysql2": "^3.6.5",
         "nodemailer": "^7.0.12"
-    },
-    "engines": {
-        "node": ">=18.0.0"
     },
     "keywords": [],
     "author": "",
