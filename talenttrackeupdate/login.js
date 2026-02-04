@@ -99,8 +99,11 @@ onAuthChange(async (user) => {
 });
 
 // Login Action
-if (loginBtn) {
-    loginBtn.addEventListener("click", async () => {
+// Login Action
+const loginForm = document.getElementById("loginForm");
+if (loginForm) {
+    loginForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
         clearErr();
         const identifier = identifierInput.value.trim();
         const password = passwordInput.value;

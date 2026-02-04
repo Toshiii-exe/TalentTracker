@@ -75,10 +75,10 @@ form.addEventListener("submit", async (e) => {
     try {
         showLoading();
         await registerUser(email, password, username, "coach", phone);
-        await logoutUser();
+        // await logoutUser(); // Removed to allow auto-login
 
-        showSuccessModal(getTranslation("signup_coach_msg_success") || "Coach account created successfully! Please login.", () => {
-            window.location.href = "index.html";
+        showSuccessModal(getTranslation("signup_coach_msg_success") || "Coach account created successfully!", () => {
+            window.location.href = "coach-home.html";
         });
 
     } catch (err) {

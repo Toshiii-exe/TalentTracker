@@ -338,7 +338,7 @@
               <p class="text-gray-500 font-medium" data-i18n="login_modal_subtitle">Please enter your details below</p>
             </div>
 
-            <form class="space-y-6" onsubmit="return false;">
+            <form id="loginForm" class="space-y-6">
               <div class="space-y-2">
                 <label class="text-xs font-black text-gray-400 uppercase tracking-widest ml-1"
                   data-i18n="login_label_identifier">Phone / Email /
@@ -378,7 +378,7 @@
                 <span>Error message here</span>
               </div>
 
-              <button id="loginBtn" type="button" data-i18n="login_btn"
+              <button id="loginBtn" type="submit" data-i18n="login_btn"
                 class="w-full bg-[#2E5F9E] hover:bg-[#1a3a63]
                    text-white font-black py-5 rounded-2xl shadow-xl hover:shadow-[#2E5F9E]/30 transition-all transform active:scale-[0.97] uppercase tracking-wider">
                 Login
