@@ -117,7 +117,7 @@ if (profilePicInput) {
             alert("Updated!");
         } catch (err) {
             console.error(err);
-            alert("Failed to upload");
+            alert("Upload failed: " + (err.message || "Unknown error"));
             if (profilePicDisplay) profilePicDisplay.classList.remove("skeleton");
         }
     });

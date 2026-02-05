@@ -90,7 +90,7 @@ if (profilePicInput) {
             alert(getTranslation("msg_updated"));
         } catch (err) {
             console.error(err);
-            alert(getTranslation("msg_upload_failed_short"));
+            alert("Upload failed: " + (err.message || getTranslation("msg_upload_failed_short")));
             if (profilePicDisplay) profilePicDisplay.classList.remove("skeleton");
         }
     });
