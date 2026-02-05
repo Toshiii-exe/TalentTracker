@@ -327,20 +327,14 @@ export function fixImageUrl(imageUrl, fallbackName = "User", size = 150) {
     return `https://ui-avatars.com/api/?name=${encodeURIComponent(fallbackName)}&background=012A61&color=fff&size=${size}`;
   }
 
-  // Handle relative paths (starting with / or alphanumeric chars but not http/data/blob)
-  if (!imageUrl.match(/^(http|https|data|blob|\/\/):/)) {
-    // If it starts with /, append directly
-    if (imageUrl.startsWith('/')) {
-      imageUrl = BACKEND_URL + imageUrl;
-    } else {
-      // If it doesn't start with /, append with /
-      imageUrl = BACKEND_URL + '/' + imageUrl;
-    }
+  // If it's a relative path, prepend BACKEND_URL
+  if (imageUrl.startsWith('/')) {
+    imageUrl = BACKEND_URL + imageUrl;
   }
 
   // Add cache busting for HTTP URLs (but not for external services or data URIs)
   if (imageUrl.startsWith('http') && !imageUrl.includes('ui-avatars.com') && !imageUrl.includes('?t=')) {
-    imageUrl += (imageUrl.includes('?') ? '&' : '?') + 't=' + new Date().getTime();
+    imageUrl += '?t=' + new Date().getTime();
   }
 
   return imageUrl;
@@ -428,9 +422,10 @@ export async function updateNavbar(user, profileData = null) {
   imgIds.forEach(id => {
     const el = document.getElementById(id);
     if (el) {
-      el.setAttribute("onerror", getImageErrorHandler(name));
       el.src = profilePic;
       el.classList.remove("hidden");
+      // Add error handler fallback
+      el.setAttribute("onerror", getImageErrorHandler(name));
     }
   });
 

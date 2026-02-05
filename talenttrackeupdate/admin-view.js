@@ -108,8 +108,8 @@ function renderProfile(data) {
     userEmail.textContent = email;
     userPhone.textContent = phone;
 
-    userPic.setAttribute('onerror', getImageErrorHandler(name, 300));
     userPic.src = fixImageUrl(pic, name, 300);
+    userPic.setAttribute('onerror', getImageErrorHandler(name, 300));
 
     updateStatusUI(status);
 

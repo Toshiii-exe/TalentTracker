@@ -238,8 +238,8 @@ function loadAthleteProfileData() {
         if (profilePicEl) {
             const name = athleteDocData.personal?.fullName || "Athlete";
             // fixImageUrl handles relative paths, PDFs, and caching
-            profilePicEl.setAttribute('onerror', getImageErrorHandler(name));
             profilePicEl.src = fixImageUrl(imgUrl, name);
+            profilePicEl.setAttribute('onerror', getImageErrorHandler(name));
         }
     }
 

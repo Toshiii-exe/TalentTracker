@@ -139,8 +139,8 @@ async function loadAthleteData() {
 
             if (athletePic) {
                 const name = p.fullName || data.username || "Athlete";
-                athletePic.setAttribute('onerror', getImageErrorHandler(name, 300));
                 athletePic.src = fixImageUrl(picUrl, name, 300);
+                athletePic.setAttribute('onerror', getImageErrorHandler(name, 300));
             }
 
             if (d.idDoc) {

@@ -7,7 +7,7 @@ import {
     uploadFile,
     BACKEND_URL
 } from "./register.js";
-import { updateNavbar, fixImageUrl, getImageErrorHandler } from "./ui-utils.js";
+import { updateNavbar, fixImageUrl } from "./ui-utils.js";
 
 // DOM Elements
 const profilePicInput = document.getElementById("profilePicInput");
@@ -132,7 +132,6 @@ function loadDashboardData(data, user) {
     profilePic = fixImageUrl(profilePic, fullName);
 
     if (profilePicDisplay) {
-        profilePicDisplay.setAttribute('onerror', getImageErrorHandler(fullName));
         profilePicDisplay.src = profilePic;
         profilePicDisplay.classList.remove("skeleton");
     }
