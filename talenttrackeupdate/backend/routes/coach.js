@@ -94,7 +94,14 @@ router.post('/:id', async (req, res) => {
     const d = req.body;
 
     // Helper to convert empty strings to null for Date fields
-    const toDate = (val) => (val === '' || val === 'null' || val === undefined) ? null : val;
+    const toDate = (val) => {
+        if (!val || val === '' || val === 'null' || val === undefined) return null;
+        // If it comes as 2003-06-18T00:00:00.000Z, take only 2003-06-18
+        if (typeof val === 'string' && val.includes('T')) {
+            return val.split('T')[0];
+        }
+        return val;
+    };
     // Helper to convert empty strings to 0 for Integer fields
     const toInt = (val) => {
         const parsed = parseInt(val);
