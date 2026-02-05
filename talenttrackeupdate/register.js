@@ -90,6 +90,17 @@ export async function signOut() {
   return logoutUser();
 }
 
+export async function deleteAccount(uid) {
+  try {
+    await API.deleteUser(uid);
+    await logoutUser();
+    return true;
+  } catch (error) {
+    console.error("Delete account failed", error);
+    throw error;
+  }
+}
+
 export function onAuthChange(callback) {
   authListeners.push(callback);
   if (auth.currentUser) {

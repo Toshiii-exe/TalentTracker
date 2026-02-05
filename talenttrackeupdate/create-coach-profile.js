@@ -3,9 +3,10 @@ import {
     onAuthChange,
     getCoachProfile,
     saveCoachProfile,
-    uploadFile
+    uploadFile,
+    deleteAccount
 } from "./register.js";
-import { showLoading, hideLoading, showSuccessModal } from "./ui-utils.js";
+import { showLoading, hideLoading, showSuccessModal, showConfirm } from "./ui-utils.js";
 import { setupDropdownInput, syncDropdown, CITIES, DISTRICTS, PROVINCES } from "./locations.js";
 import { getTranslation } from "./i18n.js";
 
@@ -430,4 +431,34 @@ document.addEventListener('DOMContentLoaded', () => {
     setupDropdownInput('citySelect', 'city', CITIES);
     setupDropdownInput('districtSelect', 'district', DISTRICTS);
     setupDropdownInput('provinceSelect', 'province', PROVINCES);
+});
+
+window.deleteMyAccount = async () => {
+    if (!currentUID) return;
+
+    const confirmed = await showConfirm(
+        getTranslation("profile_delete_confirm_msg") || "Are you sure you want to delete your account? This action cannot be undone and all your data will be lost.",
+        getTranslation("profile_delete_title") || "Delete Account"
+    );
+
+    if (confirmed) {
+        try {
+            showLoading();
+            await deleteAccount(currentUID);
+            window.location.href = "index.html";
+        } catch (error) {
+            console.error("Deletion failed", error);
+            alert("Failed to delete account. Please try again.");
+        } finally {
+            hideLoading();
+        }
+    }
+};
+
+// Show delete button if logged in
+onAuthChange((user) => {
+    if (user) {
+        const btn = document.getElementById("deleteAccountBtn");
+        if (btn) btn.classList.remove("hidden");
+    }
 });

@@ -426,6 +426,43 @@ export function updateNavbar(user, profileData = null) {
     }
   }
 
+  // Inject Profile Link
+  const dropdown = document.getElementById("navUserDropdown");
+  if (dropdown) {
+    let profileLink = document.getElementById("navProfileLink");
+    if (!profileLink) {
+      profileLink = document.createElement("a");
+      profileLink.id = "navProfileLink";
+      profileLink.className = "block w-full text-left px-2 py-2 rounded-lg text-sm font-bold text-gray-700 hover:bg-gray-50 hover:text-[var(--primary)] transition-colors mb-2 flex items-center gap-2";
+      profileLink.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg> Profile`;
+
+      // Insert before logout button
+      const logoutBtn = document.getElementById("logoutBtn");
+      if (logoutBtn) {
+        dropdown.insertBefore(profileLink, logoutBtn);
+      } else {
+        dropdown.appendChild(profileLink);
+      }
+    }
+
+    // Set HREF based on role
+    const role = user.role || (localStorage.getItem("tt_role") || "").toLowerCase();
+    if (role === 'athlete') {
+      profileLink.href = "createprofile.html";
+      profileLink.classList.remove("hidden");
+    } else if (role === 'coach') {
+      profileLink.href = "create-coach-profile.html";
+      profileLink.classList.remove("hidden");
+    } else if (role === 'admin') {
+      // Admin might not have a profile page in the same way, or maybe federation-home?
+      // For now hide it or point to home
+      profileLink.classList.add("hidden");
+    } else {
+      // Fallback or hide
+      profileLink.classList.add("hidden");
+    }
+  }
+
   // Init Notifications if logged in
   if (user && (user.uid || user.id)) {
     initNotifications(user.uid || user.id);

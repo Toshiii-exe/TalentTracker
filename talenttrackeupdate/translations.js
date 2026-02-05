@@ -668,7 +668,10 @@ export const translations = {
     msg_failed_load_event: "Failed to load event details.",
     msg_no_athletes_for_wa: "Event created! No athletes found in category to notify via WhatsApp.",
     msg_failed_load_athletes: "Event created, but failed to load athlete phone numbers.",
-    err_upload_profile: "Error uploading profile: "
+    err_upload_profile: "Error uploading profile: ",
+    profile_delete_account: "Delete Account",
+    profile_delete_confirm_msg: "Are you sure you want to delete your account? This action cannot be undone and all your data will be lost.",
+    profile_delete_title: "Delete Account"
   },
   si: {
     nav_home: "මුල් පිටුව",
@@ -1333,7 +1336,10 @@ export const translations = {
     msg_failed_load_event: "ඉසව් විස්තර පූරණය කිරීම අසාර්ථක විය.",
     msg_no_athletes_for_wa: "ඉසව්ව නිර්මාණය කරන ලදී! WhatsApp හරහා දැනුම් දීමට අදාළ කාණ්ඩයේ ක්‍රීඩකයින් හමු නොවීය.",
     msg_failed_load_athletes: "ඉසව්ව නිර්මාණය කරන ලදී, නමුත් ක්‍රීඩක දුරකථන අංක පූරණය කිරීම අසාර්ථක විය.",
-    err_upload_profile: "පැතිකඩ උඩුගත කිරීමේ දෝෂය: "
+    err_upload_profile: "පැතිකඩ උඩුගත කිරීමේ දෝෂය: ",
+    profile_delete_account: "ගිණුම මකන්න",
+    profile_delete_confirm_msg: "ඔබට ඔබේ ගිණුම මැකීමට අවශ්‍ය බව විශ්වාසද? මෙම ක්‍රියාව ආපසු හැරවිය නොහැක.",
+    profile_delete_title: "ගිණුම මකන්න"
   },
   ta: {
     nav_home: "முகப்பு",
@@ -1998,6 +2004,9 @@ export const translations = {
     msg_failed_load_event: "நிகழ்வு விவரங்களை ஏற்றுவதில் தோல்வி.",
     msg_no_athletes_for_wa: "நிகழ்வு உருவாக்கப்பட்டது! WhatsApp வழியாக தெரிவிக்க அந்த வகையில் விளையாட்டு வீரர்கள் யாரும் இல்லை.",
     msg_failed_load_athletes: "நிகழ்வு உருவாக்கப்பட்டது, ஆனால் விளையாட்டு வீரர்களின் தொலைபேசி எண்களை ஏற்ற முடியவில்லை.",
-    err_upload_profile: "சுயவிவரம் பதிவேற்றுவதில் பிழை: "
+    err_upload_profile: "சுயவிவரம் பதிவேற்றுவதில் பிழை: ",
+    profile_delete_account: "கணக்கை நீக்கு",
+    profile_delete_confirm_msg: "உங்கள் கணக்கை நிச்சயமாக நீக்க விரும்புகிறீர்களா? இந்த செயலை செயல்தவிர்க்க முடியாது.",
+    profile_delete_title: "கணக்கை நீக்கு"
   }
 };

@@ -5,9 +5,10 @@ import {
     getAthleteProfile,
     saveAthleteProfile,
     uploadFile,
-    BACKEND_URL
+    BACKEND_URL,
+    deleteAccount
 } from "./register.js";
-import { showLoading, hideLoading, updateNavbar } from "./ui-utils.js";
+import { showLoading, hideLoading, updateNavbar, showConfirm } from "./ui-utils.js";
 import { setupDropdownInput, syncDropdown, CITIES } from "./locations.js";
 import { getTranslation, applyLanguage } from "./i18n.js";
 
@@ -650,6 +651,36 @@ export async function submitProfile() {
     }
 }
 window.submitProfile = submitProfile;
+window.deleteMyAccount = async () => {
+    if (!currentUID) return;
+
+    const confirmed = await showConfirm(
+        getTranslation("profile_delete_confirm_msg") || "Are you sure you want to delete your account? This action cannot be undone and all your data will be lost.",
+        getTranslation("profile_delete_title") || "Delete Account"
+    );
+
+    if (confirmed) {
+        try {
+            showLoading();
+            await deleteAccount(currentUID);
+            window.location.href = "index.html";
+        } catch (error) {
+            console.error("Deletion failed", error);
+            displayMessage("Failed to delete account. Please try again.", "error");
+        } finally {
+            hideLoading();
+        }
+    }
+};
+
+// Show delete button if logged in
+onAuthChange((user) => {
+    if (user) {
+        const btn = document.getElementById("deleteAccountBtn");
+        if (btn) btn.classList.remove("hidden");
+    }
+});
+
 // Init Location Dropdowns
 function initLocations() {
     setupDropdownInput('citySelect', 'city', CITIES);
