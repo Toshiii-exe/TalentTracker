@@ -6,7 +6,7 @@ import {
     uploadFile,
     deleteAccount
 } from "./register.js";
-import { showLoading, hideLoading, showSuccessModal, showConfirm } from "./ui-utils.js";
+import { showLoading, hideLoading, showSuccessModal, showConfirm, fixImageUrl } from "./ui-utils.js";
 import { setupDropdownInput, syncDropdown, CITIES, DISTRICTS, PROVINCES } from "./locations.js";
 import { getTranslation } from "./i18n.js";
 
@@ -68,7 +68,7 @@ onAuthChange(async (user) => {
                 const previewImg = document.getElementById("previewImg");
                 const previewIcon = document.querySelector("#photoPreview svg");
                 if (previewImg) {
-                    previewImg.src = data.profilePic;
+                    previewImg.src = fixImageUrl(data.profilePic);
                     previewImg.classList.remove("hidden");
                     if (previewIcon) previewIcon.classList.add("hidden");
                 }

@@ -246,12 +246,7 @@ async function fetchWatchlist(favorites) {
             const aData = await getAthleteProfile(athleteId);
             if (aData && aData.exists) {
                 const aName = aData.personal?.fullName || aData.username || "Athlete";
-                let aPic = aData.documents?.profilePic || "https://ui-avatars.com/api/?name=" + encodeURIComponent(aName);
-
-                // Fix relative paths
-                if (aPic && aPic.startsWith('/')) {
-                    aPic = BACKEND_URL + aPic;
-                }
+                let aPic = aData.documents?.profilePic;
 
                 const aCat = aData.athletic?.category || "U20";
 

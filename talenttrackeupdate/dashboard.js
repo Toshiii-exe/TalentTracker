@@ -234,14 +234,12 @@ function loadAthleteProfileData() {
 
     if (athleteDocData.documents?.profilePic) {
         let imgUrl = athleteDocData.documents.profilePic;
-        const isPdf = imgUrl.toLowerCase().includes('.pdf') || imgUrl.toLowerCase().includes('pdf');
-
-        if (imgUrl.startsWith('/')) imgUrl = BACKEND_URL + imgUrl;
 
         if (profilePicEl) {
-            if (isPdf) {
-                profilePicEl.src = fixImageUrl(imgUrl, athleteDocData.personal?.fullName || "Athlete");
-            }
+            const name = athleteDocData.personal?.fullName || "Athlete";
+            // fixImageUrl handles relative paths, PDFs, and caching
+            profilePicEl.setAttribute('onerror', getImageErrorHandler(name));
+            profilePicEl.src = fixImageUrl(imgUrl, name);
         }
     }
 

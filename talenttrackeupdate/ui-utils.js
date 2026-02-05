@@ -310,44 +310,82 @@ export function showSuccessModal(message, onCloseCallback) {
 // =======================================================
 
 /**
- * Updates the Navbar with user info (Name + Profile Pic)
- * Replaces "Login" button content.
- * Handles multiple ID conventions found in the project.
+ * Normalizes an image URL for display in the UI.
+ * Handles relative paths, cache busting, and provides a fallback for PDFs.
+ * @param {string|null} imageUrl - The original image URL.
+ * @param {string} fallbackName - Name to use for avatar fallback if imageUrl is null or PDF.
+ * @param {number} size - Size for avatar fallback.
+ * @returns {string} The processed image URL or a fallback avatar URL.
  */
-export function updateNavbar(user, profileData = null) {
-  if (!user) {
-    // Reset to Login state if needed
-    // This might require more logic depending on page
-    return;
+export function fixImageUrl(imageUrl, fallbackName = "User", size = 150) {
+  if (!imageUrl) {
+    return `https://ui-avatars.com/api/?name=${encodeURIComponent(fallbackName)}&background=012A61&color=fff&size=${size}`;
   }
 
-  let name = user.displayName || user.username || localStorage.getItem("tt_username") || user.email.split("@")[0];
+  // Check for PDF and return fallback if found (can't display PDF in img tag)
+  if (imageUrl.toLowerCase().endsWith('.pdf') || imageUrl.toLowerCase().includes('.pdf?')) {
+    return `https://ui-avatars.com/api/?name=${encodeURIComponent(fallbackName)}&background=012A61&color=fff&size=${size}`;
+  }
+
+  // Handle relative paths (starting with / or alphanumeric chars but not http/data/blob)
+  if (!imageUrl.match(/^(http|https|data|blob|\/\/):/)) {
+    // If it starts with /, append directly
+    if (imageUrl.startsWith('/')) {
+      imageUrl = BACKEND_URL + imageUrl;
+    } else {
+      // If it doesn't start with /, append with /
+      imageUrl = BACKEND_URL + '/' + imageUrl;
+    }
+  }
+
+  // Add cache busting for HTTP URLs (but not for external services or data URIs)
+  if (imageUrl.startsWith('http') && !imageUrl.includes('ui-avatars.com') && !imageUrl.includes('?t=')) {
+    imageUrl += (imageUrl.includes('?') ? '&' : '?') + 't=' + new Date().getTime();
+  }
+
+  return imageUrl;
+}
+
+/**
+ * Creates an onerror handler string for img tags
+ * @param {string} fallbackName - Name to use for avatar fallback
+ * @param {number} size - Size for avatar fallback
+ * @returns {string} onerror attribute value
+ */
+export function getImageErrorHandler(fallbackName = "User", size = 150) {
+  const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(fallbackName)}&background=012A61&color=fff&size=${size}`;
+  return `this.onerror=null; this.src='${avatarUrl}';`;
+}
+
+// =======================================================
+// ROLE-BASED NAVIGATION
+// =======================================================
+
+/**
+ * Global Navbar Update for Logged-In User
+ * Handles: Name display, Profile pic, Mobile menu, Logout button, Dropdown
+ * @param {object} user - Firebase User object
+ * @param {object|null} profileData - Optional profile data from DB
+ */
+export async function updateNavbar(user, profileData = null) {
+  if (!user) return;
+
+  // Get name from various sources
+  let name = user.displayName || localStorage.getItem("tt_username") || user.email.split("@")[0];
   let profilePic = null;
 
   if (profileData) {
-    // Try to get more accurate name/pic from profile data
-    // Structure varies: athleteDocData.personal.fullName, or coachData...
-    const p = profileData.personal || profileData;
-    // Prefer username for navbar if available, otherwise fallback to fullName
-    // We already set `name` to username/email at line 290. 
-    // Here we only want to update it if we didn't have a good username before, OR
-    // actually, let's strictly prefer `localStorage` username or `user.username`.
-
-    // If the requirement is "only show username in navbar", we should NOT overwrite it with fullName here.
-    // However, if we only have email, maybe fullName is better? 
-    // The user said: "display the username i logged in with".
-    // So we should verify if we have a username.
-
-    // Strictly enforce username from login if available
-    const loginUsername = user.username || localStorage.getItem("tt_username");
-
-    if (loginUsername) {
-      name = loginUsername;
-    } else if (profileData.username) {
+    // Attempt to get better name from profile
+    if (profileData.username) {
       name = profileData.username;
-    } else if (p.fullName) {
-      // Only if absolutely no username is found
-      name = p.fullName;
+    } else if (profileData.personal?.fullName) {
+      name = profileData.personal.fullName;
+    } else if (profileData.fullName) {
+      // Coach profile structure often has fullName at root
+      name = profileData.fullName;
+    } else if (profileData.personal && typeof profileData.personal === 'string') {
+      const p = JSON.parse(profileData.personal); // sometimes it's stringified
+      if (p.fullName) name = p.fullName;
     }
 
     if (profileData.documents?.profilePic) profilePic = profileData.documents.profilePic;
@@ -355,8 +393,7 @@ export function updateNavbar(user, profileData = null) {
     else if (profileData.profilePic) profilePic = profileData.profilePic;
 
     // Default for Admin specifically if they have no pic
-    if (!profilePic && user.role === 'admin' || profileData.username === 'Admin') {
-      // let it fall through to generateAvatar logic
+    if (!profilePic && (user.role === 'admin' || profileData.username === 'Admin')) {
       profilePic = null;
     }
   }
@@ -375,20 +412,8 @@ export function updateNavbar(user, profileData = null) {
     if (el) el.textContent = name;
   });
 
-  if (profilePic) {
-    // Handle relative paths from backend
-    if (profilePic.startsWith('/')) {
-      profilePic = BACKEND_URL + profilePic;
-    }
-
-    // Ensure URL has timestamp if it's from our uploads (to bust cache)
-    if (profilePic.startsWith('http') && !profilePic.includes('?t=')) {
-      profilePic += "?t=" + new Date().getTime();
-    }
-  } else {
-    // Generate Avatar
-    profilePic = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=012A61&color=fff`;
-  }
+  // Use the utility to fix the URL
+  profilePic = fixImageUrl(profilePic, name);
 
   picContainerIds.forEach(id => {
     const el = document.getElementById(id);
@@ -403,6 +428,7 @@ export function updateNavbar(user, profileData = null) {
   imgIds.forEach(id => {
     const el = document.getElementById(id);
     if (el) {
+      el.setAttribute("onerror", getImageErrorHandler(name));
       el.src = profilePic;
       el.classList.remove("hidden");
     }

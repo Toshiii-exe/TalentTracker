@@ -212,8 +212,12 @@ async function loadProfileForEdit() {
                         if (isPdf) {
                             prevDiv.innerHTML = `<img src="https://cdn-icons-png.flaticon.com/512/337/337946.png" class="w-10 h-10 rounded object-contain"><span class="text-xs text-green-600 font-bold block mt-1">✓ Current Saved (PDF)</span>`;
                         } else {
-                            if (src.startsWith('http')) src += "?t=" + new Date().getTime();
-                            prevDiv.innerHTML = `<img src="${src}" class="w-20 h-20 rounded border border-gray-300 object-cover"><span class="text-xs text-green-600 font-bold block mt-1">✓ Current Saved</span>`;
+                            let fullSrc = src;
+                            if (!fullSrc.startsWith('http') && !fullSrc.startsWith('blob:') && !fullSrc.startsWith('data:')) {
+                                fullSrc = BACKEND_URL + (fullSrc.startsWith('/') ? fullSrc : '/' + fullSrc);
+                            }
+                            if (fullSrc.startsWith('http')) fullSrc += "?t=" + new Date().getTime();
+                            prevDiv.innerHTML = `<img src="${fullSrc}" class="w-20 h-20 rounded border border-gray-300 object-cover" onerror="this.src='https://ui-avatars.com/api/?name=User&background=012A61&color=fff'"><span class="text-xs text-green-600 font-bold block mt-1">✓ Current Saved</span>`;
                         }
                     } else {
                         let fullSrc = src;

@@ -7,7 +7,7 @@ import {
     removeFavorite,
     BACKEND_URL
 } from "./register.js";
-import { updateNavbar } from "./ui-utils.js";
+import { updateNavbar, fixImageUrl, getImageErrorHandler } from "./ui-utils.js";
 import * as API from "./api.js";
 
 // DOM Elements
@@ -135,16 +135,12 @@ async function loadAthleteData() {
 
             // Docs
             const d = data.documents || {};
-            let picUrl = d.profilePic || "https://via.placeholder.com/300?text=No+Photo";
-            const isPdf = picUrl.toLowerCase().includes('.pdf') || picUrl.toLowerCase().includes('pdf');
-            if (picUrl.startsWith('/')) picUrl = BACKEND_URL + picUrl;
+            const picUrl = d.profilePic;
 
             if (athletePic) {
-                if (isPdf) {
-                    athletePic.src = "https://cdn-icons-png.flaticon.com/512/337/337946.png";
-                } else {
-                    athletePic.src = picUrl;
-                }
+                const name = p.fullName || data.username || "Athlete";
+                athletePic.setAttribute('onerror', getImageErrorHandler(name, 300));
+                athletePic.src = fixImageUrl(picUrl, name, 300);
             }
 
             if (d.idDoc) {

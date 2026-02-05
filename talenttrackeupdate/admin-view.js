@@ -8,7 +8,7 @@ import {
     getAdminNote,
     BACKEND_URL
 } from "./register.js";
-import { updateNavbar } from "./ui-utils.js";
+import { updateNavbar, fixImageUrl, getImageErrorHandler } from "./ui-utils.js";
 import { getTranslation } from "./i18n.js";
 
 // DOM Elements
@@ -108,9 +108,8 @@ function renderProfile(data) {
     userEmail.textContent = email;
     userPhone.textContent = phone;
 
-    if (!pic) pic = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=random`;
-    if (pic.startsWith('/')) pic = BACKEND_URL + pic;
-    userPic.src = pic;
+    userPic.setAttribute('onerror', getImageErrorHandler(name, 300));
+    userPic.src = fixImageUrl(pic, name, 300);
 
     updateStatusUI(status);
 
