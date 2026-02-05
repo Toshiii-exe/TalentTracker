@@ -93,6 +93,9 @@ router.post('/:id', async (req, res) => {
     const userId = req.params.id;
     const d = req.body;
 
+    // Helper to convert empty strings to null for Date fields
+    const toDate = (val) => (val === '' || val === 'null' || val === undefined) ? null : val;
+
     try {
         const query = `
             INSERT INTO coaches (
@@ -115,7 +118,7 @@ router.post('/:id', async (req, res) => {
         `;
 
         const params = [
-            userId, d.fullName, d.gender, d.dob, d.nationality, d.nic, d.phone, d.email,
+            userId, d.fullName, d.gender, toDate(d.dob), d.nationality, d.nic, d.phone, d.email,
             d.street, d.city, d.district, d.province, d.sports, d.coachingLevel,
             d.coachingRole, d.experience, d.organization, d.highestQual,
             d.issuingAuthority, d.certId, d.certDoc, d.availDays,
@@ -125,8 +128,8 @@ router.post('/:id', async (req, res) => {
         await db.query(query, params);
         res.json({ message: 'Coach profile saved' });
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Error saving coach profile' });
+        console.error("Save Coach Profile Error:", error);
+        res.status(500).json({ error: 'Error saving coach profile: ' + error.message });
     }
 });
 
