@@ -95,6 +95,11 @@ router.post('/:id', async (req, res) => {
 
     // Helper to convert empty strings to null for Date fields
     const toDate = (val) => (val === '' || val === 'null' || val === undefined) ? null : val;
+    // Helper to convert empty strings to 0 for Integer fields
+    const toInt = (val) => {
+        const parsed = parseInt(val);
+        return isNaN(parsed) ? 0 : parsed;
+    };
 
     try {
         const query = `
@@ -118,11 +123,11 @@ router.post('/:id', async (req, res) => {
         `;
 
         const params = [
-            userId, d.fullName, d.gender, toDate(d.dob), d.nationality, d.nic, d.phone, d.email,
-            d.street, d.city, d.district, d.province, d.sports, d.coachingLevel,
-            d.coachingRole, d.experience, d.organization, d.highestQual,
-            d.issuingAuthority, d.certId, d.certDoc, d.availDays,
-            d.timeSlots, d.locationPref, d.status || 'Pending', d.profilePic
+            userId, d.fullName || '', d.gender || '', toDate(d.dob), d.nationality || '', d.nic || '', d.phone || '', d.email || '',
+            d.street || '', d.city || '', d.district || '', d.province || '', d.sports || '', d.coachingLevel || '',
+            d.coachingRole || '', toInt(d.experience), d.organization || '', d.highestQual || '',
+            d.issuingAuthority || '', d.certId || '', d.certDoc || '', d.availDays || '',
+            d.timeSlots || '', d.locationPref || '', d.status || 'Pending', d.profilePic || ''
         ];
 
         await db.query(query, params);
