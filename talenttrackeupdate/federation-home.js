@@ -136,7 +136,10 @@ function renderTable() {
         const name = user.fullName || p.fullName || user.username || getTranslation("fed_unknown_user");
         const email = user.email || getTranslation("fed_no_email");
         const docs = user.documents || {};
-        let pic = user.profilePic || docs.profilePic;
+        let pic = user.profilePic || docs.profilePic || "https://ui-avatars.com/api/?name=" + encodeURIComponent(name);
+        if (pic && pic.startsWith('/')) {
+            pic = BACKEND_URL + pic;
+        }
 
         const isApproved = user.federationApproval?.status === "approved" || user.status?.toLowerCase() === "approved";
 

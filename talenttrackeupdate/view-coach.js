@@ -7,7 +7,7 @@ import {
     uploadFile,
     BACKEND_URL
 } from "./register.js";
-import { updateNavbar, fixImageUrl } from "./ui-utils.js";
+import { updateNavbar } from "./ui-utils.js";
 
 // DOM Elements
 const profilePicInput = document.getElementById("profilePicInput");
@@ -128,8 +128,10 @@ function loadDashboardData(data, user) {
     // Map fields
     const fullName = data.fullName || user.displayName || "Coach";
     const username = data.username || fullName;
-    let profilePic = data.profilePic;
-    profilePic = fixImageUrl(profilePic, fullName);
+    let profilePic = data.profilePic || `https://ui-avatars.com/api/?name=${encodeURIComponent(fullName)}&background=012A61&color=fff`;
+    if (profilePic && profilePic.startsWith('/')) {
+        profilePic = BACKEND_URL + profilePic;
+    }
 
     if (profilePicDisplay) {
         profilePicDisplay.src = profilePic;

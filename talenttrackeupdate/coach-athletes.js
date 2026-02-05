@@ -8,7 +8,7 @@ import {
     removeFavorite,
     BACKEND_URL
 } from "./register.js";
-import { updateNavbar, fixImageUrl, getImageErrorHandler } from "./ui-utils.js";
+import { updateNavbar } from "./ui-utils.js";
 
 import { getTranslation } from "./i18n.js";
 
@@ -151,11 +151,12 @@ function renderAthletes() {
         const displayName = athlete.personal?.fullName || athlete.username || "Athlete " + athlete.id;
         const city = athlete.personal?.city || "Not Specified";
         const category = athlete.athletic?.category || "TBD";
+        let profilePic = athlete.documents?.profilePic || "https://via.placeholder.com/150?text=No+Photo";
 
-        // Use utility to fix URL
-        let profilePic = athlete.documents?.profilePic;
-        profilePic = fixImageUrl(profilePic, displayName, 300);
-        const onErrorAttr = getImageErrorHandler(displayName, 300);
+        // Fix relative paths
+        if (profilePic && profilePic.startsWith('/')) {
+            profilePic = BACKEND_URL + profilePic;
+        }
 
         const events = athlete.athletic?.events || [];
         const mainSport = events.length > 0 ? events[0].event : getTranslation("lbl_no_events");
@@ -170,7 +171,7 @@ function renderAthletes() {
 
         card.innerHTML = `
             <div class="relative h-48 overflow-hidden bg-slate-100">
-                <img src="${profilePic}" class="w-full h-full object-cover" alt="${displayName}" onerror="${onErrorAttr}">
+                <img src="${profilePic}" class="w-full h-full object-cover" alt="${displayName}" onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=012A61&color=fff&size=300';">
                 ${statusHTML}
                 
                 <button onclick="toggleFavorite('${athleteIdStr}')" class="absolute top-4 right-4 z-20 p-2 rounded-full bg-white/80 backdrop-blur shadow-sm hover:scale-110 transition-all">
