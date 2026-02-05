@@ -75,10 +75,8 @@ form.addEventListener("submit", async (e) => {
     try {
         showLoading();
         await registerUser(email, password, username, "coach", phone);
-        await logoutUser();
-
-        showSuccessModal(getTranslation("signup_coach_msg_success") || "Coach account created successfully! Please login.", () => {
-            window.location.href = "index.html";
+        showSuccessModal(getTranslation("signup_coach_msg_success") || "Coach account created successfully!", () => {
+            window.location.href = "create-coach-profile.html";
         });
 
     } catch (err) {

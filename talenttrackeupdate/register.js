@@ -63,6 +63,11 @@ export async function registerUser(email, password, username, role = 'athlete', 
   auth.currentUser = user;
   localStorage.setItem('user', JSON.stringify(user));
   localStorage.setItem('token', token);
+
+  // Ensure persistence keys for index.html redirect logic
+  localStorage.setItem('tt_username', user.username || username);
+  localStorage.setItem('tt_role', role);
+
   notifyListeners(auth.currentUser);
 
   return { user: user };
@@ -73,6 +78,11 @@ export async function loginUser(email, password, role = null) {
   auth.currentUser = data.user;
   localStorage.setItem('user', JSON.stringify(data.user));
   localStorage.setItem('token', data.token);
+
+  // Ensure persistence keys for index.html redirect logic
+  localStorage.setItem('tt_username', data.user.username);
+  localStorage.setItem('tt_role', data.user.role);
+
   notifyListeners(auth.currentUser);
   return { user: data.user };
 }

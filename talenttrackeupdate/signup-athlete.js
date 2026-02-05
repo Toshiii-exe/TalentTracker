@@ -78,10 +78,8 @@ form.addEventListener("submit", async (e) => {
     showLoading();
     // Pass email as is (optional, might be empty string)
     await registerUser(email, password, username, "athlete", phone);
-    await logoutUser();
-
-    showSuccessModal(getTranslation("signup_msg_success") || "Account created successfully! Please login.", () => {
-      window.location.href = "index.html";
+    showSuccessModal(getTranslation("signup_msg_success") || "Account created successfully!", () => {
+      window.location.href = "createprofile.html";
     });
 
   } catch (err) {
