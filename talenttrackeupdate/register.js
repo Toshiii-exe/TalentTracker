@@ -43,17 +43,27 @@ export function notifyListeners(user) {
   authListeners.forEach(cb => cb(user));
 }
 
+let isInitialized = false;
+
 // Check persistence
 const storedUser = localStorage.getItem('user');
 if (storedUser) {
   try {
     auth.currentUser = JSON.parse(storedUser);
-    setTimeout(() => notifyListeners(auth.currentUser), 0);
   } catch (e) {
     console.error("Error parsing stored user", e);
   }
-} else {
-  setTimeout(() => notifyListeners(null), 0);
+}
+isInitialized = true;
+// Notify initial state
+setTimeout(() => notifyListeners(auth.currentUser), 0);
+
+export function onAuthChange(callback) {
+  authListeners.push(callback);
+  // Only fire immediately if we have a user OR we've finished the initial check
+  if (auth.currentUser || isInitialized) {
+    callback(auth.currentUser);
+  }
 }
 
 export async function registerUser(email, password, username, role = 'athlete', phone = null) {
@@ -108,15 +118,6 @@ export async function deleteAccount(uid) {
   } catch (error) {
     console.error("Delete account failed", error);
     throw error;
-  }
-}
-
-export function onAuthChange(callback) {
-  authListeners.push(callback);
-  if (auth.currentUser) {
-    callback(auth.currentUser);
-  } else {
-    callback(auth.currentUser);
   }
 }
 

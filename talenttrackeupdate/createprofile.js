@@ -8,7 +8,7 @@ import {
     BACKEND_URL,
     deleteAccount
 } from "./register.js";
-import { showLoading, hideLoading, updateNavbar, showConfirm } from "./ui-utils.js";
+import { showLoading, hideLoading, updateNavbar, showConfirm, showSuccessModal } from "./ui-utils.js";
 import { setupDropdownInput, syncDropdown, CITIES } from "./locations.js";
 import { getTranslation, applyLanguage } from "./i18n.js";
 
@@ -636,8 +636,9 @@ export async function submitProfile() {
 
         await saveAthleteProfile(currentUID, profileData);
 
-        displayMessage(getTranslation("profile_success_msg"), "success");
-        setTimeout(() => window.location.href = "dashboard.html", 2000);
+        showSuccessModal(getTranslation("profile_success_msg") || "Profile saved successfully!", () => {
+            window.location.href = "dashboard.html";
+        });
 
     } catch (error) {
         console.error(error);

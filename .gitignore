@@ -1,0 +1,56 @@
+# Dependencies
+node_modules/
+
+# Production
+dist/
+build/
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+logs/
+*.log
+
+# Testing
+test-results/
+playwright-report/
+cypress/videos/
+cypress/screenshots/
+coverage/
+
+# Uploads
+talenttrackeupdate/backend/uploads/
+uploads/
+
+# Generated Reports and temporary files
+*.txt
+*.pdf
+*.jpg
+*.png
+!src/**/*.jpg
+!src/**/*.png
+!public/**/*.jpg
+!public/**/*.png
+!assets/**/*.jpg
+!assets/**/*.png
+!talenttrackeupdate/**/*.jpg
+!talenttrackeupdate/**/*.png
+!talenttrackeupdate/**/*.pdf
+
+# Report JSONs
+*.json
+!package.json
+!package-lock.json
+!cypress.config.js
+!playwright.config.js
+!tsconfig.json
+!jsconfig.json
+!talenttrackeupdate/**/*.json

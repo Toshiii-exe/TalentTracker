@@ -6,7 +6,11 @@
     "scripts": {
         "start": "node talenttrackeupdate/backend/server.js",
         "dev": "nodemon talenttrackeupdate/backend/server.js",
-        "postinstall": "cd talenttrackeupdate/backend && npm install"
+        "db:init": "node talenttrackeupdate/backend/init-db.js",
+        "cypress:open": "cypress open",
+        "cypress:run": "cypress run",
+        "test:pw": "playwright test",
+        "test:pw:ui": "playwright test --ui"
     },
     "dependencies": {
         "bcrypt": "^5.1.1",
@@ -17,7 +21,12 @@
         "jsonwebtoken": "^9.0.2",
         "multer": "^1.4.5-lts.1",
         "mysql2": "^3.6.5",
-        "nodemailer": "^7.0.12"
+        "nodemailer": "^7.0.12",
+        "nodemon": "^3.1.11"
+    },
+    "devDependencies": {
+        "@playwright/test": "^1.58.1",
+        "cypress": "^13.6.0"
     },
     "keywords": [],
     "author": "",

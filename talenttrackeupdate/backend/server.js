@@ -29,6 +29,12 @@ app.use(cors({
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+// Request Logger
+app.use((req, res, next) => {
+    console.log(`${new Date().toISOString()} - ${req.method} ${req.url}`);
+    next();
+});
+
 // Serve Static Files (Frontend)
 app.use(express.static(path.join(__dirname, '../'))); // Serve root folder
 

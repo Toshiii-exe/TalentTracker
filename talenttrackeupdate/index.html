@@ -102,7 +102,7 @@
         <a href="index.html" class="hover:text-[var(--primary)] transition-colors duration-200"
           data-i18n="nav_home">Home</a>
         <div class="relative group">
-          <button id="navLoginBtn"
+          <button id="navLoginBtn" data-testid="nav-login-btn"
             class="px-5 py-2 rounded-full bg-[var(--secondary)] text-white hover:bg-[var(--primary)] transition-all duration-300 font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center gap-2">
             <div id="navUserPic"
               class="w-7 h-7 rounded-full bg-white hidden overflow-hidden border border-white/20 shrink-0">
@@ -344,6 +344,7 @@
                   data-i18n="login_label_identifier">Phone / Email /
                   Username</label>
                 <input id="login-identifier" type="text" data-i18n-placeholder="login_placeholder_identifier"
+                  data-testid="login-identifier-input"
                   placeholder="Enter Phone, Email or Username" class="w-full border-2 border-gray-100 rounded-2xl px-6 py-4
                      focus:outline-none focus:border-[#2E5F9E] transition-all bg-gray-50 font-semibold" />
               </div>
@@ -352,8 +353,10 @@
                 <label class="text-xs font-black text-gray-400 uppercase tracking-widest ml-1"
                   data-i18n="login_label_password">Password</label>
                 <div class="relative">
-                  <input id="login-password" type="password" placeholder="••••••••" class="w-full border-2 border-gray-100 rounded-2xl px-6 py-4
-                       focus:outline-none focus:border-[#2E5F9E] transition-all bg-gray-50 font-semibold pr-16" />
+                  <input id="login-password" type="password" placeholder="••••••••" 
+                       data-testid="login-password-input"
+                       class="w-full border-2 border-gray-100 rounded-2xl px-6 py-4
+                        focus:outline-none focus:border-[#2E5F9E] transition-all bg-gray-50 font-semibold pr-16" />
                   <button type="button" id="togglePassword"
                     class="absolute right-5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#2E5F9E] focus:outline-none group">
                     <svg id="eyeIcon" class="w-6 h-6 transition-all group-active:scale-90" fill="none"
@@ -378,7 +381,7 @@
                 <span>Error message here</span>
               </div>
 
-              <button id="loginBtn" type="button" data-i18n="login_btn"
+              <button id="loginBtn" type="button" data-i18n="login_btn" data-testid="login-submit-btn"
                 class="w-full bg-[#2E5F9E] hover:bg-[#1a3a63]
                    text-white font-black py-5 rounded-2xl shadow-xl hover:shadow-[#2E5F9E]/30 transition-all transform active:scale-[0.97] uppercase tracking-wider">
                 Login

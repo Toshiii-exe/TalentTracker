@@ -557,10 +557,21 @@ export function initNotifications(userId) {
     </div>
   `;
 
-  // Insert before the user dropdown area
+  // Insert before the user area container if it's a direct child, otherwise append
   const userArea = document.getElementById("navUserArea") || document.getElementById("navLoginBtn");
+
   if (userArea) {
-    desktopMenu.insertBefore(bellWrapper, userArea);
+    // Find the closest direct child of desktopMenu that contains userArea
+    let target = userArea;
+    while (target && target.parentElement !== desktopMenu) {
+      target = target.parentElement;
+    }
+
+    if (target) {
+      desktopMenu.insertBefore(bellWrapper, target);
+    } else {
+      desktopMenu.appendChild(bellWrapper);
+    }
   } else {
     desktopMenu.appendChild(bellWrapper);
   }

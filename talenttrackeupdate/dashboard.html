@@ -121,7 +121,7 @@
                 <a href="events.html" class="hover:text-[var(--primary)] transition-colors duration-200"
                     data-i18n="nav_events">Events</a>
                 <div id="navUserArea" class="relative group">
-                    <button id="navLoginBtn"
+                    <button id="navLoginBtn" data-testid="nav-user-toggle"
                         class="px-5 py-2 rounded-full bg-[var(--secondary)] text-white hover:bg-[var(--primary)] transition-all duration-300 font-semibold shadow-lg hover:shadow-xl flex items-center gap-3 transform hover:-translate-y-0.5">
                         <div id="navUserPic"
                             class="w-7 h-7 rounded-full bg-white hidden overflow-hidden border border-white/20 shrink-0">
@@ -140,7 +140,7 @@
                             <p id="navUserEmail" class="text-sm font-semibold text-gray-800 break-words leading-tight">
                             </p>
                         </div>
-                        <button id="logoutBtn" data-i18n="nav_logout"
+                        <button id="logoutBtn" data-i18n="nav_logout" data-testid="nav-logout-btn"
                             class="w-full bg-red-50 text-red-600 py-3 rounded-xl hover:bg-red-100 transition-colors duration-200 text-sm font-bold flex items-center justify-center gap-2">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -287,7 +287,8 @@
                         for today's training?</p>
                 </div>
 
-                <div id="headerPBDisplay" class="flex flex-wrap gap-4 justify-center md:justify-start">
+                <div id="headerPBDisplay" data-testid="performance-pb-display"
+                    class="flex flex-wrap gap-4 justify-center md:justify-start">
                     <div class="bg-gray-50 px-4 py-2 rounded-2xl border border-gray-100 animate-pulse">
                         <p class="text-sm text-gray-500 italic">Syncing performance data...</p>
                     </div>
@@ -347,13 +348,13 @@
                 <form id="performanceForm" class="flex flex-col gap-4 flex-grow justify-center">
                     <div class="flex flex-col gap-1">
                         <label class="text-xs font-bold text-gray-500 uppercase" data-i18n="lbl_event">Event</label>
-                        <select id="performanceEvent"
+                        <select id="performanceEvent" data-testid="performance-event-select"
                             class="rounded-xl border border-gray-300 text-sm px-4 py-3 bg-gray-50 outline-none focus:border-[var(--secondary)]"
                             required></select>
                     </div>
                     <div class="flex flex-col gap-1">
                         <label class="text-xs font-bold text-gray-500 uppercase" data-i18n="lbl_date">Date</label>
-                        <input id="performanceDate" type="date"
+                        <input id="performanceDate" type="date" data-testid="performance-date-input"
                             class="rounded-xl border border-gray-300 text-sm px-4 py-3 bg-gray-50 outline-none focus:border-[var(--secondary)]"
                             required />
                     </div>
@@ -361,11 +362,12 @@
                         <label class="text-xs font-bold text-gray-500 uppercase" data-i18n="lbl_result_time">Result /
                             Time</label>
                         <input id="performanceTime" type="number" min="0" step="0.01" placeholder="e.g. 10.58"
-                            data-i18n-placeholder="ph_result_time"
+                            data-i18n-placeholder="ph_result_time" data-testid="performance-result-input"
                             class="rounded-xl border border-gray-300 text-sm px-4 py-3 bg-gray-50 outline-none focus:border-[var(--secondary)]"
                             required />
                     </div>
                     <button id="performanceSubmitBtn" type="submit" data-i18n="btn_save_result"
+                        data-testid="performance-save-btn"
                         class="w-full rounded-xl bg-[var(--secondary)] text-white text-sm font-bold px-4 py-4 hover:bg-[var(--primary)] transition shadow-lg mt-auto">
                         Save Result
                     </button>
